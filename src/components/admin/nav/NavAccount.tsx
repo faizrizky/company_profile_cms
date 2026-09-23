@@ -8,7 +8,13 @@ import { createPortal } from 'react-dom'
 
 import type { User } from '@/payload-types'
 
+import { flags } from '../flags'
+
 const greeting: Record<string, string> = { en: 'Hello', id: 'Halo' }
+// Admin UI languages — keep in sync with `i18n.supportedLanguages` in payload.config.ts.
+const languages = ['en', 'id'] as const
+const languageTitle: Record<string, string> = { en: 'Interface language', id: 'Bahasa tampilan' }
+const languageNames: Record<string, string> = { en: 'English', id: 'Indonesia' }
 const roleLabel: Record<string, Record<string, string>> = {
   en: { admin: 'Administrator', editor: 'Editor' },
   id: { admin: 'Administrator', editor: 'Editor' },
@@ -24,14 +30,14 @@ function initials(name: string) {
 
 /**
  * Account block at the foot of the sidebar: avatar + greeting, opening a small
- * menu (account settings, log out). The menu is portalled to <body> and
+ * menu (interface language, account settings, log out). The menu is portalled to <body> and
  * fixed-positioned so it can sit beside the rail without being clipped by the
  * sidebar's scroll area or picking up its link colours.
  */
 export function NavAccount({ compact }: { compact: boolean }) {
   const { user } = useAuth<User>()
   const { config } = useConfig()
-  const { i18n, t } = useTranslation()
+  const { i18n, switchLanguage, t } = useTranslation()
   const pathname = usePathname()
   const menuId = useId()
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -74,6 +80,13 @@ export function NavAccount({ compact }: { compact: boolean }) {
   const { admin: adminRoute } = config.routes
   const accountHref = formatAdminURL({ adminRoute, path: config.admin.routes.account })
   const logoutHref = formatAdminURL({ adminRoute, path: config.admin.routes.logout })
+
+  const changeLanguage = (code: (typeof languages)[number]) => {
+    if (code === i18n.language || !switchLanguage) return
+    close()
+    // Saved to the user's preferences; Payload re-renders the admin in it.
+    void switchLanguage(code)
+  }
 
   const toggle = () => {
     if (position) return close()
@@ -133,6 +146,30 @@ export function NavAccount({ compact }: { compact: boolean }) {
                 <span className="falah-account__menu-name">{name}</span>
                 <span className="falah-account__menu-email">{user.email}</span>
               </div>
+              {switchLanguage ? (
+                <div className="falah-account__langs" role="group" aria-label={languageTitle[lang]}>
+                  <span className="falah-account__section">{languageTitle[lang]}</span>
+                  <div className="falah-account__lang-options">
+                    {languages.map((code) => {
+                      const Flag = flags[code]
+                      const active = code === i18n.language
+                      return (
+                        <button
+                          key={code}
+                          type="button"
+                          role="menuitemradio"
+                          aria-checked={active}
+                          className={`falah-account__lang${active ? ' is-active' : ''}`}
+                          onClick={() => changeLanguage(code)}
+                        >
+                          <span className="falah-account__flag">{Flag ? <Flag /> : null}</span>
+                          {languageNames[code] ?? code.toUpperCase()}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              ) : null}
               <Link
                 role="menuitem"
                 href={accountHref}

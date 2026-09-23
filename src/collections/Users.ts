@@ -46,6 +46,15 @@ export const Users: CollectionConfig = {
     afterLogin: [auditLogin],
   },
   fields: [
+    {
+      // Live password requirements under Payload's password inputs.
+      name: 'passwordChecklist',
+      type: 'ui',
+      admin: {
+        disableListColumn: true,
+        components: { Field: '/components/admin/PasswordChecklist#PasswordChecklist' },
+      },
+    },
     { name: 'name', type: 'text', maxLength: 120 },
     {
       name: 'roles',
@@ -74,7 +83,12 @@ export const Users: CollectionConfig = {
               hasRole(req.user, 'admin') &&
               !(value as string[] | undefined)?.includes('admin')
             if (demotingSelf) {
-              throw new APIError('Anda tidak bisa menghapus role admin dari akun sendiri.', 400, undefined, true)
+              throw new APIError(
+                'Anda tidak bisa menghapus role admin dari akun sendiri.',
+                400,
+                undefined,
+                true,
+              )
             }
             return value
           },
