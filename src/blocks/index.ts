@@ -5,6 +5,7 @@ import { ExpertiseBlock } from './Expertise'
 import { FaqBlock } from './Faq'
 import { FeatureGridBlock } from './FeatureGrid'
 import { HeroBlock } from './Hero'
+import { elementBlocks } from './layout/elements'
 import { LayoutSectionBlock } from './layout/LayoutSection'
 import { LeadershipBlock } from './Leadership'
 import { OfficeMapBlock } from './OfficeMap'
@@ -34,4 +35,6 @@ export const pageBlocks = [
   OfficeMapBlock,
   CtaBlock,
   LayoutSectionBlock,
+  // Small elements can also sit directly on the page (like the visual editor allows).
+  ...elementBlocks,
 ]

@@ -6,6 +6,8 @@ import type { NextConfig } from 'next'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const isProduction = process.env.NODE_ENV === 'production'
+// Pages are edited in the website's visual editor, embedded in the admin.
+const frontendOrigin = process.env.FRONTEND_URL ? new URL(process.env.FRONTEND_URL).origin : ''
 
 const securityHeaders = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
@@ -27,6 +29,7 @@ const securityHeaders = [
       "img-src 'self' data: blob:",
       "font-src 'self' data:",
       "connect-src 'self'",
+      `frame-src 'self' ${frontendOrigin}`.trim(),
       "object-src 'none'",
       "frame-ancestors 'none'",
       "base-uri 'self'",

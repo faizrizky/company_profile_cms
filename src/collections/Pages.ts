@@ -21,6 +21,25 @@ export const Pages: CollectionConfig = {
     defaultColumns: ['title', 'slug', '_status', 'updatedAt'],
     group: 'Content',
     description: 'Susun halaman dari section (blocks). Slug "home" = halaman utama.',
+    components: {
+      views: {
+        edit: {
+          // Opening a page lands in the visual editor; the classic form is one tab away.
+          default: {
+            Component: {
+              path: '/components/admin/VisualEditorView#VisualEditorView',
+              clientProps: { frontendUrl: env.FRONTEND_URL },
+            },
+            tab: { label: 'Visual', order: 0 },
+          },
+          form: {
+            Component: '@payloadcms/ui#DefaultEditView',
+            path: '/form',
+            tab: { label: 'Form', href: '/form', order: 100 },
+          },
+        },
+      },
+    },
   },
   access: {
     read: publishedOrAuthenticated,
@@ -37,19 +56,6 @@ export const Pages: CollectionConfig = {
     afterDelete: [...audit.afterDelete, ...revalidate.afterDelete],
   },
   fields: [
-    {
-      name: 'editVisual',
-      type: 'ui',
-      admin: {
-        position: 'sidebar',
-        components: {
-          Field: {
-            path: '/components/admin/EditVisualButton#EditVisualButton',
-            clientProps: { frontendUrl: env.FRONTEND_URL },
-          },
-        },
-      },
-    },
     { name: 'title', type: 'text', required: true, maxLength: 120 },
     slugField('title', { reserved: RESERVED_SLUGS }),
     {
