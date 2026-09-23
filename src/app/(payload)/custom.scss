@@ -1,0 +1,266 @@
+/*
+ * Falah CMS — "glass" admin theme.
+ * Soft blue/lavender gradient backdrop, frosted white panels, violet accent.
+ * Payload's own styles live in `@layer payload-default`, so these unlayered
+ * rules win without !important.
+ */
+
+:root,
+html[data-theme='light'] {
+  /* Cool, slightly lavender neutral scale (drives every --theme-elevation-*). */
+  --color-base-0: rgb(255 255 255);
+  --color-base-50: rgb(247 248 253);
+  --color-base-100: rgb(238 240 250);
+  --color-base-150: rgb(228 231 245);
+  --color-base-200: rgb(217 220 238);
+  --color-base-250: rgb(203 207 230);
+  --color-base-300: rgb(188 192 220);
+  --color-base-350: rgb(172 177 208);
+  --color-base-400: rgb(150 155 188);
+  --color-base-450: rgb(130 136 170);
+  --color-base-500: rgb(112 118 153);
+  --color-base-550: rgb(96 102 138);
+  --color-base-600: rgb(82 88 122);
+  --color-base-650: rgb(69 74 107);
+  --color-base-700: rgb(57 62 92);
+  --color-base-750: rgb(46 51 79);
+  --color-base-800: rgb(36 40 66);
+  --color-base-850: rgb(28 32 55);
+  --color-base-900: rgb(22 25 45);
+  --color-base-950: rgb(16 18 36);
+  --color-base-1000: rgb(10 12 26);
+
+  --falah-violet-50: #f5f0ff;
+  --falah-violet-100: #ece2ff;
+  --falah-violet-300: #c4a5ff;
+  --falah-violet-500: #8b3dff;
+  --falah-violet-600: #7a2ff0;
+  --falah-violet-700: #6320cc;
+  --falah-ink: #1f2233;
+  --falah-muted: #6b7090;
+  --falah-glass: rgb(255 255 255 / 0.58);
+  --falah-glass-strong: rgb(255 255 255 / 0.78);
+  --falah-glass-border: rgb(255 255 255 / 0.75);
+  --falah-shadow: 0 18px 50px -18px rgb(76 90 180 / 0.28), 0 2px 6px rgb(76 90 180 / 0.06);
+
+  --theme-bg: transparent;
+  --theme-text: var(--falah-ink);
+  --theme-input-bg: rgb(255 255 255 / 0.72);
+  --theme-border-color: rgb(206 211 240 / 0.9);
+  --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --style-radius-s: 8px;
+  --style-radius-m: 12px;
+  --style-radius-l: 18px;
+}
+
+/* ── Backdrop ─────────────────────────────────────────────────────────── */
+
+html,
+body {
+  background:
+    radial-gradient(38rem 38rem at 12% 8%, rgb(142 170 255 / 0.55), transparent 60%),
+    radial-gradient(34rem 30rem at 58% 0%, rgb(96 110 245 / 0.45), transparent 62%),
+    radial-gradient(30rem 30rem at 72% 78%, rgb(250 180 168 / 0.45), transparent 60%),
+    radial-gradient(26rem 26rem at 4% 92%, rgb(255 150 150 / 0.35), transparent 60%),
+    linear-gradient(135deg, #dce8fb 0%, #e6e4fb 45%, #dfe7fb 100%);
+  background-attachment: fixed;
+  color: var(--falah-ink);
+}
+
+.template-default,
+.template-minimal {
+  background: transparent;
+}
+
+/* ── Glass panels ─────────────────────────────────────────────────────── */
+
+.nav {
+  background: var(--falah-glass);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  border-right: 1px solid var(--falah-glass-border);
+  box-shadow: var(--falah-shadow);
+}
+
+.app-header__bg,
+.app-header--show-bg .app-header__bg {
+  background: rgb(255 255 255 / 0.45);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--falah-glass-border);
+}
+
+.card,
+.collection-list .table,
+.document-fields__main,
+.document-fields__sidebar-wrap,
+.template-minimal__wrap,
+.blocks-field__row,
+.array-field__row {
+  background: var(--falah-glass);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--falah-glass-border);
+  border-radius: var(--style-radius-l);
+  box-shadow: var(--falah-shadow);
+}
+
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 60px -20px rgb(76 90 180 / 0.35);
+}
+
+.template-minimal__wrap {
+  padding: 40px;
+}
+
+.collection-list .table {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.table tbody tr:nth-child(odd) {
+  background: rgb(255 255 255 / 0.35);
+}
+
+/* ── Navigation (active item = white pill, violet text) ───────────────── */
+
+.nav-group__toggle {
+  color: var(--falah-muted);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nav__link {
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-inline: -12px;
+  color: var(--falah-ink);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nav a.nav__link:hover {
+  background: rgb(255 255 255 / 0.55);
+  text-decoration: none;
+}
+
+.nav__link.active {
+  background: var(--falah-glass-strong);
+  color: var(--falah-violet-600);
+  box-shadow: 0 6px 18px -8px rgb(122 47 240 / 0.35);
+}
+
+/* ── Controls ─────────────────────────────────────────────────────────── */
+
+.btn--style-primary {
+  --color: #fff;
+  --bg-color: var(--falah-violet-600);
+  --hover-bg: var(--falah-violet-700);
+  --hover-color: #fff;
+  background-image: linear-gradient(180deg, rgb(255 255 255 / 0.18), transparent), linear-gradient(135deg, #9b5cff, #7a2ff0);
+  box-shadow: 0 10px 24px -10px rgb(122 47 240 / 0.7), inset 0 1px 0 rgb(255 255 255 / 0.35);
+  border: 0;
+}
+
+.btn--style-secondary {
+  --bg-color: rgb(255 255 255 / 0.7);
+  --hover-bg: #fff;
+  border-color: var(--falah-glass-border);
+  box-shadow: 0 6px 16px -10px rgb(76 90 180 / 0.35);
+}
+
+input,
+textarea,
+.react-select .rs__control,
+.search-filter__input {
+  border-radius: 10px !important;
+}
+
+input:focus,
+textarea:focus,
+.react-select .rs__control--is-focused {
+  box-shadow: 0 0 0 3px rgb(139 61 255 / 0.18) !important;
+  border-color: var(--falah-violet-300) !important;
+}
+
+.pill {
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.75);
+  border: 1px solid var(--theme-border-color);
+}
+
+a {
+  color: inherit;
+}
+
+.render-title,
+h1 {
+  color: var(--falah-ink);
+  letter-spacing: -0.01em;
+}
+
+/* ── Brand (logo / icon) ──────────────────────────────────────────────── */
+
+.falah-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.falah-brand__mark {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 18px;
+  background: linear-gradient(135deg, #9b5cff, #6a2ee6);
+  box-shadow: 0 8px 18px -8px rgb(122 47 240 / 0.8);
+}
+
+.falah-brand__mark--sm {
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+}
+
+.falah-brand__name {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--falah-ink);
+}
+
+/* ── Visual editor button (Pages sidebar) ─────────────────────────────── */
+
+.falah-edit-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  color: #fff !important;
+  font-weight: 600;
+  text-decoration: none !important;
+  background: linear-gradient(135deg, #9b5cff, #7a2ff0);
+  box-shadow: 0 12px 26px -12px rgb(122 47 240 / 0.8), inset 0 1px 0 rgb(255 255 255 / 0.35);
+  transition: transform 0.15s ease;
+}
+
+.falah-edit-visual:hover {
+  transform: translateY(-1px);
+}
+
+.falah-edit-visual__hint {
+  color: var(--falah-muted);
+  font-size: 13px;
+  margin-bottom: 16px;
+}
