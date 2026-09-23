@@ -118,6 +118,38 @@ body {
   box-shadow: 0 8px 20px -10px rgb(40 60 200 / 0.8);
 }
 
+/* Menu toggle: frosted on the pastel page, white-on-violet over the open sidebar. */
+.hamburger {
+  border-radius: 8px;
+  background-color: rgb(255 255 255 / 0.6);
+  box-shadow: 0 0 0 1px var(--falah-line);
+}
+
+.hamburger .stroke {
+  stroke: currentColor;
+}
+
+.template-default--nav-open .template-default__nav-toggler .hamburger {
+  color: #fff;
+  background-color: rgb(255 255 255 / 0.14);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.45);
+}
+
+.template-default--nav-open .template-default__nav-toggler .hamburger:hover {
+  background-color: rgb(255 255 255 / 0.24);
+}
+
+/* Breadcrumbs start at the section name — no logo mark in front. */
+.step-nav__home,
+.step-nav__home + span {
+  display: none;
+}
+
+/* No divider between the document title/tabs and the content below. */
+.doc-header:after {
+  display: none;
+}
+
 /* ── Surfaces (single panels, not a card per row) ─────────────────────── */
 
 .card,
