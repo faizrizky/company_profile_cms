@@ -48,15 +48,19 @@ html[data-theme='light'] {
   --style-radius-m: 10px;
   --style-radius-l: 14px;
   --falah-visual-gap: 20px;
-}
 
-html,
-body {
-  background:
+  /* The page backdrop. Reused (fixed to the viewport) by the active sidebar
+     tab so the tab is pixel-identical to the page next to it. */
+  --falah-page-bg:
     radial-gradient(40rem 34rem at 88% 8%, rgb(236 150 230 / 0.4), transparent 62%),
     radial-gradient(36rem 36rem at 100% 70%, rgb(110 225 245 / 0.5), transparent 60%),
     radial-gradient(34rem 30rem at 25% 0%, rgb(170 140 240 / 0.4), transparent 62%),
     linear-gradient(135deg, #e4d8f6 0%, #cddcf7 48%, #bde5f4 100%);
+}
+
+html,
+body {
+  background: var(--falah-page-bg);
   background-attachment: fixed;
   color: var(--falah-ink);
 }
@@ -101,9 +105,10 @@ body {
 }
 
 /* Items span to the sidebar's right edge so the active one can open into
-   the page like a tab (inverted rounded corners above and below it). */
+   the page like a tab (inverted rounded corners above and below it). The tab
+   and its corners paint the page backdrop fixed to the viewport, so they
+   blend into the page with no visible seam. */
 .nav .nav__link {
-  --falah-tab-bg: #dcdcf7; /* page colour right next to the sidebar */
   --falah-tab-radius: 16px;
   align-self: stretch;
   box-sizing: border-box;
@@ -122,7 +127,8 @@ body {
 .nav .nav__link:has(.nav__link-indicator) {
   position: relative;
   padding-left: 14px;
-  background: var(--falah-tab-bg);
+  background: var(--falah-page-bg);
+  background-attachment: fixed;
   color: #0b2e7a;
   font-weight: 600;
 }
@@ -134,21 +140,22 @@ body {
   right: 0;
   width: var(--falah-tab-radius);
   height: var(--falah-tab-radius);
+  background: var(--falah-page-bg);
+  background-attachment: fixed;
   pointer-events: none;
 }
 
+/* Concave corners: keep only the area outside a quarter circle. */
 .nav .nav__link:has(.nav__link-indicator)::before {
   bottom: 100%;
-  border-bottom-right-radius: var(--falah-tab-radius);
-  box-shadow: calc(var(--falah-tab-radius) / 2) calc(var(--falah-tab-radius) / 2) 0 calc(var(--falah-tab-radius) / 2)
-    var(--falah-tab-bg);
+  -webkit-mask: radial-gradient(circle at 0 0, transparent var(--falah-tab-radius), #000 calc(var(--falah-tab-radius) + 0.5px));
+  mask: radial-gradient(circle at 0 0, transparent var(--falah-tab-radius), #000 calc(var(--falah-tab-radius) + 0.5px));
 }
 
 .nav .nav__link:has(.nav__link-indicator)::after {
   top: 100%;
-  border-top-right-radius: var(--falah-tab-radius);
-  box-shadow: calc(var(--falah-tab-radius) / 2) calc(var(--falah-tab-radius) / -2) 0
-    calc(var(--falah-tab-radius) / 2) var(--falah-tab-bg);
+  -webkit-mask: radial-gradient(circle at 0 100%, transparent var(--falah-tab-radius), #000 calc(var(--falah-tab-radius) + 0.5px));
+  mask: radial-gradient(circle at 0 100%, transparent var(--falah-tab-radius), #000 calc(var(--falah-tab-radius) + 0.5px));
 }
 
 .nav .nav__link-indicator {
