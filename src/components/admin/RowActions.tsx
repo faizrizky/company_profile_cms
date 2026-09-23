@@ -21,9 +21,10 @@ export function RowActions({ rowData, collectionSlug }: DefaultCellComponentProp
 
   const isId = i18n.language === 'id'
   const { admin, api } = config.routes
+  const label = rowData.title ?? rowData.name ?? rowData.filename ?? rowData.email
+  const title = label ? String(label) : isId ? 'Tanpa judul' : 'Untitled'
   const canDelete = Boolean(permissions?.collections?.[collectionSlug]?.delete)
   const modalSlug = `delete-${collectionSlug}-${id}`
-  const title = String(rowData.title ?? rowData.name ?? rowData.filename ?? rowData.email ?? `#${id}`)
 
   const onDelete = async () => {
     const res = await fetch(`${config.serverURL}${api}/${collectionSlug}/${id}`, {
@@ -53,6 +54,7 @@ export function RowActions({ rowData, collectionSlug }: DefaultCellComponentProp
             {isId ? 'Hapus' : 'Delete'}
           </button>
           <ConfirmationModal
+            className="falah-confirm--danger"
             modalSlug={modalSlug}
             heading={isId ? 'Hapus item ini?' : 'Delete this item?'}
             body={
