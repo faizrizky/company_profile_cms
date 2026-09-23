@@ -33,7 +33,7 @@ html[data-theme='light'] {
   --falah-accent: #5b6cf0;
   --falah-accent-hover: #4a57d6;
   --falah-accent-gradient: linear-gradient(135deg, #6a8cff 0%, #7b5cf6 100%);
-  --falah-rail: linear-gradient(180deg, #7d3fc0 0%, #5b40b3 48%, #3e4aa8 100%);
+  --falah-rail: linear-gradient(180deg, #38bdf8 0%, #1f7ae0 45%, #0b2e7a 100%);
   --falah-ink: #1f2340;
   --falah-muted: #5d6286;
   --falah-glass: rgb(255 255 255 / 0.55);
@@ -103,7 +103,7 @@ body {
 /* Items span to the sidebar's right edge so the active one can open into
    the page like a tab (inverted rounded corners above and below it). */
 .nav .nav__link {
-  --falah-tab-bg: #e3daf7; /* page colour next to the sidebar */
+  --falah-tab-bg: #dcdcf7; /* page colour right next to the sidebar */
   --falah-tab-radius: 16px;
   align-self: stretch;
   box-sizing: border-box;
@@ -118,14 +118,17 @@ body {
   text-decoration: none;
 }
 
-.nav .nav__link.active {
+/* Payload marks the current item with a child indicator, not a class. */
+.nav .nav__link:has(.nav__link-indicator) {
+  position: relative;
+  padding-left: 14px;
   background: var(--falah-tab-bg);
-  color: #3b2d86;
+  color: #0b2e7a;
   font-weight: 600;
 }
 
-.nav .nav__link.active::before,
-.nav .nav__link.active::after {
+.nav .nav__link:has(.nav__link-indicator)::before,
+.nav .nav__link:has(.nav__link-indicator)::after {
   content: '';
   position: absolute;
   right: 0;
@@ -134,14 +137,14 @@ body {
   pointer-events: none;
 }
 
-.nav .nav__link.active::before {
+.nav .nav__link:has(.nav__link-indicator)::before {
   bottom: 100%;
   border-bottom-right-radius: var(--falah-tab-radius);
   box-shadow: calc(var(--falah-tab-radius) / 2) calc(var(--falah-tab-radius) / 2) 0 calc(var(--falah-tab-radius) / 2)
     var(--falah-tab-bg);
 }
 
-.nav .nav__link.active::after {
+.nav .nav__link:has(.nav__link-indicator)::after {
   top: 100%;
   border-top-right-radius: var(--falah-tab-radius);
   box-shadow: calc(var(--falah-tab-radius) / 2) calc(var(--falah-tab-radius) / -2) 0
