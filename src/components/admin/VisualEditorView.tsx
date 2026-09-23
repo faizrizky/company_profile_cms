@@ -22,7 +22,9 @@ export function VisualEditorView({ frontendUrl, ...props }: Props) {
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const fit = () => setHeight(Math.max(560, window.innerHeight - el.getBoundingClientRect().top))
+    // Leave room for the card's bottom spacing (--falah-visual-gap in custom.scss).
+    const gap = parseFloat(getComputedStyle(el).marginBottom) || 0
+    const fit = () => setHeight(Math.max(560, window.innerHeight - el.getBoundingClientRect().top - gap))
     fit()
     const observer = new ResizeObserver(fit)
     observer.observe(document.body)
