@@ -20,7 +20,6 @@ export const Pages: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', '_status', 'updatedAt'],
     group: 'Content',
-    description: 'Susun halaman dari section (blocks). Slug "home" = halaman utama.',
     components: {
       views: {
         edit: {

@@ -1,61 +1,98 @@
 /*
- * Falah CMS — clean admin theme matching the visual editor (Puck).
- * White surfaces, hairline grey borders, one blue accent. Payload's own
- * styles live in `@layer payload-default`, so these unlayered rules win.
+ * Falah CMS — deep violet→indigo sidebar, pastel lavender→blue→cyan
+ * workspace, frosted white panels, indigo accent (pink / cyan secondary).
+ * Same theme as the visual editor. Panels are joined, not floating cards.
+ * Payload's own styles live in `@layer payload-default`; these rules win.
  */
 
 :root,
 html[data-theme='light'] {
-  /* Neutral scale = Puck greys (drives every --theme-elevation-*). */
-  --color-base-0: #ffffff;
-  --color-base-50: #fafafa;
-  --color-base-100: #f5f5f5;
-  --color-base-150: #efefef;
-  --color-base-200: #dcdcdc;
-  --color-base-250: #cfcfcf;
-  --color-base-300: #c3c3c3;
-  --color-base-350: #b7b7b7;
-  --color-base-400: #ababab;
-  --color-base-450: #9f9f9f;
-  --color-base-500: #949494;
-  --color-base-550: #858585;
-  --color-base-600: #767676;
-  --color-base-650: #686868;
-  --color-base-700: #5a5a5a;
-  --color-base-750: #4d4d4d;
-  --color-base-800: #404040;
-  --color-base-850: #343434;
-  --color-base-900: #292929;
-  --color-base-950: #202020;
-  --color-base-1000: #181818;
+  /* Cool, slightly lavender neutral scale (drives every --theme-elevation-*). */
+  --color-base-0: rgb(255 255 255);
+  --color-base-50: rgb(248 248 253);
+  --color-base-100: rgb(240 241 250);
+  --color-base-150: rgb(230 232 245);
+  --color-base-200: rgb(218 221 238);
+  --color-base-250: rgb(204 208 230);
+  --color-base-300: rgb(188 192 220);
+  --color-base-350: rgb(172 177 208);
+  --color-base-400: rgb(150 155 188);
+  --color-base-450: rgb(130 136 170);
+  --color-base-500: rgb(112 118 153);
+  --color-base-550: rgb(96 102 138);
+  --color-base-600: rgb(82 88 122);
+  --color-base-650: rgb(69 74 107);
+  --color-base-700: rgb(57 62 92);
+  --color-base-750: rgb(46 51 79);
+  --color-base-800: rgb(36 40 66);
+  --color-base-850: rgb(28 32 55);
+  --color-base-900: rgb(22 25 45);
+  --color-base-950: rgb(16 18 36);
+  --color-base-1000: rgb(10 12 26);
 
-  --falah-accent: #0158ad;
-  --falah-accent-hover: #014292;
-  --falah-accent-soft: #e7eef7;
+  --falah-accent: #5b6cf0;
+  --falah-accent-hover: #4a57d6;
+  --falah-accent-gradient: linear-gradient(135deg, #6a8cff 0%, #7b5cf6 100%);
+  --falah-rail: linear-gradient(180deg, #7d3fc0 0%, #5b40b3 48%, #3e4aa8 100%);
+  --falah-ink: #1f2340;
+  --falah-muted: #5d6286;
+  --falah-glass: rgb(255 255 255 / 0.55);
+  --falah-line: rgb(255 255 255 / 0.75);
 
-  --theme-bg: #fafafa;
-  --theme-text: #181818;
-  --theme-input-bg: #ffffff;
-  --theme-border-color: #dcdcdc;
+  --theme-bg: transparent;
+  --theme-text: var(--falah-ink);
+  --theme-input-bg: rgb(255 255 255 / 0.85);
+  --theme-border-color: var(--falah-line);
   --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --style-radius-s: 6px;
-  --style-radius-m: 8px;
-  --style-radius-l: 10px;
+  --style-radius-s: 8px;
+  --style-radius-m: 10px;
+  --style-radius-l: 14px;
 }
 
+html,
 body {
-  background: var(--theme-bg);
+  background:
+    radial-gradient(40rem 34rem at 88% 8%, rgb(236 150 230 / 0.4), transparent 62%),
+    radial-gradient(36rem 36rem at 100% 70%, rgb(110 225 245 / 0.5), transparent 60%),
+    radial-gradient(34rem 30rem at 25% 0%, rgb(170 140 240 / 0.4), transparent 62%),
+    linear-gradient(135deg, #e4d8f6 0%, #cddcf7 48%, #bde5f4 100%);
+  background-attachment: fixed;
+  color: var(--falah-ink);
 }
 
-/* ── Chrome ────────────────────────────────────────────────────────────── */
+.template-default,
+.template-minimal {
+  background: transparent;
+}
+
+/* ── Chrome: one continuous frosted frame ─────────────────────────────── */
 
 .nav {
-  background: #fff;
-  border-right: 1px solid var(--theme-border-color);
+  background: var(--falah-rail);
+  border-right: 0;
+  color: #fff;
+}
+
+.nav .nav__link,
+.nav .nav-group__toggle,
+.nav .nav-group__toggle svg,
+.nav a {
+  color: rgb(255 255 255 / 0.82);
+}
+
+.nav .nav-group__toggle .stroke {
+  stroke: currentColor;
+}
+
+.app-header__bg,
+.app-header--show-bg .app-header__bg {
+  background: rgb(255 255 255 / 0.55);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--falah-line);
 }
 
 .nav-group__toggle {
-  color: #767676;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -63,59 +100,69 @@ body {
 }
 
 .nav__link {
-  border-radius: 6px;
-  padding: 6px 10px;
-  margin-inline: -10px;
-  color: #404040;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-inline: -12px;
 }
 
 .nav a.nav__link:hover {
-  background: #f5f5f5;
+  background: rgb(255 255 255 / 0.12);
+  color: #fff;
   text-decoration: none;
 }
 
-.nav__link.active {
-  background: var(--falah-accent-soft);
-  color: var(--falah-accent);
+.nav .nav__link.active {
+  background: linear-gradient(135deg, #5b8cff 0%, #6a6ff5 100%);
+  color: #fff;
+  box-shadow: 0 8px 20px -10px rgb(40 60 200 / 0.8);
 }
 
-.app-header--show-bg .app-header__bg {
-  background: #fff;
-  border-bottom: 1px solid var(--theme-border-color);
+/* ── Surfaces (single panels, not a card per row) ─────────────────────── */
+
+.card,
+.collection-list .table,
+.template-minimal__wrap {
+  background: var(--falah-glass);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid var(--falah-line);
+  border-radius: var(--style-radius-l);
+  box-shadow: 0 14px 40px -20px rgb(60 70 170 / 0.4);
 }
 
-/* ── Controls ──────────────────────────────────────────────────────────── */
+.template-minimal__wrap {
+  padding: 36px;
+}
+
+.card:hover {
+  border-color: #fff;
+  box-shadow: 0 18px 44px -18px rgb(60 70 170 / 0.5);
+}
+
+/* ── Controls ─────────────────────────────────────────────────────────── */
 
 .btn--style-primary {
   --color: #fff;
   --bg-color: var(--falah-accent);
   --hover-bg: var(--falah-accent-hover);
   --hover-color: #fff;
+  background-image: var(--falah-accent-gradient);
+  box-shadow: 0 8px 20px -10px rgb(91 108 240 / 0.8);
 }
 
 .btn--style-secondary {
-  --bg-color: #fff;
-  --hover-bg: #f5f5f5;
+  --bg-color: rgb(255 255 255 / 0.8);
+  --hover-bg: #fff;
 }
 
 input:focus,
 textarea:focus,
 .react-select .rs__control--is-focused {
-  border-color: var(--falah-accent) !important;
-  box-shadow: 0 0 0 3px rgb(1 88 173 / 0.15) !important;
+  border-color: rgb(140 155 250) !important;
+  box-shadow: 0 0 0 3px rgb(91 108 240 / 0.18) !important;
 }
 
-.card {
-  background: #fff;
-  border: 1px solid var(--theme-border-color);
-  box-shadow: none;
-}
-
-.card:hover {
-  border-color: #c3c3c3;
-}
-
-/* ── Brand ─────────────────────────────────────────────────────────────── */
+/* ── Brand ────────────────────────────────────────────────────────────── */
 
 .falah-brand {
   display: inline-flex;
@@ -128,33 +175,36 @@ textarea:focus,
   place-items: center;
   width: 30px;
   height: 30px;
-  border-radius: 8px;
+  border-radius: 999px;
   color: #fff;
   font-size: 16px;
-  background: var(--falah-accent);
+  background: var(--falah-accent-gradient);
+  box-shadow: 0 8px 18px -8px rgb(91 108 240 / 0.8);
 }
 
 .falah-brand__mark--sm {
   width: 22px;
   height: 22px;
-  border-radius: 6px;
   font-size: 12px;
 }
 
 .falah-brand__name {
   font-size: 20px;
   font-weight: 600;
-  color: #181818;
+  color: var(--falah-ink);
 }
 
-/* ── Pages: visual editor view ─────────────────────────────────────────── */
+/* ── Pages: visual editor view ────────────────────────────────────────── */
 
-/* The editor fills everything below the document header, edge to edge. */
+/* Height is set inline to fill the window below the document header. */
 .falah-visual {
-  height: calc(100vh - var(--app-header-height) - var(--doc-controls-height, 64px) - 48px);
   min-height: 560px;
-  margin-inline: calc(var(--gutter-h) * -1);
-  border-top: 1px solid var(--theme-border-color);
+  overflow: hidden;
+  border: 1px solid var(--falah-line);
+  border-bottom: 0;
+  border-radius: var(--style-radius-l) var(--style-radius-l) 0 0;
+  background: transparent;
+  box-shadow: 0 -8px 30px -20px rgb(60 70 170 / 0.35);
 }
 
 .falah-visual__frame {
@@ -162,5 +212,4 @@ textarea:focus,
   width: 100%;
   height: 100%;
   border: 0;
-  background: #fff;
 }

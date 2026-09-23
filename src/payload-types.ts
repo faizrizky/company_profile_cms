@@ -148,8 +148,6 @@ export interface UserAuthOperations {
   };
 }
 /**
- * Susun halaman dari section (blocks). Slug "home" = halaman utama.
- *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */

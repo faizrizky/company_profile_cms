@@ -41,6 +41,8 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     theme: 'light',
+    // Gravatar would load a third-party image (blocked by our CSP anyway).
+    avatar: 'default',
     importMap: { baseDir: path.resolve(dirname) },
     meta: {
       titleSuffix: ' — Falah CMS',
