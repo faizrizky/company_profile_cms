@@ -89,12 +89,17 @@ body {
   stroke: currentColor;
 }
 
+/* Sticky bars (top header, document controls) blend into the page: no
+   tint, no border — only a blur so content scrolling underneath stays
+   legible behind them. */
 .app-header__bg,
-.app-header--show-bg .app-header__bg {
-  background: rgb(255 255 255 / 0.55);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border-bottom: 1px solid var(--falah-line);
+.app-header--show-bg .app-header__bg,
+.doc-controls:before {
+  background: transparent;
+  opacity: 1;
+  border: 0;
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
 }
 
 .nav-group__toggle {
@@ -195,9 +200,23 @@ body {
   display: none;
 }
 
-/* No divider between the document title/tabs and the content below. */
-.doc-header:after {
+/* No dividers anywhere on document screens: everything sits on one surface. */
+.doc-header:after,
+.doc-controls__divider {
   display: none;
+}
+
+.doc-controls__controls-wrapper {
+  background-color: transparent;
+  border-top: 0;
+}
+
+.document-fields--has-sidebar {
+  --main-border: none;
+}
+
+.live-preview-toolbar--static {
+  border-bottom: 0;
 }
 
 /* ── Surfaces (single panels, not a card per row) ─────────────────────── */
@@ -317,12 +336,13 @@ body {
   color: var(--falah-accent);
 }
 
-/* Dark tile behind thumbnails so white logos / icons stay visible. */
-.table .thumbnail,
-.table .file__thumbnail {
+/* Dark tile behind every thumbnail (lists, upload fields, pickers) so white
+   logos / icons stay visible. */
+.thumbnail,
+.file__thumbnail {
   overflow: hidden;
   border-radius: 8px;
-  background: #1f2340;
+  background: #0f2742;
 }
 
 /* Row actions column. */
