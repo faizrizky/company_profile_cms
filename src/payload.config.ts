@@ -28,9 +28,17 @@ import { env, s3Enabled } from './lib/env'
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 /** Collections whose copy is translatable (users, logs, inbox and brand names are not). */
-const LOCALIZED_COLLECTIONS = new Set(['pages', 'media', 'certifications', 'solution-categories', 'products'])
+const LOCALIZED_COLLECTIONS = new Set([
+  'pages',
+  'media',
+  'certifications',
+  'solution-categories',
+  'products',
+])
 
-const withLocalizedText = <T extends { slug: string; fields: Parameters<typeof localizeTextFields>[0] }>(
+const withLocalizedText = <
+  T extends { slug: string; fields: Parameters<typeof localizeTextFields>[0] },
+>(
   config: T,
 ): T => ({ ...config, fields: localizeTextFields(config.fields) })
 
@@ -54,6 +62,10 @@ export default buildConfig({
         Logo: '/components/admin/Logo#Logo',
         Icon: '/components/admin/Icon#Icon',
       },
+      // Sidebar with an icon rail when collapsed and the account menu at its foot.
+      Nav: '/components/admin/nav/FalahNav#FalahNav',
+      // Content language as flags in the top bar (Payload's dropdown is hidden in custom.scss).
+      actions: ['/components/admin/LocaleFlags#LocaleFlags'],
     },
   },
 
