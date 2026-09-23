@@ -20,7 +20,7 @@ import { Users } from './collections/Users'
 import { Footer } from './globals/Footer'
 import { Navigation } from './globals/Navigation'
 import { SiteSettings } from './globals/SiteSettings'
-import { withRowActions } from './fields/rowActions'
+import { withListEnhancements } from './fields/listEnhancements'
 import { localizeTextFields } from './fields/localize'
 import { MAX_UPLOAD_BYTES } from './hooks/secureUpload'
 import { env, s3Enabled } from './lib/env'
@@ -91,7 +91,7 @@ export default buildConfig({
     AuditLogs,
   ]
     .map((c) => (LOCALIZED_COLLECTIONS.has(c.slug) ? withLocalizedText(c) : c))
-    .map((c) => (c.slug === AuditLogs.slug ? c : withRowActions(c))),
+    .map((c) => (c.slug === AuditLogs.slug ? c : withListEnhancements(c))),
   globals: [SiteSettings, Navigation, Footer].map(withLocalizedText),
 
   i18n: { supportedLanguages: { en, id }, fallbackLanguage: 'en' },

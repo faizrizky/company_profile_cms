@@ -100,10 +100,16 @@ body {
   text-transform: uppercase;
 }
 
-.nav__link {
-  border-radius: 8px;
-  padding: 8px 12px;
-  margin-inline: -12px;
+/* Items span to the sidebar's right edge so the active one can open into
+   the page like a tab (inverted rounded corners above and below it). */
+.nav .nav__link {
+  --falah-tab-bg: #e3daf7; /* page colour next to the sidebar */
+  --falah-tab-radius: 16px;
+  align-self: stretch;
+  box-sizing: border-box;
+  margin-inline: -12px calc(-1 * var(--nav-padding-inline-end));
+  padding: 10px 16px 10px 14px;
+  border-radius: var(--falah-tab-radius) 0 0 var(--falah-tab-radius);
 }
 
 .nav a.nav__link:hover {
@@ -113,9 +119,43 @@ body {
 }
 
 .nav .nav__link.active {
-  background: linear-gradient(135deg, #5b8cff 0%, #6a6ff5 100%);
-  color: #fff;
-  box-shadow: 0 8px 20px -10px rgb(40 60 200 / 0.8);
+  background: var(--falah-tab-bg);
+  color: #3b2d86;
+  font-weight: 600;
+}
+
+.nav .nav__link.active::before,
+.nav .nav__link.active::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  width: var(--falah-tab-radius);
+  height: var(--falah-tab-radius);
+  pointer-events: none;
+}
+
+.nav .nav__link.active::before {
+  bottom: 100%;
+  border-bottom-right-radius: var(--falah-tab-radius);
+  box-shadow: calc(var(--falah-tab-radius) / 2) calc(var(--falah-tab-radius) / 2) 0 calc(var(--falah-tab-radius) / 2)
+    var(--falah-tab-bg);
+}
+
+.nav .nav__link.active::after {
+  top: 100%;
+  border-top-right-radius: var(--falah-tab-radius);
+  box-shadow: calc(var(--falah-tab-radius) / 2) calc(var(--falah-tab-radius) / -2) 0
+    calc(var(--falah-tab-radius) / 2) var(--falah-tab-bg);
+}
+
+.nav .nav__link-indicator {
+  display: none;
+}
+
+/* Let the tab corners reach outside a collapsible group. */
+.nav-group__content,
+.nav-group .rah-static {
+  overflow: visible !important;
 }
 
 /* Menu toggle: frosted on the pastel page, white-on-violet over the open sidebar. */
@@ -304,27 +344,44 @@ body {
   color: var(--falah-accent) !important;
 }
 
-.falah-row-actions__btn--danger:hover {
-  color: #d93a57 !important;
+.falah-row-actions__btn--danger {
+  border-color: #f6c6cf;
+  background: #fdecef;
+  color: #d0344f !important;
 }
 
-/* Selection bar: bulk Edit/Delete live in the row actions instead;
-   Publish / Unpublish become real buttons. */
-.list-selection .edit-many__toggle,
-.list-selection .delete-documents__toggle {
+.falah-row-actions__btn--danger:hover {
+  border-color: #d0344f;
+  background: #e0455f;
+  color: #fff !important;
+}
+
+/* Selection bar: shown right above the table (SelectionBar component), so
+   the copy Payload renders in the page header is hidden. */
+.list-header .list-selection {
   display: none;
 }
 
-.list-selection {
+.falah-selection:has(.list-selection) {
+  margin-bottom: 12px;
+}
+
+.falah-selection .list-selection {
+  display: flex;
   align-items: center;
   gap: 8px;
+  padding-inline: 4px;
+  color: var(--falah-muted);
+  font-weight: 500;
 }
 
-.list-selection__actions {
+.falah-selection .list-selection__actions {
+  display: flex;
   gap: 8px;
 }
 
-.list-selection .edit-many__toggle ~ .list-selection__button {
+/* "Select all (n)" stays a text link; Publish / Unpublish are buttons. */
+.falah-selection .list-selection__button:not(#select-all-across-pages) {
   height: 34px;
   padding: 0 16px;
   border: 1px solid var(--falah-line);
@@ -335,12 +392,15 @@ body {
   box-shadow: 0 6px 16px -10px rgb(60 70 170 / 0.45);
 }
 
-/* First of the two is Publish: primary. */
-.list-selection .edit-many__toggle + .list-selection__button {
+.falah-selection .list-selection__button:not(#select-all-across-pages):first-child {
   border-color: transparent;
   background-image: var(--falah-accent-gradient);
   color: #fff;
   box-shadow: 0 8px 20px -10px rgb(91 108 240 / 0.8);
+}
+
+.falah-selection #select-all-across-pages {
+  color: var(--falah-accent);
 }
 
 /* ── Controls ─────────────────────────────────────────────────────────── */
