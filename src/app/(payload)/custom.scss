@@ -1877,7 +1877,8 @@ input[data-reveal] {
   display: inline-block;
   max-width: 42ch;
   overflow: hidden;
-  padding-top: 10px;
+  padding-top: 0;
+  line-height: 34px;
   background: linear-gradient(135deg, #38bdf8 0%, #1f7ae0 100%);
   color: #fff;
   font-weight: 600;
@@ -1924,7 +1925,7 @@ input[data-reveal] {
   .step-nav > .step-nav__last,
   .falah-drawer-crumbs__item:last-child {
     max-width: 22ch;
-    padding-top: 9px;
+    line-height: 30px;
   }
 }
 
@@ -2504,3 +2505,11 @@ input[data-reveal] {
 .doc-tab[data-falah-tab='versions'] { --falah-tab-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8'%3E%3C/path%3E%3Cpath d='M3 3v5h5'%3E%3C/path%3E%3Cpath d='M12 7v5l4 2'%3E%3C/path%3E%3C/svg%3E"); }
 .doc-tab[data-falah-tab='api'] { --falah-tab-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m18 16 4-4-4-4'%3E%3C/path%3E%3Cpath d='m6 8-4 4 4 4'%3E%3C/path%3E%3Cpath d='m14.5 4-5 16'%3E%3C/path%3E%3C/svg%3E"); }
 .doc-tab[data-falah-tab='preview'] { --falah-tab-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0'%3E%3C/path%3E%3Ccircle cx='12' cy='12' r='3'%3E%3C/circle%3E%3C/svg%3E"); }
+
+/* Crumb labels: Payload clips them (overflow hidden) — give descenders
+   (g, p, y) room so they aren't cut off. */
+.step-nav > a,
+.step-nav > a span,
+.falah-drawer-crumbs__item {
+  line-height: 20px;
+}
