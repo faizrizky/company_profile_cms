@@ -75,6 +75,8 @@ export default buildConfig({
         '/components/admin/DrawerBreadcrumbs#DrawerBreadcrumbsProvider',
         // Skeleton of the next screen while navigating between admin views.
         '/components/admin/PageSkeleton#PageSkeletonProvider',
+        // Icons on the document tabs (Edit / Visual, Form, Versions, API).
+        '/components/admin/DocTabIcons#DocTabIconsProvider',
       ],
     },
   },
