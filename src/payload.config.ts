@@ -56,6 +56,10 @@ export default buildConfig({
     meta: {
       titleSuffix: ' — Falah CMS',
       robots: 'noindex, nofollow',
+      icons: [
+        { rel: 'icon', type: 'image/png', url: '/falah-icon.png' },
+        { rel: 'apple-touch-icon', type: 'image/png', url: '/apple-touch-icon.png' },
+      ],
     },
     components: {
       graphics: {
