@@ -2230,3 +2230,95 @@ input[data-reveal] {
     animation: none;
   }
 }
+
+/* ── Pagination: one white pill, current page as a blue dot ────────────── */
+
+.page-controls {
+  align-items: center;
+  gap: 16px;
+}
+
+.paginator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 10px 30px -12px rgb(56 189 248 / 0.55), 0 0 0 1px rgb(255 255 255 / 0.9);
+}
+
+.paginator__page,
+.paginator .clickable-arrow {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  color: var(--falah-muted);
+  font-size: 13px;
+  line-height: 1;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.paginator__page:hover {
+  background: #eef6fd;
+  color: var(--falah-ink);
+}
+
+.paginator__page--is-current,
+.paginator__page--is-current:hover {
+  background: linear-gradient(135deg, #38bdf8 0%, #1f7ae0 100%);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 6px 14px -6px rgb(31 122 224 / 0.8);
+}
+
+.paginator__separator {
+  margin: 0;
+  padding: 0 4px;
+  color: #9fb3c8;
+}
+
+.paginator .clickable-arrow .stroke {
+  stroke: var(--falah-ink);
+  stroke-width: 1.6px;
+}
+
+.paginator .clickable-arrow:not(.clickable-arrow--is-disabled):hover {
+  background: #eef6fd;
+}
+
+.paginator .clickable-arrow--is-disabled .stroke {
+  stroke: #c5d3e2;
+}
+
+.page-controls__page-info {
+  color: var(--falah-muted);
+  font-size: 13px;
+}
+
+/* Payload renders both arrows first; show them as ‹ pages › instead. */
+.paginator > * {
+  order: 1;
+}
+
+.paginator > .clickable-arrow--left {
+  order: 0;
+}
+
+.paginator > .clickable-arrow--right {
+  order: 2;
+}
+
+/* "…" rather than a dash between page ranges. */
+.paginator__separator {
+  font-size: 0;
+}
+
+.paginator__separator::after {
+  content: '…';
+  font-size: 13px;
+}
