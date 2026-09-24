@@ -66,6 +66,8 @@ export default buildConfig({
       Nav: '/components/admin/nav/FalahNav#FalahNav',
       // Content language as flags in the top bar (Payload's dropdown is hidden in custom.scss).
       actions: ['/components/admin/LocaleFlags#LocaleFlags'],
+      // Show/hide toggle on every password input (login, reset, change password).
+      providers: ['/components/admin/PasswordReveal#PasswordRevealProvider'],
     },
   },
 

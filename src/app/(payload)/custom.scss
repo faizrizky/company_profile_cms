@@ -1534,3 +1534,51 @@ body:has(.falah-visual) .doc-controls:before {
     padding: 12px 16px 18px;
   }
 }
+
+/* ── Password show/hide toggle (PasswordReveal) ─────────────────────────── */
+
+.field-type__wrap:has(> .falah-reveal) {
+  position: relative;
+}
+
+input[data-reveal] {
+  padding-right: 48px;
+}
+
+.falah-reveal {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--falah-muted);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.falah-reveal:hover {
+  background: #eef6fd;
+  color: var(--falah-ink);
+}
+
+.falah-reveal:focus-visible {
+  outline: 2px solid var(--falah-accent);
+  outline-offset: 1px;
+}
+
+.falah-reveal svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
