@@ -1,7 +1,15 @@
 'use client'
 
-import { Link, useAuth, useConfig, useTranslation } from '@payloadcms/ui'
-import { usePathname } from 'next/navigation'
+import { getTranslation } from '@payloadcms/translations'
+import {
+  Link,
+  useAuth,
+  useConfig,
+  useLocale,
+  useRouteTransition,
+  useTranslation,
+} from '@payloadcms/ui'
+import { usePathname, useRouter } from 'next/navigation'
 import { formatAdminURL } from 'payload/shared'
 import { useEffect, useId, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
@@ -14,10 +22,48 @@ const greeting: Record<string, string> = { en: 'Hello', id: 'Halo' }
 // Admin UI languages — keep in sync with `i18n.supportedLanguages` in payload.config.ts.
 const languages = ['en', 'id'] as const
 const languageTitle: Record<string, string> = { en: 'Interface language', id: 'Bahasa tampilan' }
+const contentTitle: Record<string, string> = { en: 'Content language', id: 'Bahasa konten' }
 const languageNames: Record<string, string> = { en: 'English', id: 'Indonesia' }
 const roleLabel: Record<string, Record<string, string>> = {
   en: { admin: 'Administrator', editor: 'Editor' },
   id: { admin: 'Administrator', editor: 'Editor' },
+}
+
+type LanguageOption = { code: string; label: string; active: boolean }
+
+/** A titled segmented control of flag + language name options. */
+function LanguageSection({
+  title,
+  options,
+  onSelect,
+}: {
+  title: string
+  options: LanguageOption[]
+  onSelect: (code: string) => void
+}) {
+  return (
+    <div className="falah-account__langs" role="group" aria-label={title}>
+      <span className="falah-account__section">{title}</span>
+      <div className="falah-account__lang-options">
+        {options.map(({ code, label, active }) => {
+          const Flag = flags[code]
+          return (
+            <button
+              key={code}
+              type="button"
+              role="menuitemradio"
+              aria-checked={active}
+              className={`falah-account__lang${active ? ' is-active' : ''}`}
+              onClick={() => onSelect(code)}
+            >
+              <span className="falah-account__flag">{Flag ? <Flag /> : null}</span>
+              {label}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
 }
 
 function initials(name: string) {
@@ -30,7 +76,7 @@ function initials(name: string) {
 
 /**
  * Account block at the foot of the sidebar: avatar + greeting, opening a small
- * menu (interface language, account settings, log out). The menu is portalled to <body> and
+ * menu (interface & content language, account settings, log out). The menu is portalled to <body> and
  * fixed-positioned so it can sit beside the rail without being clipped by the
  * sidebar's scroll area or picking up its link colours.
  */
@@ -38,6 +84,9 @@ export function NavAccount({ compact }: { compact: boolean }) {
   const { user } = useAuth<User>()
   const { config } = useConfig()
   const { i18n, switchLanguage, t } = useTranslation()
+  const contentLocale = useLocale()
+  const router = useRouter()
+  const { startRouteTransition } = useRouteTransition()
   const pathname = usePathname()
   const menuId = useId()
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -81,11 +130,23 @@ export function NavAccount({ compact }: { compact: boolean }) {
   const accountHref = formatAdminURL({ adminRoute, path: config.admin.routes.account })
   const logoutHref = formatAdminURL({ adminRoute, path: config.admin.routes.logout })
 
-  const changeLanguage = (code: (typeof languages)[number]) => {
-    if (code === i18n.language || !switchLanguage) return
+  const changeLanguage = (code: string) => {
+    const language = languages.find((l) => l === code)
+    if (!language || language === i18n.language || !switchLanguage) return
     close()
     // Saved to the user's preferences; Payload re-renders the admin in it.
-    void switchLanguage(code)
+    void switchLanguage(language)
+  }
+
+  // Which language's copy is being edited — the `?locale=` param, exactly as
+  // Payload's own localizer switches it (every other query param is kept).
+  const contentLocales = config.localization ? config.localization.locales : []
+  const changeContentLocale = (code: string) => {
+    if (code === contentLocale.code) return
+    close()
+    const params = new URLSearchParams(window.location.search)
+    params.set('locale', code)
+    startRouteTransition(() => router.push(`?${params.toString()}`))
   }
 
   const toggle = () => {
@@ -147,28 +208,26 @@ export function NavAccount({ compact }: { compact: boolean }) {
                 <span className="falah-account__menu-email">{user.email}</span>
               </div>
               {switchLanguage ? (
-                <div className="falah-account__langs" role="group" aria-label={languageTitle[lang]}>
-                  <span className="falah-account__section">{languageTitle[lang]}</span>
-                  <div className="falah-account__lang-options">
-                    {languages.map((code) => {
-                      const Flag = flags[code]
-                      const active = code === i18n.language
-                      return (
-                        <button
-                          key={code}
-                          type="button"
-                          role="menuitemradio"
-                          aria-checked={active}
-                          className={`falah-account__lang${active ? ' is-active' : ''}`}
-                          onClick={() => changeLanguage(code)}
-                        >
-                          <span className="falah-account__flag">{Flag ? <Flag /> : null}</span>
-                          {languageNames[code] ?? code.toUpperCase()}
-                        </button>
-                      )
-                    })}
-                  </div>
-                </div>
+                <LanguageSection
+                  title={languageTitle[lang]}
+                  options={languages.map((code) => ({
+                    code,
+                    label: languageNames[code],
+                    active: code === i18n.language,
+                  }))}
+                  onSelect={changeLanguage}
+                />
+              ) : null}
+              {contentLocales.length > 1 ? (
+                <LanguageSection
+                  title={contentTitle[lang]}
+                  options={contentLocales.map((locale) => ({
+                    code: locale.code,
+                    label: languageNames[locale.code] ?? getTranslation(locale.label, i18n),
+                    active: locale.code === contentLocale.code,
+                  }))}
+                  onSelect={changeContentLocale}
+                />
               ) : null}
               <Link
                 role="menuitem"

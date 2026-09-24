@@ -567,64 +567,11 @@ body {
   display: none;
 }
 
-/* ── Content language as flags ─────────────────────────────────────────── */
-
+/* Content language is switched from the account menu; Payload's top-bar
+   localizer is hidden. */
 .app-header__localizer,
 .app-header__localizer-spacing {
   display: none;
-}
-
-.falah-flags {
-  display: inline-flex;
-  gap: 8px;
-  padding: 6px;
-  border-radius: 999px;
-  background: rgb(255 255 255 / 0.65);
-  box-shadow: 0 0 0 1px var(--falah-line);
-}
-
-.falah-flags__btn {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  overflow: hidden;
-  border: 0;
-  border-radius: 50%;
-  background: #fff;
-  cursor: pointer;
-  opacity: 0.6;
-  filter: saturate(0.7);
-  box-shadow: 0 0 0 1px rgb(15 39 66 / 0.12);
-  transition: opacity 0.2s ease, filter 0.2s ease, transform 0.16s ease, box-shadow 0.2s ease;
-}
-
-.falah-flags__btn svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.falah-flags__btn:hover {
-  opacity: 0.85;
-  filter: none;
-}
-
-.falah-flags__btn:active {
-  transform: scale(0.9);
-}
-
-.falah-flags__btn.is-active {
-  opacity: 1;
-  filter: none;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--falah-accent);
-  cursor: default;
-}
-
-.falah-flags__code {
-  font-size: 10px;
-  font-weight: 700;
 }
 
 .sr-only {
@@ -1581,4 +1528,36 @@ input[data-reveal] {
   stroke-width: 1.9;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+/* ── Menu button: app-grid icon instead of the three-line hamburger ────── */
+
+.template-default__nav-toggler,
+.app-header__mobile-nav-toggler {
+  width: 42px;
+  height: 42px;
+}
+
+.template-default__nav-toggler .hamburger,
+.app-header__mobile-nav-toggler .hamburger {
+  --hamburger-size: 22px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 13px;
+}
+
+.template-default__nav-toggler .hamburger svg,
+.app-header__mobile-nav-toggler .hamburger svg {
+  display: none;
+}
+
+.template-default__nav-toggler :is(.hamburger__open-icon, .hamburger__close-icon)::before,
+.app-header__mobile-nav-toggler .hamburger__open-icon::before {
+  content: '';
+  width: 22px;
+  height: 22px;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linejoin='round'%3E%3Crect x='3.5' y='3.5' width='7' height='7' rx='2.2'/%3E%3Crect x='13.5' y='3.5' width='7' height='7' rx='2.2'/%3E%3Crect x='3.5' y='13.5' width='7' height='7' rx='2.2'/%3E%3Crect x='13.5' y='13.5' width='7' height='7' rx='2.2'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linejoin='round'%3E%3Crect x='3.5' y='3.5' width='7' height='7' rx='2.2'/%3E%3Crect x='13.5' y='3.5' width='7' height='7' rx='2.2'/%3E%3Crect x='3.5' y='13.5' width='7' height='7' rx='2.2'/%3E%3Crect x='13.5' y='13.5' width='7' height='7' rx='2.2'/%3E%3C/svg%3E") center / contain no-repeat;
 }

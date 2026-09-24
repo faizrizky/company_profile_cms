@@ -7,7 +7,6 @@ import { PasswordChecklist as PasswordChecklist_04392dd84d621fdceface601f994cac6
 import { FalahNav as FalahNav_eb31d88043f9ccfcb1413c23d153637e } from '../../../components/admin/nav/FalahNav'
 import { Icon as Icon_dfe4008080d895d460898c3a6155e9ba } from '../../../components/admin/Icon'
 import { Logo as Logo_91a09b539d3c86b0aebf520e7564ce08 } from '../../../components/admin/Logo'
-import { LocaleFlags as LocaleFlags_13a34c7021672c768aa167cc27454b68 } from '../../../components/admin/LocaleFlags'
 import { PasswordRevealProvider as PasswordRevealProvider_655eb28e21bff48b103452f82d4670db } from '../../../components/admin/PasswordReveal'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
@@ -22,7 +21,6 @@ export const importMap = {
   "/components/admin/nav/FalahNav#FalahNav": FalahNav_eb31d88043f9ccfcb1413c23d153637e,
   "/components/admin/Icon#Icon": Icon_dfe4008080d895d460898c3a6155e9ba,
   "/components/admin/Logo#Logo": Logo_91a09b539d3c86b0aebf520e7564ce08,
-  "/components/admin/LocaleFlags#LocaleFlags": LocaleFlags_13a34c7021672c768aa167cc27454b68,
   "/components/admin/PasswordReveal#PasswordRevealProvider": PasswordRevealProvider_655eb28e21bff48b103452f82d4670db,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
