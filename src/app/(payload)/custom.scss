@@ -771,9 +771,10 @@ body {
 }
 
 /* Row actions column. */
+/* Buttons start under the "Actions" heading. */
 .falah-row-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 6px;
 }
 
@@ -1925,4 +1926,39 @@ input[data-reveal] {
     max-width: 22ch;
     padding-top: 9px;
   }
+}
+
+/* Dashboard: the last crumb is Payload's dashboard switcher (a select). */
+.step-nav > .step-nav__last:has(.dashboard-breadcrumb-select, .dashboard-breadcrumb-dropdown__editing) {
+  display: inline-flex;
+  align-items: center;
+  max-width: none;
+  overflow: visible;
+  padding-top: 0;
+  padding-right: 10px;
+}
+
+.step-nav__last .dashboard-breadcrumb-select .rs__control,
+.step-nav__last .dashboard-breadcrumb-select .rs__control--is-focused {
+  min-height: 0;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  cursor: pointer;
+}
+
+.step-nav__last .dashboard-breadcrumb-select .rs__value-container {
+  padding: 0;
+}
+
+.step-nav__last .dashboard-breadcrumb-select :is(.rs__single-value, .rs__indicator) {
+  color: #fff;
+}
+
+.step-nav__last .dashboard-breadcrumb-select .rs__indicator {
+  padding: 0 0 0 6px;
+}
+
+.step-nav__last .dashboard-breadcrumb-select .rs__indicator-separator {
+  display: none;
 }
