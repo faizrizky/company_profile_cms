@@ -1962,3 +1962,21 @@ input[data-reveal] {
 .step-nav__last .dashboard-breadcrumb-select .rs__indicator-separator {
   display: none;
 }
+
+/* Payload fades links while pressed / focused by mouse (opacity .7–.8). On
+   the overlapping breadcrumb pills, the sidebar tabs and the account menu
+   that makes the shapes behind show through, so keep them opaque and give
+   a small press instead. */
+.step-nav a:is(:active, :focus),
+.nav a:is(:active, :focus),
+.falah-account__item:is(:active, :focus) {
+  opacity: 1;
+}
+
+.step-nav > a {
+  transition: color 0.2s ease, transform 0.12s ease;
+}
+
+.step-nav > a:active {
+  transform: scale(0.97);
+}
