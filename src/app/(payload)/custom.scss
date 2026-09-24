@@ -1024,7 +1024,10 @@ body:has(.falah-visual) .doc-controls:before {
 .document-fields,
 .falah-visual,
 .template-minimal__wrap {
-  animation: falah-enter 0.38s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  /* "backwards", not "both": once finished the animation must leave no
+     transform behind — a lingering transform makes these boxes the
+     containing block for position:fixed children (drag previews, popups). */
+  animation: falah-enter 0.38s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
 }
 
 .list-controls {
@@ -1039,7 +1042,7 @@ body:has(.falah-visual) .doc-controls:before {
 
 /* Table rows cascade in. */
 .table tbody tr {
-  animation: falah-enter 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: falah-enter 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
 }
 
 .table tbody tr:nth-child(1) { animation-delay: 110ms; }
@@ -2512,4 +2515,27 @@ input[data-reveal] {
 .step-nav > a span,
 .falah-drawer-crumbs__item {
   line-height: 20px;
+}
+
+/* Sortable lists: the dragged row is drawn in a position:fixed overlay inside
+   the table card. A backdrop-filter would make the card its containing block
+   (the row jumps away from the pointer), so the table card goes without. */
+.collection-list .table {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* The row being dragged: a floating white card under the pointer. */
+.table.table--drag-preview {
+  overflow: hidden;
+  border: 0;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgb(31 122 224 / 0.25), 0 18px 40px -12px rgb(6 41 79 / 0.35);
+  animation: none;
+  cursor: grabbing;
+}
+
+.table.table--drag-preview tbody tr {
+  animation: none;
 }
