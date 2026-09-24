@@ -8,6 +8,7 @@ import { FalahNav as FalahNav_eb31d88043f9ccfcb1413c23d153637e } from '../../../
 import { Icon as Icon_dfe4008080d895d460898c3a6155e9ba } from '../../../components/admin/Icon'
 import { Logo as Logo_91a09b539d3c86b0aebf520e7564ce08 } from '../../../components/admin/Logo'
 import { PasswordRevealProvider as PasswordRevealProvider_655eb28e21bff48b103452f82d4670db } from '../../../components/admin/PasswordReveal'
+import { DrawerBreadcrumbsProvider as DrawerBreadcrumbsProvider_6e9713ad596daa1c735620b384e54755 } from '../../../components/admin/DrawerBreadcrumbs'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -22,5 +23,6 @@ export const importMap = {
   "/components/admin/Icon#Icon": Icon_dfe4008080d895d460898c3a6155e9ba,
   "/components/admin/Logo#Logo": Logo_91a09b539d3c86b0aebf520e7564ce08,
   "/components/admin/PasswordReveal#PasswordRevealProvider": PasswordRevealProvider_655eb28e21bff48b103452f82d4670db,
+  "/components/admin/DrawerBreadcrumbs#DrawerBreadcrumbsProvider": DrawerBreadcrumbsProvider_6e9713ad596daa1c735620b384e54755,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

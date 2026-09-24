@@ -65,7 +65,11 @@ export default buildConfig({
       // Sidebar with an icon rail when collapsed and the account menu at its foot.
       Nav: '/components/admin/nav/FalahNav#FalahNav',
       // Show/hide toggle on every password input (login, reset, change password).
-      providers: ['/components/admin/PasswordReveal#PasswordRevealProvider'],
+      providers: [
+        '/components/admin/PasswordReveal#PasswordRevealProvider',
+        // Breadcrumb of the current page on top of every drawer.
+        '/components/admin/DrawerBreadcrumbs#DrawerBreadcrumbsProvider',
+      ],
     },
   },
 
@@ -106,7 +110,15 @@ export default buildConfig({
     .map((c) => (c.slug === AuditLogs.slug ? c : withListEnhancements(c))),
   globals: [SiteSettings, Navigation, Footer].map(withLocalizedText),
 
-  i18n: { supportedLanguages: { en, id }, fallbackLanguage: 'en' },
+  i18n: {
+    supportedLanguages: { en, id },
+    fallbackLanguage: 'en',
+    // Drawer titles stay short; the file name is in the drawer's breadcrumb.
+    translations: {
+      en: { upload: { sizesFor: 'Image sizes' } },
+      id: { upload: { sizesFor: 'Ukuran gambar' } },
+    },
+  },
 
   upload: {
     limits: { fileSize: MAX_UPLOAD_BYTES, files: 1 },
