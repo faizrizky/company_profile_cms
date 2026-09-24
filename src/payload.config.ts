@@ -73,6 +73,8 @@ export default buildConfig({
         '/components/admin/PasswordReveal#PasswordRevealProvider',
         // Breadcrumb of the current page on top of every drawer.
         '/components/admin/DrawerBreadcrumbs#DrawerBreadcrumbsProvider',
+        // Skeleton of the next screen while navigating between admin views.
+        '/components/admin/PageSkeleton#PageSkeletonProvider',
       ],
     },
   },

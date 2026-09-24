@@ -2000,3 +2000,233 @@ input[data-reveal] {
   align-items: center;
   justify-content: center;
 }
+
+/* ── Skeletons (PageSkeleton provider, visual editor loading) ─────────── */
+
+.falah-sk {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 10px;
+  background: rgb(31 122 224 / 0.08);
+}
+
+.falah-sk::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.75), transparent);
+  animation: falah-sk-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes falah-sk-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes falah-sk-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.falah-sk--title { width: min(320px, 60%); height: 40px; border-radius: 12px; }
+.falah-sk--heading { width: 160px; height: 26px; margin-bottom: 14px; }
+.falah-sk--pill { width: 104px; height: 32px; border-radius: 999px; }
+.falah-sk--small { width: 120px; height: 28px; }
+.falah-sk--accent { background: rgb(31 122 224 / 0.22); }
+.falah-sk--label { width: 34%; max-width: 180px; height: 12px; border-radius: 6px; }
+.falah-sk--strong { width: 120px; height: 16px; margin-bottom: 6px; }
+.falah-sk--input { height: 42px; border-radius: 12px; }
+.falah-sk--textarea { height: 96px; border-radius: 12px; }
+.falah-sk--meta { width: min(420px, 70%); height: 14px; margin: 18px 0 28px; border-radius: 6px; }
+.falah-sk--check { flex: none; width: 18px; height: 18px; border-radius: 50%; }
+.falah-sk--cell { flex: 1; height: 14px; border-radius: 6px; }
+.falah-sk--cell-lg { flex: 2; }
+.falah-sk--icon { width: 28px; height: 28px; border-radius: 8px; }
+.falah-sk--item { height: 40px; border-radius: 12px; }
+.falah-sk--frame { flex: 1; border-radius: 12px; }
+
+.falah-sk-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 14px var(--gutter-h) 40px;
+}
+
+.falah-sk-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.falah-sk-card {
+  border: 1px solid rgb(255 255 255 / 0.9);
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.72);
+  box-shadow: 0 1px 2px rgb(6 41 79 / 0.04), 0 20px 40px -28px rgb(30 90 160 / 0.45);
+}
+
+.falah-sk-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+}
+
+.falah-sk-search .falah-sk--input {
+  flex: 1;
+}
+
+.falah-sk-table {
+  padding: 8px 20px;
+}
+
+.falah-sk-row {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  height: 58px;
+  border-bottom: 1px solid var(--falah-line);
+}
+
+.falah-sk-row:last-child {
+  border-bottom: 0;
+}
+
+.falah-sk-group + .falah-sk-group {
+  margin-top: 8px;
+}
+
+.falah-sk-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.falah-sk-card--tile {
+  height: 76px;
+  padding: 18px;
+}
+
+.falah-sk-edit {
+  display: grid;
+  grid-template-columns: minmax(0, 2.4fr) minmax(0, 1fr);
+  gap: 32px;
+}
+
+.falah-sk-edit__main,
+.falah-sk-edit__side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.falah-sk-card--fields {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px 26px;
+}
+
+.falah-sk-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.falah-sk-card--editor {
+  height: calc(100vh - var(--app-header-height) - 150px);
+  min-height: 420px;
+  overflow: hidden;
+}
+
+.falah-sk-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.falah-sk-editor__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+}
+
+.falah-sk-editor__spacer {
+  flex: 1;
+}
+
+.falah-sk-editor__body {
+  display: grid;
+  flex: 1;
+  grid-template-columns: 260px minmax(0, 1fr) 280px;
+  gap: 16px;
+  min-height: 0;
+  padding: 0 20px 20px;
+}
+
+.falah-sk-editor__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.falah-sk-editor__canvas {
+  display: flex;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgb(31 122 224 / 0.04);
+}
+
+/* Covers the content area (not the top bar or the sidebar) while navigating. */
+.falah-sk-overlay {
+  position: absolute;
+  top: var(--app-header-height);
+  right: 0;
+  left: 0;
+  z-index: 30;
+  min-height: calc(100vh - var(--app-header-height));
+  background: var(--falah-page-bg);
+  background-attachment: fixed;
+  pointer-events: none;
+  animation: falah-sk-in 0.2s ease 0.15s both;
+}
+
+/* Visual editor: the skeleton sits over the iframe until the studio is ready. */
+.falah-visual {
+  position: relative;
+}
+
+.falah-visual__skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: #f5faff;
+}
+
+@media (max-width: 1024px) {
+  .falah-sk-edit {
+    grid-template-columns: 1fr;
+  }
+
+  .falah-sk-editor__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .falah-sk-editor__panel {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .falah-sk::after {
+    animation: none;
+  }
+}
