@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import type { CollectionConfig } from 'payload'
 
 import { anyone, isAdmin, isAuthenticated } from '@/access'
+import { fieldCard } from '@/fields/card'
 import { auditCollection } from '@/hooks/auditLog'
 import { revalidateCollection } from '@/hooks/revalidateFrontend'
 import { ALLOWED_MIME_TYPES, secureUpload } from '@/hooks/secureUpload'
@@ -40,11 +41,13 @@ export const Media: CollectionConfig = {
     focalPoint: true,
   },
   fields: [
-    {
-      name: 'alt',
-      type: 'text',
-      maxLength: 200,
-      admin: { description: 'Teks alternatif untuk aksesibilitas & SEO. Kosongkan untuk gambar dekoratif.' },
-    },
+    fieldCard({ en: 'Details', id: 'Detail' }, [
+      {
+        name: 'alt',
+        type: 'text',
+        maxLength: 200,
+        admin: { description: 'Teks alternatif untuk aksesibilitas & SEO. Kosongkan untuk gambar dekoratif.' },
+      },
+    ]),
   ],
 }

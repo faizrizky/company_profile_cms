@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { anyone, isAdmin, isAuthenticated } from '@/access'
+import { fieldCard } from '@/fields/card'
 import { imageField } from '@/fields/section'
 import { auditCollection } from '@/hooks/auditLog'
 import { revalidateCollection } from '@/hooks/revalidateFrontend'
@@ -23,41 +24,45 @@ export const Certifications: CollectionConfig = {
     afterDelete: [...audit.afterDelete, ...revalidate.afterDelete],
   },
   fields: [
-    { name: 'title', type: 'text', required: true, maxLength: 120 },
-    { name: 'subtitle', type: 'text', maxLength: 120 },
-    { name: 'description', type: 'textarea', maxLength: 400 },
-    {
-      type: 'row',
-      fields: [
-        imageField('icon', { required: true, admin: { width: '50%' } }),
-        {
-          name: 'iconShape',
-          type: 'select',
-          defaultValue: 'square',
-          admin: { width: '50%' },
-          options: [
-            { label: 'Square', value: 'square' },
-            { label: 'Wide', value: 'wide' },
-            { label: 'Narrow', value: 'narrow' },
-          ],
-        },
-      ],
-    },
-    {
-      type: 'row',
-      fields: [
-        imageField('certificate', { required: true, label: 'Certificate image', admin: { width: '50%' } }),
-        {
-          name: 'certificateFocus',
-          type: 'select',
-          defaultValue: 'center',
-          admin: { width: '50%' },
-          options: [
-            { label: 'Center', value: 'center' },
-            { label: 'Top', value: 'top' },
-          ],
-        },
-      ],
-    },
+    fieldCard({ en: 'Content', id: 'Konten' }, [
+      { name: 'title', type: 'text', required: true, maxLength: 120 },
+      { name: 'subtitle', type: 'text', maxLength: 120 },
+      { name: 'description', type: 'textarea', maxLength: 400 },
+    ]),
+    fieldCard({ en: 'Icon & certificate', id: 'Ikon & sertifikat' }, [
+      {
+        type: 'row',
+        fields: [
+          imageField('icon', { required: true, admin: { width: '50%' } }),
+          {
+            name: 'iconShape',
+            type: 'select',
+            defaultValue: 'square',
+            admin: { width: '50%' },
+            options: [
+              { label: 'Square', value: 'square' },
+              { label: 'Wide', value: 'wide' },
+              { label: 'Narrow', value: 'narrow' },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'row',
+        fields: [
+          imageField('certificate', { required: true, label: 'Certificate image', admin: { width: '50%' } }),
+          {
+            name: 'certificateFocus',
+            type: 'select',
+            defaultValue: 'center',
+            admin: { width: '50%' },
+            options: [
+              { label: 'Center', value: 'center' },
+              { label: 'Top', value: 'top' },
+            ],
+          },
+        ],
+      },
+    ]),
   ],
 }

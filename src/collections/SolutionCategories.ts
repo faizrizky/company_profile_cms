@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { isAdmin, isAuthenticated, publishedOrAuthenticated } from '@/access'
+import { fieldCard } from '@/fields/card'
 import { hrefField } from '@/fields/link'
 import { imageField } from '@/fields/section'
 import { seoField } from '@/fields/seo'
@@ -33,7 +34,9 @@ export const SolutionCategories: CollectionConfig = {
     afterDelete: [...audit.afterDelete, ...revalidate.afterDelete],
   },
   fields: [
-    { name: 'title', type: 'text', required: true, maxLength: 80 },
+    fieldCard({ en: 'General', id: 'Umum' }, [
+      { name: 'title', type: 'text', required: true, maxLength: 80 },
+    ]),
     slugField(),
     {
       name: 'hasDetailPage',

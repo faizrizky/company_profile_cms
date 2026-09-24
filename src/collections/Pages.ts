@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { isAdmin, isAuthenticated, publishedOrAuthenticated } from '@/access'
 import { pageBlocks } from '@/blocks'
+import { fieldCard } from '@/fields/card'
 import { seoField } from '@/fields/seo'
 import { slugField } from '@/fields/slug'
 import { auditCollection } from '@/hooks/auditLog'
@@ -55,7 +56,9 @@ export const Pages: CollectionConfig = {
     afterDelete: [...audit.afterDelete, ...revalidate.afterDelete],
   },
   fields: [
-    { name: 'title', type: 'text', required: true, maxLength: 120 },
+    fieldCard({ en: 'General', id: 'Umum' }, [
+      { name: 'title', type: 'text', required: true, maxLength: 120 },
+    ]),
     slugField('title', { reserved: RESERVED_SLUGS }),
     {
       type: 'tabs',

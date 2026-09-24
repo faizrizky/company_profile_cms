@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { anyone, isAdmin, isAuthenticated } from '@/access'
+import { fieldCard } from '@/fields/card'
 import { imageField } from '@/fields/section'
 import { slugField } from '@/fields/slug'
 import { auditCollection } from '@/hooks/auditLog'
@@ -29,22 +30,26 @@ export const Products: CollectionConfig = {
     afterDelete: [...audit.afterDelete, ...revalidate.afterDelete],
   },
   fields: [
-    { name: 'title', type: 'text', required: true, maxLength: 120 },
+    fieldCard({ en: 'Content', id: 'Konten' }, [
+      { name: 'title', type: 'text', required: true, maxLength: 120 },
+      {
+        name: 'category',
+        type: 'relationship',
+        relationTo: 'solution-categories',
+        required: true,
+        index: true,
+      },
+    ]),
     slugField(),
-    {
-      name: 'category',
-      type: 'relationship',
-      relationTo: 'solution-categories',
-      required: true,
-      index: true,
-    },
-    {
-      type: 'row',
-      fields: [
-        imageField('image', { required: true, admin: { width: '50%' } }),
-        imageField('imageMobile', { label: 'Image (mobile)', admin: { width: '50%' } }),
-      ],
-    },
+    fieldCard({ en: 'Images', id: 'Gambar' }, [
+      {
+        type: 'row',
+        fields: [
+          imageField('image', { required: true, admin: { width: '50%' } }),
+          imageField('imageMobile', { label: 'Image (mobile)', admin: { width: '50%' } }),
+        ],
+      },
+    ]),
     {
       name: 'layout',
       type: 'group',

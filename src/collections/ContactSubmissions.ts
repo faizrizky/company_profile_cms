@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { isAdmin, isAuthenticated, nobody } from '@/access'
 import { submitContactEndpoint } from '@/endpoints/submitContact'
+import { fieldCard } from '@/fields/card'
 import { auditCollection } from '@/hooks/auditLog'
 
 const audit = auditCollection('contact-submissions')
@@ -40,18 +41,24 @@ export const ContactSubmissions: CollectionConfig = {
       ],
       admin: { position: 'sidebar' },
     },
-    { name: 'fullName', type: 'text', required: true, admin: { readOnly: true } },
-    { name: 'organization', type: 'text', required: true, admin: { readOnly: true } },
-    {
-      type: 'row',
-      fields: [
-        { name: 'email', type: 'email', required: true, admin: { readOnly: true } },
-        { name: 'phone', type: 'text', required: true, admin: { readOnly: true } },
-      ],
-    },
-    { name: 'interest', type: 'text', admin: { readOnly: true } },
-    { name: 'message', type: 'textarea', admin: { readOnly: true } },
-    { name: 'internalNotes', type: 'textarea' },
+    fieldCard({ en: 'Sender', id: 'Pengirim' }, [
+      { name: 'fullName', type: 'text', required: true, admin: { readOnly: true } },
+      { name: 'organization', type: 'text', required: true, admin: { readOnly: true } },
+      {
+        type: 'row',
+        fields: [
+          { name: 'email', type: 'email', required: true, admin: { readOnly: true } },
+          { name: 'phone', type: 'text', required: true, admin: { readOnly: true } },
+        ],
+      },
+    ]),
+    fieldCard({ en: 'Message', id: 'Pesan' }, [
+      { name: 'interest', type: 'text', admin: { readOnly: true } },
+      { name: 'message', type: 'textarea', admin: { readOnly: true } },
+    ]),
+    fieldCard({ en: 'Internal notes', id: 'Catatan internal' }, [
+      { name: 'internalNotes', type: 'textarea' },
+    ]),
     {
       name: 'meta',
       type: 'group',

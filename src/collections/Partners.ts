@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { anyone, isAdmin, isAuthenticated } from '@/access'
+import { fieldCard } from '@/fields/card'
 import { hrefField } from '@/fields/link'
 import { imageField } from '@/fields/section'
 import { auditCollection } from '@/hooks/auditLog'
@@ -24,14 +25,16 @@ export const Partners: CollectionConfig = {
     afterDelete: [...audit.afterDelete, ...revalidate.afterDelete],
   },
   fields: [
-    { name: 'name', type: 'text', required: true, maxLength: 120 },
-    imageField('logo', { required: true }),
-    hrefField({ name: 'website', required: false }),
-    {
-      name: 'showInHero',
-      type: 'checkbox',
-      defaultValue: true,
-      label: 'Tampilkan di marquee Hero halaman utama',
-    },
+    fieldCard({ en: 'Partner', id: 'Partner' }, [
+      { name: 'name', type: 'text', required: true, maxLength: 120 },
+      hrefField({ name: 'website', required: false }),
+      {
+        name: 'showInHero',
+        type: 'checkbox',
+        defaultValue: true,
+        label: 'Tampilkan di marquee Hero halaman utama',
+      },
+    ]),
+    fieldCard({ en: 'Logo', id: 'Logo' }, [imageField('logo', { required: true })]),
   ],
 }

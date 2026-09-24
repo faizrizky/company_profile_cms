@@ -530,12 +530,12 @@ export interface Partner {
   id: number;
   _order?: string | null;
   name: string;
-  logo: number | Media;
   /**
    * Contoh: /contact, /solution/command-center, https://…
    */
   website?: string | null;
   showInHero?: boolean | null;
+  logo: number | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -938,11 +938,11 @@ export interface Product {
   id: number;
   _order?: string | null;
   title: string;
+  category: number | SolutionCategory;
   /**
    * Bagian URL. Huruf kecil, angka, dan tanda "-". Otomatis dari judul bila kosong.
    */
   slug: string;
-  category: number | SolutionCategory;
   image: number | Media;
   imageMobile?: (number | null) | Media;
   layout?: {
@@ -1837,9 +1837,9 @@ export interface MediaSelect<T extends boolean = true> {
 export interface PartnersSelect<T extends boolean = true> {
   _order?: T;
   name?: T;
-  logo?: T;
   website?: T;
   showInHero?: T;
+  logo?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1933,8 +1933,8 @@ export interface SolutionCategoriesSelect<T extends boolean = true> {
 export interface ProductsSelect<T extends boolean = true> {
   _order?: T;
   title?: T;
-  slug?: T;
   category?: T;
+  slug?: T;
   image?: T;
   imageMobile?: T;
   layout?:

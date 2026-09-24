@@ -1,6 +1,7 @@
 import { APIError, type CollectionConfig } from 'payload'
 
 import { hasRole, isAdmin, isAdminField, isAdminOrSelf } from '@/access'
+import { fieldCard } from '@/fields/card'
 import { auditCollection, auditLogin } from '@/hooks/auditLog'
 import { enforcePasswordPolicy } from '@/hooks/passwordPolicy'
 import { env, isProduction } from '@/lib/env'
@@ -55,45 +56,47 @@ export const Users: CollectionConfig = {
         components: { Field: '/components/admin/PasswordChecklist#PasswordChecklist' },
       },
     },
-    { name: 'name', type: 'text', maxLength: 120 },
-    {
-      name: 'roles',
-      type: 'select',
-      hasMany: true,
-      required: true,
-      defaultValue: ['editor'],
-      saveToJWT: true,
-      options: [
-        { label: 'Admin', value: 'admin' },
-        { label: 'Editor', value: 'editor' },
-      ],
-      access: {
-        // Editors can't promote themselves.
-        create: isAdminField,
-        update: isAdminField,
-      },
-      admin: { description: 'Admin: kelola user & pengaturan. Editor: kelola konten saja.' },
-      hooks: {
-        beforeChange: [
-          ({ value, originalDoc, req }) => {
-            const demotingSelf =
-              req.user &&
-              originalDoc &&
-              String(req.user.id) === String(originalDoc.id) &&
-              hasRole(req.user, 'admin') &&
-              !(value as string[] | undefined)?.includes('admin')
-            if (demotingSelf) {
-              throw new APIError(
-                'Anda tidak bisa menghapus role admin dari akun sendiri.',
-                400,
-                undefined,
-                true,
-              )
-            }
-            return value
-          },
+    fieldCard({ en: 'Profile', id: 'Profil' }, [
+      { name: 'name', type: 'text', maxLength: 120 },
+      {
+        name: 'roles',
+        type: 'select',
+        hasMany: true,
+        required: true,
+        defaultValue: ['editor'],
+        saveToJWT: true,
+        options: [
+          { label: 'Admin', value: 'admin' },
+          { label: 'Editor', value: 'editor' },
         ],
+        access: {
+          // Editors can't promote themselves.
+          create: isAdminField,
+          update: isAdminField,
+        },
+        admin: { description: 'Admin: kelola user & pengaturan. Editor: kelola konten saja.' },
+        hooks: {
+          beforeChange: [
+            ({ value, originalDoc, req }) => {
+              const demotingSelf =
+                req.user &&
+                originalDoc &&
+                String(req.user.id) === String(originalDoc.id) &&
+                hasRole(req.user, 'admin') &&
+                !(value as string[] | undefined)?.includes('admin')
+              if (demotingSelf) {
+                throw new APIError(
+                  'Anda tidak bisa menghapus role admin dari akun sendiri.',
+                  400,
+                  undefined,
+                  true,
+                )
+              }
+              return value
+            },
+          ],
+        },
       },
-    },
+    ]),
   ],
 }
