@@ -172,6 +172,7 @@ async function main() {
       data: {
         slug: product.slug,
         title: product.title,
+        summary: product.summary,
         category: categoryIds.get('virtual-training-suite')!,
         image: await media(product.image, product.title),
         imageMobile: 'imageMobile' in product ? await media(product.imageMobile, product.title) : undefined,

@@ -24,22 +24,22 @@ export const Navigation: GlobalConfig = {
       type: 'text',
       defaultValue: 'Our Solutions',
       maxLength: 40,
+      admin: {
+        description: 'Isi mega menu diambil otomatis dari Solution Categories & Products.',
+      },
     },
+    // Superseded: the mega menu is now built from Solution Categories and
+    // Products. Hidden rather than removed so existing data survives until the
+    // columns are dropped in a migration.
     {
       name: 'solutionLinks',
       type: 'array',
       maxRows: 10,
-      admin: { description: 'Menu kiri pada mega menu "Our Solutions".' },
+      admin: { hidden: true },
       fields: [...linkFields(), { name: 'highlight', type: 'checkbox' }],
     },
-    { name: 'featured', type: 'group', label: 'Mega menu — kartu besar', fields: cardFields },
-    {
-      name: 'cards',
-      type: 'array',
-      label: 'Mega menu — kartu kecil',
-      maxRows: 3,
-      fields: cardFields,
-    },
+    { name: 'featured', type: 'group', admin: { hidden: true }, fields: cardFields },
+    { name: 'cards', type: 'array', maxRows: 3, admin: { hidden: true }, fields: cardFields },
     { name: 'links', type: 'array', label: 'Menu lainnya', maxRows: 6, fields: linkFields() },
     { name: 'cta', type: 'group', label: 'Tombol kanan', fields: linkFields() },
   ],

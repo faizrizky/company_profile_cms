@@ -67,6 +67,8 @@ export const translationsId: Record<string, string> = {
   'High-fidelity medical simulation for emergency response and clinical procedure training.':
     'Simulasi medis berfidelitas tinggi untuk pelatihan tanggap darurat dan prosedur klinis.',
   'Troubleshooting Training': 'Pelatihan Troubleshooting',
+  'Diagnose and resolve equipment faults step by step in realistic simulated scenarios.':
+    'Mendiagnosis dan mengatasi kerusakan peralatan langkah demi langkah dalam skenario simulasi yang realistis.',
   Defence: 'Pertahanan',
   'Pilot Training': 'Pelatihan Pilot',
   'Emergency Response': 'Tanggap Darurat',

@@ -172,30 +172,37 @@ export const products = [
   {
     slug: 'operational-training',
     title: 'Operational Training',
+    summary: 'Advanced fixed-wing simulators for pilot readiness and mission training.',
     image: '/home/11741bf42ede88699c0d4a8887fb08c6bc410913.webp',
     layout: { wide: true, largeTitle: true },
   },
   {
     slug: 'language-training',
     title: 'Language Training',
+    summary:
+      'Immersive scenarios that build mission-language fluency and communication confidence under pressure.',
     image: '/solution/26084133901f38ffdb0a0d834e68f2abf7f01a10.webp',
     imageMobile: '/solution/9dee84aa2fba896df6a942d2c0b7360fc89fd9a0.webp',
   },
   {
     slug: 'maintenance-training',
     title: 'Maintenance Training',
+    summary:
+      'Guide technicians through complex maintenance tasks in a safe, repeatable simulated environment.',
     image: '/solution/10a5d1245f72bfd89f17f50606b7e7305e297729.webp',
     imageMobile: '/solution/4ea7da47e3a99f421aa2170b8f455951267d3748.webp',
   },
   {
     slug: 'troubleshooting-training',
     title: 'Troubleshooting Training',
+    summary: 'Diagnose and resolve equipment faults step by step in realistic simulated scenarios.',
     image: '/solution/31deac48545172aea55a3ae044ab871699406688.webp',
     imageMobile: '/solution/ac716aeb028db0e1e31be1828a370893f3c0404b.webp',
   },
   {
     slug: 'medical-training',
     title: 'Medical Training',
+    summary: 'High-fidelity medical simulation for emergency response and clinical procedure training.',
     image: '/solution/b8fab63d7cb82402b57018a514f8d26d1348ef94-67f37a.webp',
     imageMobile: '/solution/4821fcd72c10c59a24ff708b9b0f42948420fd13.webp',
   },

@@ -17,7 +17,8 @@ export const Products: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'updatedAt'],
     group: 'Solutions',
-    description: 'Kartu produk di Solution Overview. Geser untuk mengatur urutan.',
+    description:
+      'Kartu produk di Solution Overview dan mega menu (produk pertama tiap kategori jadi kartu besar). Geser untuk mengatur urutan.',
   },
   access: {
     read: anyone,
@@ -32,6 +33,12 @@ export const Products: CollectionConfig = {
   fields: [
     fieldCard({ en: 'Content', id: 'Konten' }, [
       { name: 'title', type: 'text', required: true, maxLength: 120 },
+      {
+        name: 'summary',
+        type: 'textarea',
+        maxLength: 160,
+        admin: { description: 'Deskripsi singkat, tampil di mega menu "Our Solutions".' },
+      },
       {
         name: 'category',
         type: 'relationship',
