@@ -1980,3 +1980,23 @@ input[data-reveal] {
 .step-nav > a:active {
   transform: scale(0.97);
 }
+
+/* Taller top bar for the breadcrumb pills (sticky bars, the sidebar and the
+   menu button all follow this variable), plus breathing room between the
+   breadcrumb and the page title below it. */
+:root {
+  --app-header-height: 68px;
+}
+
+.template-default__wrap > .app-header + * {
+  padding-top: 14px;
+}
+
+/* Header buttons: "Create New" is a link (block) — centre its label like
+   the <button>s next to it. */
+.list-header__title-actions .btn,
+.doc-header .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
