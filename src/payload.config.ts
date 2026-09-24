@@ -77,6 +77,9 @@ export default buildConfig({
         '/components/admin/PageSkeleton#PageSkeletonProvider',
         // Icons on the document tabs (Edit / Visual, Form, Versions, API).
         '/components/admin/DocTabIcons#DocTabIconsProvider',
+        // Themed tooltips ([data-falah-tooltip]) and tab-switch animation.
+        '/components/admin/Tooltips#TooltipProvider',
+        '/components/admin/TabTransitions#TabTransitionsProvider',
       ],
     },
   },

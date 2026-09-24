@@ -1252,7 +1252,7 @@ body:has(.falah-visual) .doc-controls:before {
   border-radius: 10px;
   color: var(--falah-muted);
   font-weight: 500;
-  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.12s ease;
 }
 
 .tabs-field__tab-button:after {
@@ -2538,4 +2538,104 @@ input[data-reveal] {
 
 .table.table--drag-preview tbody tr {
   animation: none;
+}
+
+/* ── Tooltips (TooltipProvider) ─────────────────────────────────────────── */
+
+.falah-tooltip {
+  position: fixed;
+  z-index: 10000;
+  max-width: 240px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--falah-ink);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 0 0 1px rgb(31 122 224 / 0.15), 0 12px 28px -10px rgb(6 41 79 / 0.35);
+}
+
+.falah-tooltip::before {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: inherit;
+  transform: rotate(45deg);
+}
+
+.falah-tooltip--right {
+  transform: translate(0, -50%);
+  animation: falah-tooltip-right 0.18s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.falah-tooltip--right::before {
+  top: 50%;
+  left: -4px;
+  margin-top: -5px;
+  box-shadow: -1px 1px 0 0 rgb(31 122 224 / 0.15);
+}
+
+.falah-tooltip--top {
+  transform: translate(-50%, -100%);
+  animation: falah-tooltip-top 0.18s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.falah-tooltip--top::before {
+  bottom: -4px;
+  left: 50%;
+  margin-left: -5px;
+  box-shadow: 1px 1px 0 0 rgb(31 122 224 / 0.15);
+}
+
+@keyframes falah-tooltip-right {
+  from {
+    opacity: 0;
+    transform: translate(-6px, -50%) scale(0.96);
+  }
+}
+
+@keyframes falah-tooltip-top {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% + 6px)) scale(0.96);
+  }
+}
+
+/* ── Tabs fields: content slides in on switch, soft focus ring ─────────── */
+
+.tabs-field__content-wrap.falah-tab-enter > * {
+  animation: falah-tab-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.tabs-field__content-wrap.falah-tab-enter .render-fields > * {
+  animation: falah-tab-in 0.36s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.tabs-field__content-wrap.falah-tab-enter .render-fields > :nth-child(2) { animation-delay: 40ms; }
+.tabs-field__content-wrap.falah-tab-enter .render-fields > :nth-child(3) { animation-delay: 80ms; }
+.tabs-field__content-wrap.falah-tab-enter .render-fields > :nth-child(4) { animation-delay: 120ms; }
+.tabs-field__content-wrap.falah-tab-enter .render-fields > :nth-child(n + 5) { animation-delay: 150ms; }
+
+@keyframes falah-tab-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.tabs-field__tab-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.tabs-field__tab-button:focus-visible {
+  outline: 2px solid rgb(31 122 224 / 0.45);
+  outline-offset: 2px;
+}
+
+.tabs-field__tab-button:active {
+  transform: scale(0.96);
 }

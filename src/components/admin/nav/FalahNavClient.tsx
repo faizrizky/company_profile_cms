@@ -65,7 +65,7 @@ export function FalahNavClient({ groups }: { groups: NavGroupData[] }) {
                     className="nav__link"
                     href={item.href}
                     prefetch={false}
-                    title={rail ? item.label : undefined}
+                    data-falah-tooltip={rail ? item.label : undefined}
                     aria-current={isActive ? 'page' : undefined}
                   >
                     {isActive ? <div className="nav__link-indicator" /> : null}

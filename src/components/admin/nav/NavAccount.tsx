@@ -172,7 +172,7 @@ export function NavAccount({ compact }: { compact: boolean }) {
         aria-expanded={Boolean(position)}
         aria-controls={menuId}
         aria-haspopup="menu"
-        title={compact ? `${name} — ${user.email}` : undefined}
+        data-falah-tooltip={compact && !position ? name : undefined}
       >
         <span className="falah-account__avatar" aria-hidden>
           {initials(name)}
