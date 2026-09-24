@@ -5,7 +5,12 @@ import { fileTypeFromBuffer } from 'file-type'
 import { JSDOM } from 'jsdom'
 import { APIError, type CollectionBeforeOperationHook } from 'payload'
 
-export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024 // 10 MB
+/** Images, PDFs and SVGs. */
+export const MAX_FILE_BYTES = 10 * 1024 * 1024 // 10 MB
+/** Short web videos (showcase clips, looping backgrounds). */
+export const MAX_VIDEO_BYTES = 50 * 1024 * 1024 // 50 MB
+/** Hard cap for the upload parser — the per-type limits above are enforced below. */
+export const MAX_UPLOAD_BYTES = Math.max(MAX_FILE_BYTES, MAX_VIDEO_BYTES)
 
 /** Binary formats, verified by magic bytes — the extension and the browser-sent MIME are ignored. */
 const BINARY_TYPES: Record<string, string> = {
@@ -15,7 +20,11 @@ const BINARY_TYPES: Record<string, string> = {
   'image/avif': 'avif',
   'image/gif': 'gif',
   'application/pdf': 'pdf',
+  'video/mp4': 'mp4',
+  'video/webm': 'webm',
 }
+
+export const VIDEO_MIME_TYPES = ['video/mp4', 'video/webm']
 
 export const ALLOWED_MIME_TYPES = [...Object.keys(BINARY_TYPES), 'image/svg+xml']
 
@@ -58,12 +67,20 @@ export const secureUpload: CollectionBeforeOperationHook = async ({ args, operat
   if (detected) {
     const ext = BINARY_TYPES[detected.mime]
     if (!ext) throw reject(`Tipe file tidak diizinkan (${detected.mime}).`)
+    const isVideo = VIDEO_MIME_TYPES.includes(detected.mime)
+    const limit = isVideo ? MAX_VIDEO_BYTES : MAX_FILE_BYTES
+    if (file.size > limit) {
+      throw reject(`Ukuran ${isVideo ? 'video' : 'file'} maksimal ${limit / 1024 / 1024} MB.`)
+    }
     file.mimetype = detected.mime
     extension = ext
   } else {
     const text = file.data.toString('utf8')
     if (!/<svg[\s>]/i.test(text)) {
-      throw reject('Tipe file tidak dikenali. Gunakan JPG, PNG, WebP, AVIF, GIF, SVG, atau PDF.')
+      throw reject('Tipe file tidak dikenali. Gunakan JPG, PNG, WebP, AVIF, GIF, SVG, PDF, MP4, atau WebM.')
+    }
+    if (file.size > MAX_FILE_BYTES) {
+      throw reject(`Ukuran file maksimal ${MAX_FILE_BYTES / 1024 / 1024} MB.`)
     }
     const clean = sanitizeSvg(text)
     const root = /<svg\b[^>]*>/i.exec(clean)?.[0]

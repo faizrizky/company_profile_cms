@@ -3,6 +3,7 @@ import type { Condition, Field, GroupField, UploadField } from 'payload'
 /** The subset of admin options our field helpers expose. */
 export type AdminOverrides = { description?: string; condition?: Condition; width?: string }
 
+/** An image from the media library (videos and PDFs can't be picked). */
 export const imageField = (
   name: string,
   overrides: { required?: boolean; label?: string; admin?: AdminOverrides } = {},
@@ -10,6 +11,22 @@ export const imageField = (
   name,
   type: 'upload',
   relationTo: 'media',
+  filterOptions: { mimeType: { contains: 'image/' } },
+  ...overrides,
+})
+
+/**
+ * A video (MP4 / WebM) from the media library. Keep clips short and web-sized:
+ * H.264 MP4, 720–1080p, "faststart", no audio for looping backgrounds.
+ */
+export const videoField = (
+  name: string,
+  overrides: { required?: boolean; label?: string; admin?: AdminOverrides } = {},
+): UploadField => ({
+  name,
+  type: 'upload',
+  relationTo: 'media',
+  filterOptions: { mimeType: { contains: 'video/' } },
   ...overrides,
 })
 

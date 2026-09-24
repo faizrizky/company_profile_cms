@@ -238,6 +238,7 @@ export interface Media {
    * Teks alternatif untuk aksesibilitas & SEO. Kosongkan untuk gambar dekoratif.
    */
   alt?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -321,10 +322,14 @@ export interface VideoShowcaseBlock {
   };
   background?: (number | null) | Media;
   poster: number | Media;
+  /**
+   * Opsional. Video MP4/WebM yang diputar langsung di halaman saat tombol play diklik (poster tampil sebelumnya).
+   */
+  video?: (number | null) | Media;
   captionTitle?: string | null;
   captionDescription?: string | null;
   /**
-   * Opsional. Link video (https://…) yang dibuka saat tombol play diklik.
+   * Opsional. Link video luar (mis. YouTube) — dipakai bila Video di atas kosong.
    */
   videoUrl?: string | null;
   id?: string | null;
@@ -891,7 +896,14 @@ export interface SolutionCategory {
       | null;
   };
   showcase?: {
+    /**
+     * Latar tab; juga poster video latar di bawah.
+     */
     background?: (number | null) | Media;
+    /**
+     * Opsional. Video latar (tanpa suara, diputar berulang). MP4 720p, ±10 detik, < 4 MB.
+     */
+    backgroundVideo?: (number | null) | Media;
     /**
      * PDF brosur. Kosongkan = tombol mengarah ke halaman contact.
      */
@@ -901,6 +913,10 @@ export interface SolutionCategory {
           name: string;
           description?: string | null;
           tags?: string[] | null;
+          /**
+           * Opsional. Video latar khusus tab ini (menggantikan video latar umum).
+           */
+          video?: (number | null) | Media;
           id?: string | null;
         }[]
       | null;
@@ -1326,6 +1342,7 @@ export interface VideoShowcaseBlockSelect<T extends boolean = true> {
       };
   background?: T;
   poster?: T;
+  video?: T;
   captionTitle?: T;
   captionDescription?: T;
   videoUrl?: T;
@@ -1784,6 +1801,7 @@ export interface SpacerElementSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -1895,6 +1913,7 @@ export interface SolutionCategoriesSelect<T extends boolean = true> {
     | T
     | {
         background?: T;
+        backgroundVideo?: T;
         brochure?: T;
         tabs?:
           | T
@@ -1902,6 +1921,7 @@ export interface SolutionCategoriesSelect<T extends boolean = true> {
               name?: T;
               description?: T;
               tags?: T;
+              video?: T;
               id?: T;
             };
       };

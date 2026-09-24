@@ -3,7 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { isAdmin, isAuthenticated, publishedOrAuthenticated } from '@/access'
 import { fieldCard } from '@/fields/card'
 import { hrefField } from '@/fields/link'
-import { imageField } from '@/fields/section'
+import { imageField, videoField } from '@/fields/section'
 import { seoField } from '@/fields/seo'
 import { slugField } from '@/fields/slug'
 import { auditCollection } from '@/hooks/auditLog'
@@ -105,7 +105,15 @@ export const SolutionCategories: CollectionConfig = {
               name: 'showcase',
               type: 'group',
               fields: [
-                imageField('background'),
+                imageField('background', {
+                  admin: { description: 'Latar tab; juga poster video latar di bawah.' },
+                }),
+                videoField('backgroundVideo', {
+                  admin: {
+                    description:
+                      'Opsional. Video latar (tanpa suara, diputar berulang). MP4 720p, ±10 detik, < 4 MB.',
+                  },
+                }),
                 {
                   name: 'brochure',
                   type: 'upload',
@@ -120,6 +128,9 @@ export const SolutionCategories: CollectionConfig = {
                     { name: 'name', type: 'text', required: true, maxLength: 80 },
                     { name: 'description', type: 'textarea', maxLength: 400 },
                     { name: 'tags', type: 'text', hasMany: true, maxRows: 8 },
+                    videoField('video', {
+                      admin: { description: 'Opsional. Video latar khusus tab ini (menggantikan video latar umum).' },
+                    }),
                   ],
                 },
               ],

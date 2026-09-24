@@ -8,6 +8,8 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 const isProduction = process.env.NODE_ENV === 'production'
 // Pages are edited in the website's visual editor, embedded in the admin.
 const frontendOrigin = process.env.FRONTEND_URL ? new URL(process.env.FRONTEND_URL).origin : ''
+// Media served from S3-compatible storage (previews in the admin).
+const mediaOrigin = process.env.S3_PUBLIC_URL ? new URL(process.env.S3_PUBLIC_URL).origin : ''
 
 const securityHeaders = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
@@ -26,7 +28,8 @@ const securityHeaders = [
       "default-src 'self'",
       `script-src 'self' 'unsafe-inline'${isProduction ? '' : " 'unsafe-eval'"}`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob:",
+      `img-src 'self' data: blob: ${mediaOrigin}`.trim(),
+      `media-src 'self' blob: ${mediaOrigin}`.trim(),
       "font-src 'self' data:",
       "connect-src 'self'",
       `frame-src 'self' ${frontendOrigin}`.trim(),

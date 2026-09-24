@@ -45,6 +45,29 @@ SEED_ADMIN_EMAIL=you@example.com SEED_ADMIN_PASSWORD='…' npm run seed
 
 `SEED_ASSETS_DIR` defaults to `../company-profile-falah/public`.
 
+## Media storage (S3 / MinIO)
+
+Uploads (images, SVG, PDF, MP4/WebM video) go to an S3-compatible bucket when
+`S3_BUCKET` is set, otherwise to `./media` on disk. Locally this is **MinIO**:
+
+- Installed with Homebrew (`minio`, `minio-mc`) and run by a LaunchAgent
+  (`~/Library/LaunchAgents/com.falah.minio.plist`): API `:9000`, console `:9001`.
+- Root credentials: `~/.config/falah-minio/root.env` (only for the console / `mc`).
+- Bucket `falah-media`: public **read** of objects only (no listing).
+- The CMS uses its own user `falah-cms`, limited to that bucket
+  (`~/.config/falah-minio/cms.env` → `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` in `.env`).
+- `S3_PUBLIC_URL` is what browsers load media from — use the laptop's LAN IP
+  (e.g. `http://192.168.x.x:9000/falah-media`) so other devices on the network
+  see the images; update it (and the website's `CMS_MEDIA_URL`) if the IP changes.
+
+```bash
+launchctl kickstart -k gui/$(id -u)/com.falah.minio   # restart MinIO
+mc ls falah/falah-media                               # list files
+```
+
+Upload limits: 10 MB for images / PDF, 50 MB for video. Videos: H.264 MP4,
+720–1080p, `-movflags +faststart`, no audio track for looping backgrounds.
+
 ## Schema changes
 
 1. Edit collections / blocks in `src/`.

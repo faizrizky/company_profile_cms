@@ -35,6 +35,8 @@ const schema = z
     S3_ACCESS_KEY_ID: optional(z.string()),
     S3_SECRET_ACCESS_KEY: optional(z.string()),
     S3_PUBLIC_URL: optional(z.string().url()),
+    /** Path-style URLs (host/bucket/key) — required by MinIO, harmless elsewhere. */
+    S3_FORCE_PATH_STYLE: optional(z.enum(['true', 'false'])).transform((v) => v === 'true'),
   })
   .superRefine((env, ctx) => {
     const s3 = [env.S3_BUCKET, env.S3_ACCESS_KEY_ID, env.S3_SECRET_ACCESS_KEY]

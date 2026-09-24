@@ -147,6 +147,9 @@ export default buildConfig({
           collections: {
             media: env.S3_PUBLIC_URL
               ? {
+                  // Files are served straight from the public bucket (media is
+                  // public anyway) instead of streaming through the CMS.
+                  disablePayloadAccessControl: true,
                   generateFileURL: ({ filename, prefix }) =>
                     `${env.S3_PUBLIC_URL}/${[prefix, filename].filter(Boolean).join('/')}`,
                 }
@@ -156,6 +159,7 @@ export default buildConfig({
           config: {
             region: env.S3_REGION,
             endpoint: env.S3_ENDPOINT,
+            forcePathStyle: env.S3_FORCE_PATH_STYLE,
             credentials: {
               accessKeyId: env.S3_ACCESS_KEY_ID!,
               secretAccessKey: env.S3_SECRET_ACCESS_KEY!,
