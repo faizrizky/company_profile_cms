@@ -34,7 +34,14 @@ const schema = z
     S3_ENDPOINT: optional(z.string().url()),
     S3_ACCESS_KEY_ID: optional(z.string()),
     S3_SECRET_ACCESS_KEY: optional(z.string()),
-    S3_PUBLIC_URL: optional(z.string().url()),
+    /**
+     * Where browsers load media from: a public URL (CDN / bucket), or a path
+     * such as /media that this app proxies to the bucket — then media works
+     * on any host (localhost, LAN IP) without changing this value.
+     */
+    S3_PUBLIC_URL: optional(
+      z.string().refine((v) => /^\/[\w-]+$/.test(v) || URL.canParse(v), 'Use a URL or a path like /media'),
+    ),
     /** Path-style URLs (host/bucket/key) — required by MinIO, harmless elsewhere. */
     S3_FORCE_PATH_STYLE: optional(z.enum(['true', 'false'])).transform((v) => v === 'true'),
   })

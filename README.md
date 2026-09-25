@@ -56,9 +56,11 @@ Uploads (images, SVG, PDF, MP4/WebM video) go to an S3-compatible bucket when
 - Bucket `falah-media`: public **read** of objects only (no listing).
 - The CMS uses its own user `falah-cms`, limited to that bucket
   (`~/.config/falah-minio/cms.env` → `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` in `.env`).
-- `S3_PUBLIC_URL` is what browsers load media from — use the laptop's LAN IP
-  (e.g. `http://192.168.x.x:9000/falah-media`) so other devices on the network
-  see the images; update it (and the website's `CMS_MEDIA_URL`) if the IP changes.
+- `S3_PUBLIC_URL=/media`: browsers load media from `/media/<file>` on whichever
+  host they opened (localhost, LAN IP, domain); the CMS and the website proxy
+  that path to the bucket (`S3_ENDPOINT`, and the website's `CMS_MEDIA_URL`).
+  Nothing to change when the network or IP changes. Use a full URL instead only
+  for a public CDN/bucket in production.
 
 ```bash
 launchctl kickstart -k gui/$(id -u)/com.falah.minio   # restart MinIO

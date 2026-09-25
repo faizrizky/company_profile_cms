@@ -8,8 +8,11 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 const isProduction = process.env.NODE_ENV === 'production'
 // Pages are edited in the website's visual editor, embedded in the admin.
 const frontendOrigin = process.env.FRONTEND_URL ? new URL(process.env.FRONTEND_URL).origin : ''
-// Media served from S3-compatible storage (previews in the admin).
-const mediaOrigin = process.env.S3_PUBLIC_URL ? new URL(process.env.S3_PUBLIC_URL).origin : ''
+// Media served from S3-compatible storage (previews in the admin): either a
+// public origin, or a path on this app proxied to the bucket (any host works).
+const s3PublicUrl = process.env.S3_PUBLIC_URL ?? ''
+const mediaProxyPath = s3PublicUrl.startsWith('/') ? s3PublicUrl : ''
+const mediaOrigin = s3PublicUrl && !mediaProxyPath ? new URL(s3PublicUrl).origin : ''
 
 const securityHeaders = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
@@ -60,7 +63,13 @@ const nextConfig: NextConfig = {
     return [
       { source: '/:path*', headers: securityHeaders },
       { source: '/api/media/file/:path*', headers: mediaHeaders },
+      ...(mediaProxyPath ? [{ source: `${mediaProxyPath}/:path*`, headers: mediaHeaders }] : []),
     ]
+  },
+  async rewrites() {
+    if (!mediaProxyPath || !process.env.S3_ENDPOINT) return []
+    const bucket = `${process.env.S3_ENDPOINT.replace(/\/$/, '')}/${process.env.S3_BUCKET}`
+    return [{ source: `${mediaProxyPath}/:path*`, destination: `${bucket}/:path*` }]
   },
   async redirects() {
     // This app only serves the CMS; the public site lives in the frontend repo.
