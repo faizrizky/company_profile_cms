@@ -727,7 +727,11 @@ export interface CtaBlock {
     | null;
   media?: (number | null) | Media;
   /**
-   * Opsional. Link video (https://…) yang dibuka saat tombol play diklik.
+   * Opsional. Video MP4/WebM yang diputar langsung di halaman (gambar Media jadi poster).
+   */
+  video?: (number | null) | Media;
+  /**
+   * Opsional. Link video luar (mis. YouTube) — dipakai bila Video di atas kosong.
    */
   videoUrl?: string | null;
   id?: string | null;
@@ -1656,6 +1660,7 @@ export interface CtaBlockSelect<T extends boolean = true> {
         id?: T;
       };
   media?: T;
+  video?: T;
   videoUrl?: T;
   id?: T;
   blockName?: T;

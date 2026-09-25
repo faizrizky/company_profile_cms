@@ -1,7 +1,7 @@
 import type { Block } from 'payload'
 
 import { buttonsField, hrefField } from '@/fields/link'
-import { backgroundFields, imageField, sectionHeaderField } from '@/fields/section'
+import { backgroundFields, imageField, sectionHeaderField, videoField } from '@/fields/section'
 
 export const CtaBlock: Block = {
   slug: 'cta',
@@ -22,12 +22,18 @@ export const CtaBlock: Block = {
     ...backgroundFields({ mobile: true, required: true }),
     buttonsField(2),
     imageField('media', { admin: { condition: (_, s) => s?.variant === 'withMedia' } }),
+    videoField('video', {
+      admin: {
+        condition: (_, s) => s?.variant === 'withMedia',
+        description: 'Opsional. Video MP4/WebM yang diputar langsung di halaman (gambar Media jadi poster).',
+      },
+    }),
     hrefField({
       name: 'videoUrl',
       required: false,
       admin: {
         condition: (_, s) => s?.variant === 'withMedia',
-        description: 'Opsional. Link video (https://…) yang dibuka saat tombol play diklik.',
+        description: 'Opsional. Link video luar (mis. YouTube) — dipakai bila Video di atas kosong.',
       },
     }),
   ],
