@@ -16,6 +16,11 @@ const schema = z
       .enum(['true', 'false'])
       .default('false')
       .transform((v) => v === 'true'),
+    /**
+     * PEM of the database's CA when it is not publicly trusted (Supabase:
+     * Project Settings → Database → SSL certificate). `\n` escapes allowed.
+     */
+    DATABASE_SSL_CA: optional(z.string()).transform((v) => v?.replace(/\\n/g, '\n')),
     PAYLOAD_SECRET: z.string().min(32, 'PAYLOAD_SECRET must be at least 32 characters'),
     SERVER_URL: z.string().url(),
     FRONTEND_URL: z.string().url(),

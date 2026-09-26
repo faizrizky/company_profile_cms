@@ -142,7 +142,8 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: env.DATABASE_URL,
-      ssl: env.DATABASE_SSL ? { rejectUnauthorized: true } : undefined,
+      // Certificates are always verified; Supabase needs its own CA for that.
+      ssl: env.DATABASE_SSL ? { rejectUnauthorized: true, ca: env.DATABASE_SSL_CA } : undefined,
     },
     migrationDir: path.resolve(dirname, 'migrations'),
   }),

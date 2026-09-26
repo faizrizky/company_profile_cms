@@ -1,19 +1,20 @@
 #!/usr/bin/env bash
-# Copies the local CMS (Postgres + MinIO media) to the cloud (Neon + Cloudflare R2).
+# Copies the local CMS (Postgres + MinIO media) to the cloud (Supabase + Cloudflare R2).
 # Run once before the first production deploy:
 #
-#   NEON_DATABASE_URL='postgres://…neon.tech/neondb?sslmode=require' \
+#   CLOUD_DATABASE_URL='postgresql://postgres.<ref>:<password>@aws-…pooler.supabase.com:5432/postgres' \
+#   (Supabase: the *Session* pooler, port 5432 — a restore needs a session)
 #   R2_ENDPOINT='https://<account-id>.r2.cloudflarestorage.com' \
 #   R2_ACCESS_KEY_ID='…' R2_SECRET_ACCESS_KEY='…' R2_BUCKET='falah-media' \
 #   ./scripts/copy-to-cloud.sh
 #
-# Existing data in the Neon database is REPLACED by the local copy.
+# Existing data in the cloud database is REPLACED by the local copy.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
 
-: "${NEON_DATABASE_URL:?set NEON_DATABASE_URL}"
+: "${CLOUD_DATABASE_URL:?set CLOUD_DATABASE_URL}"
 : "${R2_ENDPOINT:?set R2_ENDPOINT}"
 : "${R2_ACCESS_KEY_ID:?set R2_ACCESS_KEY_ID}"
 : "${R2_SECRET_ACCESS_KEY:?set R2_SECRET_ACCESS_KEY}"
@@ -27,13 +28,13 @@ trap 'rm -f "$DUMP"' EXIT
 echo "→ Dumping local database…"
 pg_dump "$LOCAL_DATABASE_URL" --no-owner --no-privileges --clean --if-exists >"$DUMP"
 
-echo "→ Restoring into Neon…"
-psql "$NEON_DATABASE_URL" --quiet --set ON_ERROR_STOP=1 --single-transaction --file "$DUMP"
+echo "→ Restoring into the cloud database…"
+psql "$CLOUD_DATABASE_URL" --quiet --set ON_ERROR_STOP=1 --single-transaction --file "$DUMP"
 
 # The local database was built with dev "push"; production uses migrations.
 # Mark the initial migration as applied so `payload migrate` starts from here.
 echo "→ Marking migration $INITIAL_MIGRATION as applied…"
-psql "$NEON_DATABASE_URL" --quiet --set ON_ERROR_STOP=1 <<SQL
+psql "$CLOUD_DATABASE_URL" --quiet --set ON_ERROR_STOP=1 <<SQL
 DELETE FROM payload_migrations WHERE batch = -1;
 INSERT INTO payload_migrations (name, batch, updated_at, created_at)
 SELECT '$INITIAL_MIGRATION', 1, now(), now()
