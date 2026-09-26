@@ -1,6 +1,7 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { env } from '@/lib/env'
 import type { CollectionConfig } from 'payload'
 
 import { anyone, isAdmin, isAuthenticated } from '@/access'
@@ -39,11 +40,17 @@ export const Media: CollectionConfig = {
     ],
     // The size's own URL: with public storage that is the bucket/CDN, so the
     // admin doesn't stream every thumbnail through the CMS.
+    // Straight from the public bucket/CDN, so the admin doesn't stream every
+    // thumbnail through the CMS. (Built from the file name: this runs before
+    // the storage plugin fills in the public URLs.)
     adminThumbnail: ({ doc }) => {
       // Videos / PDFs get Payload's file icon.
       if (typeof doc.mimeType !== 'string' || !doc.mimeType.startsWith('image/')) return null
-      const sizes = doc.sizes as Record<string, { url?: string | null } | undefined> | undefined
-      return sizes?.thumbnail?.url || (typeof doc.url === 'string' ? doc.url : null) || null
+      const sizes = doc.sizes as Record<string, { filename?: string | null } | undefined> | undefined
+      const filename = sizes?.thumbnail?.filename || (typeof doc.filename === 'string' ? doc.filename : null)
+      if (!filename) return null
+      const base = env.S3_PUBLIC_URL && /^https?:/.test(env.S3_PUBLIC_URL) ? env.S3_PUBLIC_URL : null
+      return base ? `${base}/${encodeURIComponent(filename)}` : `/api/media/file/${encodeURIComponent(filename)}`
     },
     focalPoint: true,
   },
