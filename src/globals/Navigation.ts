@@ -65,9 +65,9 @@ export const Navigation: GlobalConfig = {
             {
               type: 'row',
               fields: [
-                { name: 'label', type: 'text', required: true, maxLength: 80 },
+                { name: 'label', type: 'text', required: true, maxLength: 80, admin: { width: '50%' } },
                 // Free text here: this is where the choices are defined.
-                hrefField({ name: 'target', label: { en: 'Link', id: 'Link' } }),
+                hrefField({ name: 'target', label: { en: 'Link', id: 'Link' }, admin: { width: '50%' } }),
               ],
             },
           ],

@@ -2,7 +2,7 @@
 
 import { FieldDescription, FieldError, FieldLabel, useConfig, useField, useTranslation } from '@payloadcms/ui'
 import type { TextFieldClientComponent } from 'payload'
-import { useEffect, useId, useMemo, useState } from 'react'
+import { useEffect, useId, useMemo, useState, type CSSProperties } from 'react'
 
 type Option = { label: string; href: string }
 type Group = { label: string; options: Option[] }
@@ -86,7 +86,15 @@ export const LinkField: TextFieldClientComponent = ({ field, path: pathFromProps
   const selectValue = isCustom ? CUSTOM : (value ?? '')
 
   return (
-    <div className={`field-type text falah-link-field${showError ? ' error' : ''}`}>
+    <div
+      className={`field-type text falah-link-field${showError ? ' error' : ''}`}
+      // Same width rules as Payload's own fields (rows share space evenly).
+      style={
+        (field.admin?.width
+          ? { '--field-width': field.admin.width }
+          : { flex: '1 1 0', minWidth: 0 }) as CSSProperties
+      }
+    >
       <FieldLabel htmlFor={id} label={field.label} required={field.required} />
       <div className="field-type__wrap">
         <FieldError path={path} message={errorMessage} showError={showError} />

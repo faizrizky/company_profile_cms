@@ -31,6 +31,7 @@ export const hrefField = ({ admin, ...overrides }: HrefOverrides = {}): TextFiel
   const name = overrides.name ?? 'href'
   return {
     name: 'href',
+    label: 'Link',
     type: 'text',
     required: true,
     maxLength: 500,
@@ -51,8 +52,8 @@ export const linkFields = ({ withStyle = false }: { withStyle?: boolean } = {}):
   {
     type: 'row',
     fields: [
-      { name: 'label', type: 'text', required: true, maxLength: 80 },
-      hrefField(),
+      { name: 'label', type: 'text', required: true, maxLength: 80, admin: { width: '50%' } },
+      hrefField({ admin: { width: '50%' } }),
       ...(withStyle
         ? [
             {

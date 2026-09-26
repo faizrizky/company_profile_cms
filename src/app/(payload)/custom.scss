@@ -2951,7 +2951,21 @@ input[data-reveal] {
 }
 
 .falah-link-field__select {
+  padding-right: 42px;
   cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2356708f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-position: right 16px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  text-overflow: ellipsis;
+}
+
+.falah-link-field__select:focus,
+.falah-link-field__input:focus {
+  outline: none;
+  border-color: rgb(125 190 245);
+  box-shadow: 0 0 0 3px rgb(31 122 224 / 0.18);
 }
 
 .falah-link-field__input {
