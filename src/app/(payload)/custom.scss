@@ -259,6 +259,20 @@ body {
     opacity: 1;
   }
 
+  /* Opening/closing animates the grid column (Payload, 150ms). The nav takes
+     the column's width instead of jumping to its final width, so it never
+     covers the content while the column is still resizing. */
+  .template-default > .nav,
+  .template-default > .nav.nav--rail {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .template-default .nav .nav__link-label,
+  .template-default .nav .nav-group__toggle {
+    white-space: nowrap;
+  }
+
   /* The menu button lives at the top of the sidebar in both states. */
   .template-default__nav-toggler-wrapper {
     width: var(--falah-rail-width);
