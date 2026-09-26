@@ -921,9 +921,13 @@ export interface SolutionCategory {
           description?: string | null;
           tags?: string[] | null;
           /**
-           * Opsional. Video latar khusus tab ini (menggantikan video latar umum).
+           * Opsional. Video latar khusus tab ini (menggantikan video latar umum). MP4 1080p, ±25 detik, tanpa suara, ≤ 15 MB.
            */
           video?: (number | null) | Media;
+          /**
+           * Opsional. Versi ringan untuk HP: MP4 720p, ≤ 4 MB. Kosong = pakai video desktop.
+           */
+          videoMobile?: (number | null) | Media;
           id?: string | null;
         }[]
       | null;
@@ -1934,6 +1938,7 @@ export interface SolutionCategoriesSelect<T extends boolean = true> {
               description?: T;
               tags?: T;
               video?: T;
+              videoMobile?: T;
               id?: T;
             };
       };

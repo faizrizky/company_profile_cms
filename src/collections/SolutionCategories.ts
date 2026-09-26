@@ -128,9 +128,26 @@ export const SolutionCategories: CollectionConfig = {
                     { name: 'name', type: 'text', required: true, maxLength: 80 },
                     { name: 'description', type: 'textarea', maxLength: 400 },
                     { name: 'tags', type: 'text', hasMany: true, maxRows: 8 },
-                    videoField('video', {
-                      admin: { description: 'Opsional. Video latar khusus tab ini (menggantikan video latar umum).' },
-                    }),
+                    {
+                      type: 'row',
+                      fields: [
+                        videoField('video', {
+                          label: 'Video (desktop)',
+                          admin: {
+                            width: '50%',
+                            description:
+                              'Opsional. Video latar khusus tab ini (menggantikan video latar umum). MP4 1080p, ±25 detik, tanpa suara, ≤ 15 MB.',
+                          },
+                        }),
+                        videoField('videoMobile', {
+                          label: 'Video (HP)',
+                          admin: {
+                            width: '50%',
+                            description: 'Opsional. Versi ringan untuk HP: MP4 720p, ≤ 4 MB. Kosong = pakai video desktop.',
+                          },
+                        }),
+                      ],
+                    },
                   ],
                 },
               ],
