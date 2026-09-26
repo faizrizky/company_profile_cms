@@ -22,6 +22,7 @@ import { Navigation } from './globals/Navigation'
 import { SiteSettings } from './globals/SiteSettings'
 import { withListEnhancements } from './fields/listEnhancements'
 import { localizeTextFields } from './fields/localize'
+import { translateCollection, translateGlobal } from './i18n/translateAdmin'
 import { MAX_UPLOAD_BYTES } from './hooks/secureUpload'
 import { env, s3Enabled } from './lib/env'
 
@@ -118,8 +119,10 @@ export default buildConfig({
     AuditLogs,
   ]
     .map((c) => (LOCALIZED_COLLECTIONS.has(c.slug) ? withLocalizedText(c) : c))
-    .map((c) => (c.slug === AuditLogs.slug ? c : withListEnhancements(c))),
-  globals: [SiteSettings, Navigation, Footer].map(withLocalizedText),
+    .map((c) => (c.slug === AuditLogs.slug ? c : withListEnhancements(c)))
+    // Labels & descriptions follow the admin language (EN / ID).
+    .map(translateCollection),
+  globals: [SiteSettings, Navigation, Footer].map(withLocalizedText).map(translateGlobal),
 
   i18n: {
     supportedLanguages: { en, id },
