@@ -2758,3 +2758,24 @@ input[data-reveal] {
   color: var(--falah-ink);
   font-weight: 600;
 }
+
+/* Autosave indicator: only a pill while it has something to say. */
+.doc-controls__meta > li:has(> .autosave:empty) {
+  display: none;
+}
+
+.doc-controls__meta > li:has(> .status) {
+  --falah-meta-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E");
+}
+
+.doc-controls__meta > li:has(> .autosave) {
+  --falah-meta-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12a9 9 0 1 1-2.64-6.36L21 8'/%3E%3Cpath d='M21 3v5h-5'/%3E%3C/svg%3E");
+}
+
+/* Dates in full (Payload truncates them). */
+.doc-controls__meta > li,
+.doc-controls__value {
+  overflow: visible;
+  max-width: none;
+  text-overflow: clip;
+}
