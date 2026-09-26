@@ -1378,7 +1378,8 @@ body:has(.falah-visual) .doc-controls:before {
 }
 
 .collapsible.collapsible--style-default {
-  overflow: hidden;
+  /* Not clipped: dropdowns (select, relationship) must spill out of the card. */
+  overflow: visible;
   border: 1px solid var(--falah-line);
   border-radius: 14px;
   background: #fff;
@@ -1392,11 +1393,13 @@ body:has(.falah-visual) .doc-controls:before {
 
 .collapsible__toggle-wrap {
   padding: 10px 12px 10px 16px;
-  border-radius: 0;
+  /* Rounded itself, since the card no longer clips it. */
+  border-radius: 13px 13px 0 0;
   background: #f5faff;
 }
 
 .collapsible--collapsed .collapsible__toggle-wrap {
+  border-radius: 13px;
   background: #fff;
 }
 
