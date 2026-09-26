@@ -1,6 +1,8 @@
 import type { Block, CollectionConfig, Field, GlobalConfig } from 'payload'
 import { formatLabels, toWords } from 'payload/shared'
 
+import { fieldCard } from '../fields/card'
+
 import {
   BLOCKS_ID,
   DESCRIPTIONS_EN,
@@ -25,6 +27,32 @@ const description = (text: unknown): unknown =>
   typeof text === 'string' && DESCRIPTIONS_EN[text] ? { en: DESCRIPTIONS_EN[text], id: text } : text
 
 const label = (text: unknown) => bilingual(text, LABELS_ID, LABELS_EN)
+
+const isMediaField = (f: Field): boolean =>
+  f.type === 'upload' || (f.type === 'row' && f.fields.length > 0 && f.fields.every((x) => x.type === 'upload'))
+
+/**
+ * Block forms: consecutive image/video fields (background, poster, video…)
+ * share one "Media" card, like the Header group. Presentational only (a
+ * collapsible), so the data shape doesn't change.
+ */
+function groupMediaFields(fields: Field[]): Field[] {
+  const out: Field[] = []
+  let run: Field[] = []
+  const flush = () => {
+    if (run.length) out.push(fieldCard({ en: 'Media', id: 'Media' }, run))
+    run = []
+  }
+  for (const field of fields) {
+    if (isMediaField(field)) run.push(field)
+    else {
+      flush()
+      out.push(field)
+    }
+  }
+  flush()
+  return out
+}
 
 function translateFields(fields: Field[]): Field[] {
   return fields.map((field) => {
@@ -61,7 +89,7 @@ function translateFields(fields: Field[]): Field[] {
             singular: bilingual(labels.singular, BLOCKS_ID) as Text,
             plural: bilingual(labels.plural, BLOCKS_ID) as Text,
           },
-          fields: translateFields(block.fields),
+          fields: groupMediaFields(translateFields(block.fields)),
         }
       })
     }

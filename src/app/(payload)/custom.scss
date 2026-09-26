@@ -1557,6 +1557,24 @@ body:has(.falah-visual) .doc-controls:before {
   box-shadow: 0 1px 2px rgb(6 41 79 / 0.04), 0 20px 40px -28px rgb(30 90 160 / 0.45);
 }
 
+/* Inside a block (Pages layout): the same light-blue card as groups (Header). */
+.blocks-field .collapsible-field__collapsible.collapsible--style-default {
+  border: 1px solid #d3e2f3;
+  border-radius: 18px;
+  background: #f7fbff;
+  box-shadow: 0 8px 20px -18px rgb(15 39 66 / 0.45);
+}
+
+.blocks-field .collapsible-field__collapsible > .collapsible__toggle-wrap {
+  background: transparent;
+}
+
+/* Upload fields: no grey box around the file card. */
+.upload .upload__dropzoneAndUpload,
+.upload--has-one {
+  background: transparent;
+}
+
 .collapsible-field__collapsible > .collapsible__toggle-wrap {
   padding: 18px 20px 6px 26px;
   background: transparent;
