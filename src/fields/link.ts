@@ -24,15 +24,28 @@ type HrefOverrides = {
   admin?: AdminOverrides
 }
 
-export const hrefField = ({ admin, ...overrides }: HrefOverrides = {}): TextField => ({
-  name: 'href',
-  type: 'text',
-  required: true,
-  maxLength: 500,
-  ...overrides,
-  admin: { description: 'Contoh: /contact, /solution/command-center, https://…', ...admin },
-  validate: withTextValidation(isSafeHref),
-})
+/** Fields that point at a page get the page picker; URLs of other kinds (video, website…) stay free text. */
+const PICKER_FIELDS = new Set(['href', 'buttonHref'])
+
+export const hrefField = ({ admin, ...overrides }: HrefOverrides = {}): TextField => {
+  const name = overrides.name ?? 'href'
+  return {
+    name: 'href',
+    type: 'text',
+    required: true,
+    maxLength: 500,
+    ...overrides,
+    admin: {
+      description: {
+        en: 'Pick a page, or "Other" for your own URL (/contact, #faq, https://…).',
+        id: 'Pilih halaman, atau "Lainnya" untuk URL sendiri (/contact, #faq, https://…).',
+      },
+      ...admin,
+      ...(PICKER_FIELDS.has(name) ? { components: { Field: '/components/admin/LinkField#LinkField' } } : {}),
+    },
+    validate: withTextValidation(isSafeHref),
+  }
+}
 
 export const linkFields = ({ withStyle = false }: { withStyle?: boolean } = {}): Field[] => [
   {

@@ -44,6 +44,36 @@ export const Navigation: GlobalConfig = {
     { name: 'featured', type: 'group', admin: { hidden: true }, fields: cardFields },
     { name: 'cards', type: 'array', maxRows: 3, admin: { hidden: true }, fields: cardFields },
     { name: 'links', type: 'array', label: 'Menu lainnya', maxRows: 6, fields: linkFields() },
+    {
+      name: 'linkLibrary',
+      type: 'array',
+      label: { en: 'Links per page', id: 'Link per halaman' },
+      labels: { singular: { en: 'Page', id: 'Halaman' }, plural: { en: 'Pages', id: 'Halaman' } },
+      admin: {
+        description: {
+          en: 'Extra link choices for the page editor (e.g. a section #faq, an external site), grouped by page. Pages and solution pages are listed automatically.',
+          id: 'Pilihan link tambahan untuk editor halaman (mis. bagian #faq, situs luar), dikelompokkan per halaman. Halaman dan halaman solusi sudah muncul otomatis.',
+        },
+      },
+      fields: [
+        { name: 'group', type: 'text', required: true, maxLength: 60, label: { en: 'Page', id: 'Halaman' } },
+        {
+          name: 'links',
+          type: 'array',
+          maxRows: 30,
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                { name: 'label', type: 'text', required: true, maxLength: 80 },
+                // Free text here: this is where the choices are defined.
+                hrefField({ name: 'target', label: { en: 'Link', id: 'Link' } }),
+              ],
+            },
+          ],
+        },
+      ],
+    },
     { name: 'cta', type: 'group', label: 'Tombol kanan', fields: linkFields() },
   ],
 }
