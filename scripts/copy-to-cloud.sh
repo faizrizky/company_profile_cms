@@ -14,11 +14,19 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
 
-: "${CLOUD_DATABASE_URL:?set CLOUD_DATABASE_URL}"
-: "${S3_ENDPOINT:?set S3_ENDPOINT}"
-: "${S3_ACCESS_KEY_ID:?set S3_ACCESS_KEY_ID}"
-: "${S3_SECRET_ACCESS_KEY:?set S3_SECRET_ACCESS_KEY}"
-: "${S3_BUCKET:?set S3_BUCKET}"
+# Anything not passed in the environment is asked for (secrets without echo).
+ask() {
+  local name="$1" prompt="$2" secret="${3:-}"
+  if [ -z "${!name:-}" ]; then
+    if [ -n "$secret" ]; then read -r -s -p "$prompt: " "$name"; echo; else read -r -p "$prompt: " "$name"; fi
+  fi
+  [ -n "${!name:-}" ] || { echo "$name is required" >&2; exit 1; }
+}
+ask CLOUD_DATABASE_URL "Database URL (Supabase session pooler, port 5432)" secret
+ask S3_ENDPOINT "S3 endpoint (https://<ref>.supabase.co/storage/v1/s3)"
+ask S3_ACCESS_KEY_ID "S3 access key ID"
+ask S3_SECRET_ACCESS_KEY "S3 secret access key" secret
+S3_BUCKET="${S3_BUCKET:-falah-media}"
 
 LOCAL_DATABASE_URL="$(grep '^DATABASE_URL=' .env | cut -d= -f2-)"
 INITIAL_MIGRATION="$(ls src/migrations/*_initial.ts | head -1 | xargs basename | sed 's/\.ts$//')"
