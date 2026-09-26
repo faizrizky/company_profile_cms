@@ -7,6 +7,13 @@ import { withTextValidation } from '@/fields/validate'
 import { auditGlobal } from '@/hooks/auditLog'
 import { revalidateGlobal } from '@/hooks/revalidateFrontend'
 
+/** Digits only, Indonesian local numbers (0…) converted to the 62 country code. */
+const normalizeWhatsapp = (value: unknown) => {
+  if (typeof value !== 'string' || !value.trim()) return value
+  const digits = value.replace(/\D/g, '')
+  return digits.startsWith('0') ? `62${digits.slice(1)}` : digits
+}
+
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   admin: { group: 'Settings' },
@@ -63,13 +70,27 @@ export const SiteSettings: GlobalConfig = {
                     {
                       name: 'whatsappNumber',
                       type: 'text',
-                      maxLength: 20,
+                      label: 'Nomor WhatsApp',
+                      maxLength: 25,
+                      hooks: {
+                        // Accept 0812…, +62 812-…, 62812…; store as 62812… (what wa.me needs).
+                        beforeValidate: [({ value }) => normalizeWhatsapp(value)],
+                      },
                       validate: withTextValidation((v) =>
-                        /^[1-9][0-9]{7,14}$/.test(v) ? true : 'Format internasional tanpa + / spasi, mis. 6281234567890',
+                        /^[1-9][0-9]{7,14}$/.test(v) ? true : 'Nomor tidak valid. Contoh: 0812 3456 7890 atau +62 812 3456 7890',
                       ),
-                      admin: { description: 'Mis. 6281234567890' },
+                      admin: {
+                        description:
+                          'Nomor yang dihubungi saat pengunjung klik WhatsApp. Boleh ditulis 0812…, +62 812… atau 62812…',
+                      },
                     },
-                    { name: 'whatsappMessage', type: 'text', maxLength: 200, label: 'Pesan awal WhatsApp' },
+                    {
+                      name: 'whatsappMessage',
+                      type: 'text',
+                      maxLength: 200,
+                      label: 'Pesan awal WhatsApp',
+                      admin: { description: 'Opsional. Teks yang sudah terisi saat chat terbuka.' },
+                    },
                   ],
                 },
               ],

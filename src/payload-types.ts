@@ -2141,9 +2141,12 @@ export interface SiteSetting {
      */
     phone: string;
     /**
-     * Mis. 6281234567890
+     * Nomor yang dihubungi saat pengunjung klik WhatsApp. Boleh ditulis 0812…, +62 812… atau 62812…
      */
     whatsappNumber?: string | null;
+    /**
+     * Opsional. Teks yang sudah terisi saat chat terbuka.
+     */
     whatsappMessage?: string | null;
   };
   socials?:
