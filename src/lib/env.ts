@@ -22,8 +22,8 @@ const schema = z
      */
     DATABASE_SSL_CA: optional(z.string()).transform((v) => v?.replace(/\\n/g, '\n')),
     PAYLOAD_SECRET: z.string().min(32, 'PAYLOAD_SECRET must be at least 32 characters'),
-    SERVER_URL: z.string().url(),
-    FRONTEND_URL: z.string().url(),
+    SERVER_URL: z.string().url('SERVER_URL must be a full URL, e.g. https://cms.example.com'),
+    FRONTEND_URL: z.string().url('FRONTEND_URL must be a full URL, e.g. https://example.com'),
     REVALIDATE_SECRET: z.string().min(32, 'REVALIDATE_SECRET must be at least 32 characters'),
     CONTACT_API_KEY: z.string().min(32, 'CONTACT_API_KEY must be at least 32 characters'),
     /**
@@ -60,6 +60,8 @@ const schema = z
     }
     if (env.NODE_ENV === 'production') {
       for (const key of ['SERVER_URL', 'FRONTEND_URL'] as const) {
+        // An invalid URL is already reported by its own .url() check.
+        if (!URL.canParse(env[key])) continue
         const url = new URL(env[key])
         const isLocal = ['localhost', '127.0.0.1'].includes(url.hostname)
         if (url.protocol !== 'https:' && !isLocal) {
