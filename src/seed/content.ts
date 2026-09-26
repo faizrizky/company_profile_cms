@@ -3,7 +3,7 @@
  * (company-profile-falah @ main). Asset paths are relative to the
  * frontend's `public/` folder.
  */
-import type { Page } from '@/payload-types'
+import type { Page, SiteSetting } from '@/payload-types'
 
 export type MediaRef = (assetPath: string, alt?: string) => Promise<number>
 
@@ -636,12 +636,17 @@ export const contactLayout = async (media: MediaRef): Promise<Layout> => [
 // ── Globals ────────────────────────────────────────────────────────────
 
 const SOLUTION_LINKS = [
-  { label: 'Advanced Education System Solution', href: '/solution' },
-  { label: 'Command Center Solution', href: '/solution' },
-  { label: 'Simulation Training Solution', href: '/solution' },
-  { label: 'Virtual Training Suites Solution', href: '/solution/virtual-training-suite' },
-  { label: 'Virtual Connect Suites Solution', href: '/solution' },
+  { label: 'Virtual Training Suite', href: '/solution/virtual-training-suite' },
+  { label: 'Training Simulators', href: '/solution' },
+  { label: 'Advanced Education System', href: '/solution' },
+  { label: 'Integrated Operations Center', href: '/solution' },
+  { label: 'Cyber Defense Solutions', href: '/solution' },
+  { label: 'Cyber Defense Training Solutions', href: '/solution' },
+  { label: 'Digital Workplace Solutions', href: '/solution' },
+  { label: 'Logistics Management Solution', href: '/solution' },
 ]
+
+type SocialPlatform = NonNullable<NonNullable<SiteSetting['socials']>[number]['platform']>
 
 export const siteSettings = async (media: MediaRef) => ({
   siteName: 'Falah Inovasi Teknologi',
@@ -654,13 +659,13 @@ export const siteSettings = async (media: MediaRef) => ({
     email: 'business@falahtech.co.id',
     phone: '021 2696 1651',
   },
-  socials: await Promise.all(
-    [1, 2, 3, 4, 5].map(async (n) => ({
-      label: `Social ${n}`,
-      url: '#',
-      icon: await media(`/home/social-${n}.svg`),
-    })),
-  ),
+  socials: [
+    { platform: 'facebook', label: 'Facebook', url: '#' },
+    { platform: 'instagram', label: 'Instagram', url: '#' },
+    { platform: 'linkedin', label: 'LinkedIn', url: '#' },
+    { platform: 'tiktok', label: 'TikTok', url: '#' },
+    { platform: 'youtube', label: 'YouTube', url: '#' },
+  ] satisfies { platform: SocialPlatform; label: string; url: string }[],
 })
 
 export const navigation = async (media: MediaRef) => ({
@@ -705,7 +710,13 @@ export const footer = {
     'Immersive simulation and operational technology solutions for government, defense, education, and enterprise sectors.',
   columns: [
     { title: 'Solution', links: SOLUTION_LINKS },
-    { title: 'Company', links: [{ label: 'About Us', href: '/about' }] },
+    {
+      title: 'Company',
+      links: [
+        { label: 'About Us', href: '/about' },
+        { label: 'Press Release', href: '#' },
+      ],
+    },
   ],
   copyright: '© {year} Falah Inovasi Teknologi | All Right Reserved',
 }

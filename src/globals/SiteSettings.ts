@@ -87,11 +87,30 @@ export const SiteSettings: GlobalConfig = {
                 {
                   type: 'row',
                   fields: [
+                    {
+                      name: 'platform',
+                      type: 'select',
+                      required: true,
+                      defaultValue: 'other',
+                      options: [
+                        { label: 'Facebook', value: 'facebook' },
+                        { label: 'Instagram', value: 'instagram' },
+                        { label: 'LinkedIn', value: 'linkedin' },
+                        { label: 'TikTok', value: 'tiktok' },
+                        { label: 'YouTube', value: 'youtube' },
+                        { label: 'X (Twitter)', value: 'x' },
+                        { label: 'WhatsApp', value: 'whatsapp' },
+                        { label: 'Lainnya (ikon sendiri)', value: 'other' },
+                      ],
+                      admin: { width: '25%', description: 'Ikonnya otomatis sesuai platform.' },
+                    },
                     { name: 'label', type: 'text', required: true, maxLength: 40 },
                     hrefField({ name: 'url' }),
-                    imageField('icon', { required: true }),
                   ],
                 },
+                imageField('icon', {
+                  admin: { condition: (_, row) => row?.platform === 'other' },
+                }),
               ],
             },
           ],

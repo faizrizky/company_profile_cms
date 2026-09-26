@@ -2140,12 +2140,16 @@ export interface SiteSetting {
   };
   socials?:
     | {
+        /**
+         * Ikonnya otomatis sesuai platform.
+         */
+        platform: 'facebook' | 'instagram' | 'linkedin' | 'tiktok' | 'youtube' | 'x' | 'whatsapp' | 'other';
         label: string;
         /**
          * Contoh: /contact, /solution/command-center, https://…
          */
         url: string;
-        icon: number | Media;
+        icon?: (number | null) | Media;
         id?: string | null;
       }[]
     | null;
@@ -2267,6 +2271,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   socials?:
     | T
     | {
+        platform?: T;
         label?: T;
         url?: T;
         icon?: T;
