@@ -25,7 +25,10 @@ export const Navigation: GlobalConfig = {
       defaultValue: 'Our Solutions',
       maxLength: 40,
       admin: {
-        description: 'Isi mega menu diambil otomatis dari Solution Categories & Products.',
+        description: {
+          en: 'The mega menu is filled automatically from Solution Categories & Products.',
+          id: 'Isi mega menu diambil otomatis dari Solution Categories & Products.',
+        },
       },
     },
     // Superseded: the mega menu is now built from Solution Categories and

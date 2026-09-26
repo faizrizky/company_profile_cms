@@ -43,7 +43,9 @@ export const SiteSettings: GlobalConfig = {
                   type: 'textarea',
                   required: true,
                   maxLength: 300,
-                  admin: { description: 'Alamat lengkap (ditampilkan di peta website).' },
+                  admin: {
+                    description: { en: 'Full address (shown on the website map).', id: 'Alamat lengkap (ditampilkan di peta website).' },
+                  },
                 },
                 {
                   name: 'mapPicker',
@@ -58,14 +60,14 @@ export const SiteSettings: GlobalConfig = {
                       type: 'number',
                       min: -90,
                       max: 90,
-                      admin: { width: '50%', step: 0.000001, description: 'Terisi otomatis dari peta.' },
+                      admin: { width: '50%', step: 0.000001, description: { en: 'Filled in from the map.', id: 'Terisi otomatis dari peta.' } },
                     },
                     {
                       name: 'longitude',
                       type: 'number',
                       min: -180,
                       max: 180,
-                      admin: { width: '50%', step: 0.000001, description: 'Terisi otomatis dari peta.' },
+                      admin: { width: '50%', step: 0.000001, description: { en: 'Filled in from the map.', id: 'Terisi otomatis dari peta.' } },
                     },
                   ],
                 },
@@ -94,26 +96,37 @@ export const SiteSettings: GlobalConfig = {
                     {
                       name: 'whatsappNumber',
                       type: 'text',
-                      label: 'Nomor WhatsApp',
+                      label: { en: 'WhatsApp number', id: 'Nomor WhatsApp' },
                       maxLength: 25,
                       hooks: {
                         // Accept 0812…, +62 812-…, 62812…; store as 62812… (what wa.me needs).
                         beforeValidate: [({ value }) => normalizeWhatsapp(value)],
                       },
-                      validate: withTextValidation((v) =>
-                        /^[1-9][0-9]{7,14}$/.test(v) ? true : 'Nomor tidak valid. Contoh: 0812 3456 7890 atau +62 812 3456 7890',
+                      validate: withTextValidation((v, lang) =>
+                        /^[1-9][0-9]{7,14}$/.test(v)
+                          ? true
+                          : lang === 'id'
+                            ? 'Nomor tidak valid. Contoh: 0812 3456 7890 atau +62 812 3456 7890'
+                            : 'Invalid number. Example: 0812 3456 7890 or +62 812 3456 7890',
                       ),
                       admin: {
-                        description:
-                          'Nomor yang dihubungi saat pengunjung klik WhatsApp. Boleh ditulis 0812…, +62 812… atau 62812…',
+                        description: {
+                          en: 'Number visitors reach when they click WhatsApp. You can type 0812…, +62 812… or 62812…',
+                          id: 'Nomor yang dihubungi saat pengunjung klik WhatsApp. Boleh ditulis 0812…, +62 812… atau 62812…',
+                        },
                       },
                     },
                     {
                       name: 'whatsappMessage',
                       type: 'text',
                       maxLength: 200,
-                      label: 'Pesan awal WhatsApp',
-                      admin: { description: 'Opsional. Teks yang sudah terisi saat chat terbuka.' },
+                      label: { en: 'WhatsApp opening message', id: 'Pesan awal WhatsApp' },
+                      admin: {
+                        description: {
+                          en: 'Optional. Text already typed in when the chat opens.',
+                          id: 'Opsional. Teks yang sudah terisi saat chat terbuka.',
+                        },
+                      },
                     },
                   ],
                 },
@@ -145,9 +158,9 @@ export const SiteSettings: GlobalConfig = {
                         { label: 'YouTube', value: 'youtube' },
                         { label: 'X (Twitter)', value: 'x' },
                         { label: 'WhatsApp', value: 'whatsapp' },
-                        { label: 'Lainnya (ikon sendiri)', value: 'other' },
+                        { label: { en: 'Other (own icon)', id: 'Lainnya (ikon sendiri)' }, value: 'other' },
                       ],
-                      admin: { width: '25%', description: 'Ikonnya otomatis sesuai platform.' },
+                      admin: { width: '25%', description: { en: 'The icon follows the platform.', id: 'Ikonnya otomatis sesuai platform.' } },
                     },
                     { name: 'label', type: 'text', required: true, maxLength: 40 },
                     hrefField({ name: 'url' }),

@@ -1,12 +1,15 @@
 import type { Condition, Field, GroupField, UploadField } from 'payload'
 
 /** The subset of admin options our field helpers expose. */
-export type AdminOverrides = { description?: string; condition?: Condition; width?: string }
+/** Plain text, or one text per admin language ({ en, id }). */
+export type LocalizedText = string | Record<string, string>
+
+export type AdminOverrides = { description?: LocalizedText; condition?: Condition; width?: string }
 
 /** An image from the media library (videos and PDFs can't be picked). */
 export const imageField = (
   name: string,
-  overrides: { required?: boolean; label?: string; admin?: AdminOverrides } = {},
+  overrides: { required?: boolean; label?: LocalizedText; admin?: AdminOverrides } = {},
 ): UploadField => ({
   name,
   type: 'upload',
@@ -21,7 +24,7 @@ export const imageField = (
  */
 export const videoField = (
   name: string,
-  overrides: { required?: boolean; label?: string; admin?: AdminOverrides } = {},
+  overrides: { required?: boolean; label?: LocalizedText; admin?: AdminOverrides } = {},
 ): UploadField => ({
   name,
   type: 'upload',

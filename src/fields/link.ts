@@ -1,6 +1,6 @@
 import type { Field, TextField } from 'payload'
 
-import type { AdminOverrides } from './section'
+import type { AdminOverrides, LocalizedText } from './section'
 import { withTextValidation } from './validate'
 
 /**
@@ -18,7 +18,7 @@ export const isSafeHref = (value: string): true | string => {
 
 type HrefOverrides = {
   name?: string
-  label?: string
+  label?: LocalizedText
   required?: boolean
   defaultValue?: string
   admin?: AdminOverrides

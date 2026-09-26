@@ -132,18 +132,23 @@ export const SolutionCategories: CollectionConfig = {
                       type: 'row',
                       fields: [
                         videoField('video', {
-                          label: 'Video (desktop)',
+                          label: { en: 'Video (desktop)', id: 'Video (desktop)' },
                           admin: {
                             width: '50%',
-                            description:
-                              'Opsional. Video latar khusus tab ini (menggantikan video latar umum). MP4 1080p, ±25 detik, tanpa suara, ≤ 15 MB.',
+                            description: {
+                              en: 'Optional. Background video for this tab (replaces the shared one). MP4 1080p, ~25 s, no audio, ≤ 15 MB.',
+                              id: 'Opsional. Video latar khusus tab ini (menggantikan video latar umum). MP4 1080p, ±25 detik, tanpa suara, ≤ 15 MB.',
+                            },
                           },
                         }),
                         videoField('videoMobile', {
-                          label: 'Video (HP)',
+                          label: { en: 'Video (phone)', id: 'Video (HP)' },
                           admin: {
                             width: '50%',
-                            description: 'Opsional. Versi ringan untuk HP: MP4 720p, ≤ 4 MB. Kosong = pakai video desktop.',
+                            description: {
+                              en: 'Optional. Lighter version for phones: MP4 720p, ≤ 4 MB. Empty = the desktop video.',
+                              id: 'Opsional. Versi ringan untuk HP: MP4 720p, ≤ 4 MB. Kosong = pakai video desktop.',
+                            },
                           },
                         }),
                       ],

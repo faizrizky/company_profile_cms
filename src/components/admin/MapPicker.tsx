@@ -2,7 +2,7 @@
 
 import 'leaflet/dist/leaflet.css'
 
-import { useField } from '@payloadcms/ui'
+import { useField, useTranslation } from '@payloadcms/ui'
 import type { UIFieldClientComponent } from 'payload'
 import type { Map as LeafletMap, Marker } from 'leaflet'
 import { useEffect, useRef, useState } from 'react'
@@ -11,6 +11,33 @@ import { useEffect, useRef, useState } from 'react'
 const FALLBACK: [number, number] = [-6.2444, 106.8295]
 
 const round = (n: number) => Math.round(n * 1e6) / 1e6
+
+const TEXT = {
+  en: {
+    label: 'Location on the map',
+    placeholder: 'Search an address / building…',
+    search: 'Search',
+    useAddress: 'Use the address above',
+    searching: 'Searching…',
+    notFound: 'Address not found. Try a shorter one, then click the map to adjust.',
+    moved: 'Pin moved. Drag it if it is not quite right.',
+    failed: 'Search failed. Click directly on the map.',
+    pin: (lat: number, lng: number) => `Pin: ${lat}, ${lng}. Click the map or drag the pin to change it.`,
+    empty: 'Click the map to drop the office pin. Without a pin, the website map uses the address text.',
+  },
+  id: {
+    label: 'Lokasi di peta',
+    placeholder: 'Cari alamat / nama gedung…',
+    search: 'Cari',
+    useAddress: 'Pakai alamat di atas',
+    searching: 'Mencari…',
+    notFound: 'Alamat tidak ditemukan. Coba lebih singkat, lalu klik peta untuk menyesuaikan.',
+    moved: 'Pin dipindah. Geser pin bila belum pas.',
+    failed: 'Gagal mencari alamat. Klik langsung di peta.',
+    pin: (lat: number, lng: number) => `Pin: ${lat}, ${lng}. Klik peta atau geser pin untuk mengubah.`,
+    empty: 'Klik peta untuk menaruh pin lokasi kantor. Tanpa pin, peta di website memakai alamat teks.',
+  },
+}
 
 /**
  * Pick the office location on a map: click to drop the pin, drag it to fine
@@ -23,6 +50,8 @@ export const MapPicker: UIFieldClientComponent = ({ path }) => {
   const lat = useField<number | null>({ path: at('latitude') })
   const lng = useField<number | null>({ path: at('longitude') })
   const address = useField<string>({ path: at('address') })
+  const { i18n } = useTranslation()
+  const t = i18n.language === 'id' ? TEXT.id : TEXT.en
 
   const box = useRef<HTMLDivElement>(null)
   const map = useRef<LeafletMap | null>(null)
@@ -74,32 +103,32 @@ export const MapPicker: UIFieldClientComponent = ({ path }) => {
 
   const search = async (text: string) => {
     if (!text.trim()) return
-    setStatus('Mencari…')
+    setStatus(t.searching)
     try {
       const res = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=id&q=${encodeURIComponent(text)}`,
         { headers: { Accept: 'application/json' } },
       )
       const [hit] = (await res.json()) as { lat: string; lon: string }[]
-      if (!hit) return setStatus('Alamat tidak ditemukan. Coba lebih singkat, lalu klik peta untuk menyesuaikan.')
+      if (!hit) return setStatus(t.notFound)
       const latlng = { lat: Number(hit.lat), lng: Number(hit.lon) }
       const m = map.current as (LeafletMap & { falahPlace?: (p: typeof latlng) => void }) | null
       m?.falahPlace?.(latlng)
       m?.setView(latlng, 17)
-      setStatus('Pin dipindah. Geser pin bila belum pas.')
+      setStatus(t.moved)
     } catch {
-      setStatus('Gagal mencari alamat. Klik langsung di peta.')
+      setStatus(t.failed)
     }
   }
 
   return (
     <div className="field-type falah-map-picker">
-      <label className="field-label">Lokasi di peta</label>
+      <label className="field-label">{t.label}</label>
       <div className="falah-map-picker__search">
         <input
           type="text"
           value={query}
-          placeholder="Cari alamat / nama gedung…"
+          placeholder={t.placeholder}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
@@ -109,7 +138,7 @@ export const MapPicker: UIFieldClientComponent = ({ path }) => {
           }}
         />
         <button type="button" className="btn btn--style-secondary btn--size-small" onClick={() => void search(query)}>
-          Cari
+          {t.search}
         </button>
         {address.value ? (
           <button
@@ -120,7 +149,7 @@ export const MapPicker: UIFieldClientComponent = ({ path }) => {
               void search(address.value)
             }}
           >
-            Pakai alamat di atas
+            {t.useAddress}
           </button>
         ) : null}
       </div>
@@ -128,8 +157,8 @@ export const MapPicker: UIFieldClientComponent = ({ path }) => {
       <p className="field-description">
         {status ??
           (hasPin
-            ? `Pin: ${lat.value}, ${lng.value}. Klik peta atau geser pin untuk mengubah.`
-            : 'Klik peta untuk menaruh pin lokasi kantor. Tanpa pin, peta di website memakai alamat teks.')}
+            ? t.pin(lat.value!, lng.value!)
+            : t.empty)}
       </p>
     </div>
   )

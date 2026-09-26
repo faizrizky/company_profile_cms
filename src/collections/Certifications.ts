@@ -51,8 +51,14 @@ export const Certifications: CollectionConfig = {
         type: 'row',
         fields: [
           imageField('certificate', {
-            label: 'Certificate image',
-            admin: { width: '50%', description: 'Opsional. Tanpa gambar, sertifikasi tidak tampil di galeri sertifikat.' },
+            label: { en: 'Certificate image', id: 'Gambar sertifikat' },
+            admin: {
+              width: '50%',
+              description: {
+                en: 'Optional. Without it, the certification is left out of the certificate gallery.',
+                id: 'Opsional. Tanpa gambar, sertifikasi tidak tampil di galeri sertifikat.',
+              },
+            },
           }),
           {
             name: 'certificateFocus',

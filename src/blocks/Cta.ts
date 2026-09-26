@@ -25,7 +25,10 @@ export const CtaBlock: Block = {
     videoField('video', {
       admin: {
         condition: (_, s) => s?.variant === 'withMedia',
-        description: 'Opsional. Video MP4/WebM yang diputar langsung di halaman (gambar Media jadi poster).',
+        description: {
+          en: 'Optional. MP4/WebM video played right on the page (the Media image is its poster).',
+          id: 'Opsional. Video MP4/WebM yang diputar langsung di halaman (gambar Media jadi poster).',
+        },
       },
     }),
     hrefField({
@@ -33,7 +36,10 @@ export const CtaBlock: Block = {
       required: false,
       admin: {
         condition: (_, s) => s?.variant === 'withMedia',
-        description: 'Opsional. Link video luar (mis. YouTube) — dipakai bila Video di atas kosong.',
+        description: {
+          en: 'Optional. External video link (e.g. YouTube), used when Video above is empty.',
+          id: 'Opsional. Link video luar (mis. YouTube) — dipakai bila Video di atas kosong.',
+        },
       },
     }),
   ],

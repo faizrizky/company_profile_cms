@@ -37,7 +37,12 @@ export const Products: CollectionConfig = {
         name: 'summary',
         type: 'textarea',
         maxLength: 160,
-        admin: { description: 'Deskripsi singkat, tampil di mega menu "Our Solutions".' },
+        admin: {
+          description: {
+            en: 'Short description, shown in the "Our Solutions" mega menu.',
+            id: 'Deskripsi singkat, tampil di mega menu "Our Solutions".',
+          },
+        },
       },
       {
         name: 'category',

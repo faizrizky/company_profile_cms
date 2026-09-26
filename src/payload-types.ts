@@ -580,7 +580,7 @@ export interface Certification {
   icon: number | Media;
   iconShape?: ('square' | 'wide' | 'narrow') | null;
   /**
-   * Opsional. Tanpa gambar, sertifikasi tidak tampil di galeri sertifikat.
+   * Optional. Without it, the certification is left out of the certificate gallery.
    */
   certificate?: (number | null) | Media;
   certificateFocus?: ('center' | 'top') | null;
@@ -730,11 +730,11 @@ export interface CtaBlock {
     | null;
   media?: (number | null) | Media;
   /**
-   * Opsional. Video MP4/WebM yang diputar langsung di halaman (gambar Media jadi poster).
+   * Optional. MP4/WebM video played right on the page (the Media image is its poster).
    */
   video?: (number | null) | Media;
   /**
-   * Opsional. Link video luar (mis. YouTube) — dipakai bila Video di atas kosong.
+   * Optional. External video link (e.g. YouTube), used when Video above is empty.
    */
   videoUrl?: string | null;
   id?: string | null;
@@ -921,11 +921,11 @@ export interface SolutionCategory {
           description?: string | null;
           tags?: string[] | null;
           /**
-           * Opsional. Video latar khusus tab ini (menggantikan video latar umum). MP4 1080p, ±25 detik, tanpa suara, ≤ 15 MB.
+           * Optional. Background video for this tab (replaces the shared one). MP4 1080p, ~25 s, no audio, ≤ 15 MB.
            */
           video?: (number | null) | Media;
           /**
-           * Opsional. Versi ringan untuk HP: MP4 720p, ≤ 4 MB. Kosong = pakai video desktop.
+           * Optional. Lighter version for phones: MP4 720p, ≤ 4 MB. Empty = the desktop video.
            */
           videoMobile?: (number | null) | Media;
           id?: string | null;
@@ -966,7 +966,7 @@ export interface Product {
   _order?: string | null;
   title: string;
   /**
-   * Deskripsi singkat, tampil di mega menu "Our Solutions".
+   * Short description, shown in the "Our Solutions" mega menu.
    */
   summary?: string | null;
   category: number | SolutionCategory;
@@ -2128,15 +2128,15 @@ export interface SiteSetting {
   logo: number | Media;
   contact: {
     /**
-     * Alamat lengkap (ditampilkan di peta website).
+     * Full address (shown on the website map).
      */
     address: string;
     /**
-     * Terisi otomatis dari peta.
+     * Filled in from the map.
      */
     latitude?: number | null;
     /**
-     * Terisi otomatis dari peta.
+     * Filled in from the map.
      */
     longitude?: number | null;
     /**
@@ -2149,18 +2149,18 @@ export interface SiteSetting {
      */
     phone: string;
     /**
-     * Nomor yang dihubungi saat pengunjung klik WhatsApp. Boleh ditulis 0812…, +62 812… atau 62812…
+     * Number visitors reach when they click WhatsApp. You can type 0812…, +62 812… or 62812…
      */
     whatsappNumber?: string | null;
     /**
-     * Opsional. Teks yang sudah terisi saat chat terbuka.
+     * Optional. Text already typed in when the chat opens.
      */
     whatsappMessage?: string | null;
   };
   socials?:
     | {
         /**
-         * Ikonnya otomatis sesuai platform.
+         * The icon follows the platform.
          */
         platform: 'facebook' | 'instagram' | 'linkedin' | 'tiktok' | 'youtube' | 'x' | 'whatsapp' | 'other';
         label: string;
@@ -2182,7 +2182,7 @@ export interface SiteSetting {
 export interface Navigation {
   id: number;
   /**
-   * Isi mega menu diambil otomatis dari Solution Categories & Products.
+   * The mega menu is filled automatically from Solution Categories & Products.
    */
   solutionsLabel?: string | null;
   solutionLinks?:
