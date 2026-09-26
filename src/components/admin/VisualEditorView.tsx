@@ -14,6 +14,9 @@ import { EditorSkeleton } from './skeletons'
 
 /** Sent by the studio (frontend) once the editor has mounted. */
 const READY_MESSAGE = 'falah-studio:ready'
+/** The studio asks for the admin's session token (see the website's lib/studio/token.ts). */
+const TOKEN_REQUEST = 'falah-studio:token-request'
+const TOKEN_RESPONSE = 'falah-studio:token'
 /** Never keep the placeholder up longer than this, even without the message. */
 const READY_TIMEOUT_MS = 20_000
 
@@ -26,7 +29,13 @@ type Props = ComponentProps<typeof DefaultEditView> & { frontendUrl: string }
  */
 export function VisualEditorView({ frontendUrl, ...props }: Props) {
   const { collectionSlug, id } = useDocumentInfo()
-  const { getEntityConfig } = useConfig()
+  const {
+    config: {
+      routes: { api },
+      serverURL,
+    },
+    getEntityConfig,
+  } = useConfig()
   const collectionConfig = collectionSlug ? getEntityConfig({ collectionSlug }) : undefined
   const locale = useLocale()
   const { i18n } = useTranslation()
@@ -71,6 +80,29 @@ export function VisualEditorView({ frontendUrl, ...props }: Props) {
       window.clearTimeout(timer)
     }
   }, [frontendUrl, src])
+
+  // Hand the session to the studio when it can't share the cookie (the site
+  // on another domain). Only answers the website origin, only to its frame,
+  // with a freshly refreshed token.
+  useEffect(() => {
+    const origin = new URL(frontendUrl).origin
+    const onMessage = async (event: MessageEvent) => {
+      if (event.origin !== origin || event.data?.type !== TOKEN_REQUEST || !event.source) return
+      let token: string | null = null
+      try {
+        const res = await fetch(`${serverURL}${api}/users/refresh-token`, {
+          method: 'POST',
+          credentials: 'include',
+        })
+        if (res.ok) token = ((await res.json()) as { refreshedToken?: string }).refreshedToken ?? null
+      } catch {
+        // No session: the studio shows its "please log in" screen.
+      }
+      ;(event.source as Window).postMessage({ type: TOKEN_RESPONSE, token }, origin)
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [frontendUrl, serverURL, api])
 
   if (!id) return <DefaultEditView {...props} />
 
