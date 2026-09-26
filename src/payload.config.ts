@@ -25,6 +25,7 @@ import { localizeTextFields } from './fields/localize'
 import { translateCollection, translateGlobal } from './i18n/translateAdmin'
 import { MAX_UPLOAD_BYTES } from './hooks/secureUpload'
 import { env, s3Enabled } from './lib/env'
+import { SUPABASE_ROOT_CA } from './lib/supabaseCa'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -42,6 +43,26 @@ const withLocalizedText = <
 >(
   config: T,
 ): T => ({ ...config, fields: localizeTextFields(config.fields) })
+
+/**
+ * CA for verifying the database certificate: DATABASE_SSL_CA if set, else the
+ * bundled Supabase root CA for Supabase hosts (its chain isn't publicly trusted).
+ */
+function databaseCa(url: string): string | undefined {
+  if (env.DATABASE_SSL_CA) return env.DATABASE_SSL_CA
+  if (new URL(url).hostname.endsWith('.supabase.com') || new URL(url).hostname.endsWith('.supabase.co')) {
+    return SUPABASE_ROOT_CA
+  }
+  return undefined
+}
+
+function withoutSslParams(url: string): string {
+  const parsed = new URL(url)
+  for (const key of ['sslmode', 'sslcert', 'sslkey', 'sslrootcert', 'uselibpqcompat']) {
+    parsed.searchParams.delete(key)
+  }
+  return parsed.toString()
+}
 
 export default buildConfig({
   serverURL: env.SERVER_URL,
@@ -141,9 +162,11 @@ export default buildConfig({
 
   db: postgresAdapter({
     pool: {
-      connectionString: env.DATABASE_URL,
+      // SSL comes from DATABASE_SSL(_CA) below: `sslmode=…` in the URL (as in
+      // Supabase/Vercel connection strings) would override it and drop the CA.
+      connectionString: withoutSslParams(env.DATABASE_URL),
       // Certificates are always verified; Supabase needs its own CA for that.
-      ssl: env.DATABASE_SSL ? { rejectUnauthorized: true, ca: env.DATABASE_SSL_CA } : undefined,
+      ssl: env.DATABASE_SSL ? { rejectUnauthorized: true, ca: databaseCa(env.DATABASE_URL) } : undefined,
     },
     migrationDir: path.resolve(dirname, 'migrations'),
   }),
