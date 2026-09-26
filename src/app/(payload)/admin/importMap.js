@@ -3,6 +3,7 @@ import { Nothing as Nothing_e2b1b0e7fee819dbb082017850c6ef2a } from '../../../co
 import { SelectionBar as SelectionBar_f7534a8a02a657e5c7e609e9cec59411 } from '../../../components/admin/SelectionBar'
 import { VisualEditorView as VisualEditorView_61cd617b938842b661c9f6d1678c1c79 } from '../../../components/admin/VisualEditorView'
 import { DefaultEditView as DefaultEditView_3817bf644402e67bfe6577f60ef982de } from '@payloadcms/ui'
+import { MediaFileCell as MediaFileCell_43b49a85fdeabccf4cc8d1c9210a9a19 } from '../../../components/admin/MediaFileCell'
 import { PasswordChecklist as PasswordChecklist_04392dd84d621fdceface601f994cac6 } from '../../../components/admin/PasswordChecklist'
 import { MapPicker as MapPicker_d50713359d9f0b3960c18e52c90ab2a7 } from '../../../components/admin/MapPicker'
 import { FalahNav as FalahNav_eb31d88043f9ccfcb1413c23d153637e } from '../../../components/admin/nav/FalahNav'
@@ -24,6 +25,7 @@ export const importMap = {
   "/components/admin/SelectionBar#SelectionBar": SelectionBar_f7534a8a02a657e5c7e609e9cec59411,
   "/components/admin/VisualEditorView#VisualEditorView": VisualEditorView_61cd617b938842b661c9f6d1678c1c79,
   "@payloadcms/ui#DefaultEditView": DefaultEditView_3817bf644402e67bfe6577f60ef982de,
+  "/components/admin/MediaFileCell#MediaFileCell": MediaFileCell_43b49a85fdeabccf4cc8d1c9210a9a19,
   "/components/admin/PasswordChecklist#PasswordChecklist": PasswordChecklist_04392dd84d621fdceface601f994cac6,
   "/components/admin/MapPicker#MapPicker": MapPicker_d50713359d9f0b3960c18e52c90ab2a7,
   "/components/admin/nav/FalahNav#FalahNav": FalahNav_eb31d88043f9ccfcb1413c23d153637e,

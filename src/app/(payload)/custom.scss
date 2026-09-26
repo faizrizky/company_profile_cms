@@ -2918,3 +2918,15 @@ input[data-reveal] {
   box-shadow: 0 6px 14px rgb(31 122 224 / 0.5);
   transform: rotate(-45deg);
 }
+
+/* Media list previews (MediaFileCell): images and video first frames. */
+.falah-file-thumb {
+  overflow: hidden;
+  background: #1f2937;
+}
+
+.falah-file-thumb :is(img, video) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

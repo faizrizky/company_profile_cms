@@ -63,5 +63,12 @@ export const Media: CollectionConfig = {
         admin: { description: 'Teks alternatif untuk aksesibilitas & SEO. Kosongkan untuk gambar dekoratif.' },
       },
     ]),
+    // Merged into Payload's own upload field of the same name: only the list
+    // cell changes (video previews).
+    {
+      name: 'filename',
+      type: 'text',
+      admin: { components: { Cell: '/components/admin/MediaFileCell#MediaFileCell' } },
+    },
   ],
 }
