@@ -2639,3 +2639,84 @@ input[data-reveal] {
 .tabs-field__tab-button:active {
   transform: scale(0.96);
 }
+
+/* ── Edit screen: sidebar card & document meta pills ───────────────────── */
+
+/* Right column (slug, flags, …) as a card matching the field cards. */
+.document-fields__sidebar-fields:not(:empty) {
+  margin-top: 0;
+  padding: 24px 26px 8px;
+  border: 1px solid rgb(255 255 255 / 0.9);
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.72);
+  box-shadow: 0 1px 2px rgb(6 41 79 / 0.04), 0 20px 40px -28px rgb(30 90 160 / 0.45);
+}
+
+.document-fields__sidebar-fields > .render-fields {
+  gap: 20px;
+}
+
+@media (min-width: 1025px) {
+  /* Level with the first field card, off the screen edge like the main column. */
+  .document-fields__sidebar-fields:not(:empty) {
+    margin: 30px var(--gutter-h) 30px 0;
+  }
+}
+
+@media (max-width: 1024px) {
+  .document-fields__sidebar-fields:not(:empty) {
+    padding: 18px 18px 4px;
+  }
+}
+
+/* Status / Last modified / Created: soft glass pills. */
+.doc-controls__meta {
+  gap: 8px;
+}
+
+.doc-controls__meta > li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid rgb(255 255 255 / 0.9);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.65);
+  box-shadow: 0 6px 16px -12px rgb(30 90 160 / 0.5);
+  color: var(--falah-ink);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.doc-controls__meta > li::before {
+  content: '';
+  width: 14px;
+  height: 14px;
+  flex: none;
+  background: var(--falah-accent);
+  -webkit-mask: var(--falah-meta-icon) center / contain no-repeat;
+  mask: var(--falah-meta-icon) center / contain no-repeat;
+}
+
+.doc-controls__meta > li {
+  --falah-meta-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 6v6l4 2'/%3E%3C/svg%3E");
+}
+
+.doc-controls__meta > li:last-child {
+  --falah-meta-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='4' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
+}
+
+.doc-controls__label {
+  color: var(--falah-muted);
+  font-weight: 500;
+}
+
+.doc-controls__meta > li > p,
+.doc-controls__value {
+  margin: 0;
+  color: var(--falah-ink);
+  font-weight: 600;
+}
