@@ -14,7 +14,11 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
 
-# Anything not passed in the environment is asked for (secrets without echo).
+# Credentials can live in .env.cloud (git-ignored), e.g.
+#   CLOUD_DATABASE_URL=…  S3_ENDPOINT=…  S3_ACCESS_KEY_ID=…  S3_SECRET_ACCESS_KEY=…
+if [ -f .env.cloud ]; then set -a; . ./.env.cloud; set +a; fi
+
+# Anything still missing is asked for (secrets without echo).
 ask() {
   local name="$1" prompt="$2" secret="${3:-}"
   if [ -z "${!name:-}" ]; then
