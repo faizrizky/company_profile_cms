@@ -2231,10 +2231,18 @@ input[data-reveal] {
 }
 
 /* Covers the content area (not the top bar or the sidebar) while navigating. */
+/* The skeleton overlay is positioned against the content wrapper. */
+.template-default__wrap {
+  position: relative;
+}
+
 .falah-sk-overlay {
   position: absolute;
   top: var(--app-header-height);
   right: 0;
+  /* Down to the bottom of the content, not just one screen: on a scrolled,
+     long page the old screen must not show through below the skeleton. */
+  bottom: 0;
   left: 0;
   z-index: 30;
   min-height: calc(100vh - var(--app-header-height));
