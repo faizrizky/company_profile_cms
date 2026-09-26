@@ -35,7 +35,7 @@ const securityHeaders = [
       `img-src 'self' data: blob: https://tile.openstreetmap.org ${mediaOrigin}`.trim(),
       `media-src 'self' blob: ${mediaOrigin}`.trim(),
       "font-src 'self' data:",
-      "connect-src 'self' https://nominatim.openstreetmap.org",
+      "connect-src 'self' https://photon.komoot.io https://nominatim.openstreetmap.org",
       `frame-src 'self' ${frontendOrigin}`.trim(),
       "object-src 'none'",
       "frame-ancestors 'none'",

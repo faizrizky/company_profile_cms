@@ -12,6 +12,61 @@ const FALLBACK: [number, number] = [-6.2444, 106.8295]
 
 const round = (n: number) => Math.round(n * 1e6) / 1e6
 
+/**
+ * Indonesian addresses (RT/RW, "No.", Kel./Kec., postcodes…) confuse the
+ * geocoders, so try cleaned-up variants from most to least specific.
+ */
+function queryVariants(text: string): string[] {
+  const parts = text
+    .split(',')
+    .map((part) =>
+      part
+        .replace(/\b(No|Nomor|Kav|Blok)\.?\s*[\w/-]+/gi, '')
+        .replace(/\bKel(urahan)?\.?(?=\s|$)/gi, '')
+        .replace(/\bKec(amatan)?\.?\s*/gi, '')
+        .replace(/\bKota(\s+Adm(inistrasi)?\.?)?\s+/gi, '')
+        .replace(/Daerah Khusus Ibukota\s*/gi, '')
+        .replace(/\bPrpt\.?/gi, 'Prapatan')
+        .replace(/\b\d{5}\b/g, '')
+        .replace(/\s+/g, ' ')
+        .trim(),
+    )
+    .filter((part) => part && !/^(RT|RW)\b/i.test(part))
+  const variants = [
+    text,
+    parts.join(', '),
+    parts.slice(0, 3).join(', '),
+    parts.length > 1 ? `${parts[0]}, ${parts[parts.length - 1]}` : '',
+    parts[0] ?? '',
+    parts[0]?.replace(/^(Jl|Jln|Jalan)\.?\s+/i, '') ?? '',
+    parts.slice(1).join(', '),
+  ]
+  return [...new Set(variants.map((v) => v.trim()).filter((v) => v.length > 2))]
+}
+
+type LatLng = { lat: number; lng: number }
+
+/** Photon handles loose text well; Nominatim is the fallback. Both are OpenStreetMap. */
+async function geocode(query: string): Promise<LatLng | null> {
+  const q = encodeURIComponent(query)
+  try {
+    const res = await fetch(`https://photon.komoot.io/api/?limit=1&bbox=94,-11.5,141.5,6.5&q=${q}`)
+    const [hit] = ((await res.json()) as { features?: { geometry: { coordinates: [number, number] } }[] }).features ?? []
+    if (hit) return { lat: hit.geometry.coordinates[1], lng: hit.geometry.coordinates[0] }
+  } catch {
+    // try the next service
+  }
+  try {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=id&q=${q}`, {
+      headers: { Accept: 'application/json' },
+    })
+    const [hit] = (await res.json()) as { lat: string; lon: string }[]
+    return hit ? { lat: Number(hit.lat), lng: Number(hit.lon) } : null
+  } catch {
+    return null
+  }
+}
+
 const TEXT = {
   en: {
     label: 'Location on the map',
@@ -105,14 +160,13 @@ export const MapPicker: UIFieldClientComponent = ({ path }) => {
     if (!text.trim()) return
     setStatus(t.searching)
     try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=id&q=${encodeURIComponent(text)}`,
-        { headers: { Accept: 'application/json' } },
-      )
-      const [hit] = (await res.json()) as { lat: string; lon: string }[]
-      if (!hit) return setStatus(t.notFound)
-      const latlng = { lat: Number(hit.lat), lng: Number(hit.lon) }
-      const m = map.current as (LeafletMap & { falahPlace?: (p: typeof latlng) => void }) | null
+      let latlng: LatLng | null = null
+      for (const variant of queryVariants(text)) {
+        latlng = await geocode(variant)
+        if (latlng) break
+      }
+      if (!latlng) return setStatus(t.notFound)
+      const m = map.current as (LeafletMap & { falahPlace?: (p: LatLng) => void }) | null
       m?.falahPlace?.(latlng)
       m?.setView(latlng, 17)
       setStatus(t.moved)
