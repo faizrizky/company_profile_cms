@@ -37,7 +37,14 @@ export const Media: CollectionConfig = {
       { name: 'card', width: 960 },
       { name: 'hero', width: 1920 },
     ],
-    adminThumbnail: 'thumbnail',
+    // The size's own URL: with public storage that is the bucket/CDN, so the
+    // admin doesn't stream every thumbnail through the CMS.
+    adminThumbnail: ({ doc }) => {
+      // Videos / PDFs get Payload's file icon.
+      if (typeof doc.mimeType !== 'string' || !doc.mimeType.startsWith('image/')) return null
+      const sizes = doc.sizes as Record<string, { url?: string | null } | undefined> | undefined
+      return sizes?.thumbnail?.url || (typeof doc.url === 'string' ? doc.url : null) || null
+    },
     focalPoint: true,
   },
   fields: [
