@@ -25,7 +25,8 @@ export const SolutionHighlightsBlock: Block = {
     {
       name: 'items',
       type: 'array',
-      maxRows: 4,
+      // Figma: the featured card spans two columns, then up to 7 cards (3 rows of 3).
+      maxRows: 7,
       fields: [
         imageField('image', { required: true }),
         { name: 'title', type: 'text', required: true, maxLength: 120 },
