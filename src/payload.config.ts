@@ -169,6 +169,10 @@ export default buildConfig({
       ssl: env.DATABASE_SSL ? { rejectUnauthorized: true, ca: databaseCa(env.DATABASE_URL) } : undefined,
     },
     migrationDir: path.resolve(dirname, 'migrations'),
+    // Dev "push" only ever touches a local database. Pointed at the cloud
+    // (scripts, a dev server with the production URL) it would mark the
+    // database as dev-pushed and block `payload migrate` in the next deploy.
+    push: ['localhost', '127.0.0.1', '::1'].includes(new URL(env.DATABASE_URL).hostname),
   }),
 
   sharp,
