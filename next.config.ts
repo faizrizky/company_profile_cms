@@ -31,10 +31,11 @@ const securityHeaders = [
       "default-src 'self'",
       `script-src 'self' 'unsafe-inline'${isProduction ? '' : " 'unsafe-eval'"}`,
       "style-src 'self' 'unsafe-inline'",
-      `img-src 'self' data: blob: ${mediaOrigin}`.trim(),
+      // OpenStreetMap tiles + address search for the office map picker.
+      `img-src 'self' data: blob: https://tile.openstreetmap.org ${mediaOrigin}`.trim(),
       `media-src 'self' blob: ${mediaOrigin}`.trim(),
       "font-src 'self' data:",
-      "connect-src 'self'",
+      "connect-src 'self' https://nominatim.openstreetmap.org",
       `frame-src 'self' ${frontendOrigin}`.trim(),
       "object-src 'none'",
       "frame-ancestors 'none'",

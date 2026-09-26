@@ -4,6 +4,7 @@ import { SelectionBar as SelectionBar_f7534a8a02a657e5c7e609e9cec59411 } from '.
 import { VisualEditorView as VisualEditorView_61cd617b938842b661c9f6d1678c1c79 } from '../../../components/admin/VisualEditorView'
 import { DefaultEditView as DefaultEditView_3817bf644402e67bfe6577f60ef982de } from '@payloadcms/ui'
 import { PasswordChecklist as PasswordChecklist_04392dd84d621fdceface601f994cac6 } from '../../../components/admin/PasswordChecklist'
+import { MapPicker as MapPicker_d50713359d9f0b3960c18e52c90ab2a7 } from '../../../components/admin/MapPicker'
 import { FalahNav as FalahNav_eb31d88043f9ccfcb1413c23d153637e } from '../../../components/admin/nav/FalahNav'
 import { Icon as Icon_dfe4008080d895d460898c3a6155e9ba } from '../../../components/admin/Icon'
 import { Logo as Logo_91a09b539d3c86b0aebf520e7564ce08 } from '../../../components/admin/Logo'
@@ -24,6 +25,7 @@ export const importMap = {
   "/components/admin/VisualEditorView#VisualEditorView": VisualEditorView_61cd617b938842b661c9f6d1678c1c79,
   "@payloadcms/ui#DefaultEditView": DefaultEditView_3817bf644402e67bfe6577f60ef982de,
   "/components/admin/PasswordChecklist#PasswordChecklist": PasswordChecklist_04392dd84d621fdceface601f994cac6,
+  "/components/admin/MapPicker#MapPicker": MapPicker_d50713359d9f0b3960c18e52c90ab2a7,
   "/components/admin/nav/FalahNav#FalahNav": FalahNav_eb31d88043f9ccfcb1413c23d153637e,
   "/components/admin/Icon#Icon": Icon_dfe4008080d895d460898c3a6155e9ba,
   "/components/admin/Logo#Logo": Logo_91a09b539d3c86b0aebf520e7564ce08,

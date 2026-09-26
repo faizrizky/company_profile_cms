@@ -43,7 +43,31 @@ export const SiteSettings: GlobalConfig = {
                   type: 'textarea',
                   required: true,
                   maxLength: 300,
-                  admin: { description: 'Alamat lengkap (dipakai untuk pin Google Maps).' },
+                  admin: { description: 'Alamat lengkap (ditampilkan di peta website).' },
+                },
+                {
+                  name: 'mapPicker',
+                  type: 'ui',
+                  admin: { components: { Field: '/components/admin/MapPicker#MapPicker' } },
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'latitude',
+                      type: 'number',
+                      min: -90,
+                      max: 90,
+                      admin: { width: '50%', step: 0.000001, description: 'Terisi otomatis dari peta.' },
+                    },
+                    {
+                      name: 'longitude',
+                      type: 'number',
+                      min: -180,
+                      max: 180,
+                      admin: { width: '50%', step: 0.000001, description: 'Terisi otomatis dari peta.' },
+                    },
+                  ],
                 },
                 {
                   name: 'shortAddress',

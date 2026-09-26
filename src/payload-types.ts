@@ -2128,9 +2128,17 @@ export interface SiteSetting {
   logo: number | Media;
   contact: {
     /**
-     * Alamat lengkap (dipakai untuk pin Google Maps).
+     * Alamat lengkap (ditampilkan di peta website).
      */
     address: string;
+    /**
+     * Terisi otomatis dari peta.
+     */
+    latitude?: number | null;
+    /**
+     * Terisi otomatis dari peta.
+     */
+    longitude?: number | null;
     /**
      * Versi singkat untuk footer. Enter = baris baru.
      */
@@ -2273,6 +2281,8 @@ export interface SiteSettingsSelect<T extends boolean = true> {
     | T
     | {
         address?: T;
+        latitude?: T;
+        longitude?: T;
         shortAddress?: T;
         email?: T;
         phone?: T;
