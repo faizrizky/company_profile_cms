@@ -9,6 +9,7 @@
 #   ./scripts/copy-to-cloud.sh
 #
 # Existing data in the cloud database is REPLACED by the local copy.
+# SKIP_DB=1 copies only the media.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -37,6 +38,7 @@ INITIAL_MIGRATION="$(ls src/migrations/*_initial.ts | head -1 | xargs basename |
 DUMP="$(mktemp -t falah-cms-XXXX).sql"
 trap 'rm -f "$DUMP"' EXIT
 
+if [ -z "${SKIP_DB:-}" ]; then
 echo "→ Dumping local database…"
 pg_dump "$LOCAL_DATABASE_URL" --no-owner --no-privileges --clean --if-exists >"$DUMP"
 
@@ -45,17 +47,16 @@ psql "$CLOUD_DATABASE_URL" --quiet --set ON_ERROR_STOP=1 --single-transaction --
 
 # The local database was built with dev "push"; production uses migrations.
 # Mark the initial migration as applied so `payload migrate` starts from here.
-echo "→ Marking migration $INITIAL_MIGRATION as applied…"
+echo "→ Marking migration ${INITIAL_MIGRATION} as applied…"
 psql "$CLOUD_DATABASE_URL" --quiet --set ON_ERROR_STOP=1 <<SQL
 DELETE FROM payload_migrations WHERE batch = -1;
 INSERT INTO payload_migrations (name, batch, updated_at, created_at)
 SELECT '$INITIAL_MIGRATION', 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM payload_migrations WHERE name = '$INITIAL_MIGRATION');
 SQL
+fi
 
-echo "→ Copying media to bucket $S3_BUCKET…"
-mc alias set falah-cloud "$S3_ENDPOINT" "$S3_ACCESS_KEY_ID" "$S3_SECRET_ACCESS_KEY" --api S3v4 --path on >/dev/null
-mc mirror --overwrite falah/falah-media "falah-cloud/$S3_BUCKET"
-mc alias remove falah-cloud >/dev/null
+echo "→ Copying media to bucket ${S3_BUCKET}…"
+node scripts/copy-media.mjs
 
 echo "✓ Done. Database and media are in the cloud."
