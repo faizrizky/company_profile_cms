@@ -866,8 +866,46 @@ body {
   --bg-color: var(--falah-accent);
   --hover-bg: var(--falah-accent-hover);
   --hover-color: #fff;
+  border-color: transparent;
   background-image: var(--falah-accent-gradient);
+  background-origin: border-box;
   box-shadow: 0 8px 20px -10px rgb(31 122 224 / 0.8);
+}
+
+/* Split button (Publish changes ▾): one gradient pill; the halves are
+   transparent over it, split by a thin divider. */
+.btn--style-primary.btn--withPopup {
+  display: inline-flex;
+  overflow: hidden;
+  border-radius: 999px;
+}
+
+.btn--style-primary.btn--withPopup > .btn,
+.btn--style-primary.btn--withPopup .popup-button {
+  border-color: transparent;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #fff;
+}
+
+.btn--style-primary.btn--withPopup > .btn {
+  padding-inline: 20px 16px;
+}
+
+.btn--style-primary.btn--withPopup .popup-button {
+  height: 100%;
+  padding-inline: 10px 14px;
+  border-left: 1px solid rgb(255 255 255 / 0.35);
+}
+
+.btn--style-primary.btn--withPopup > .btn:not(:disabled):hover,
+.btn--style-primary.btn--withPopup .popup-button:not(.popup-button--disabled):hover {
+  background: rgb(255 255 255 / 0.14);
+}
+
+.btn--style-primary.btn--withPopup.btn--disabled {
+  opacity: 0.6;
 }
 
 .btn--style-secondary {
