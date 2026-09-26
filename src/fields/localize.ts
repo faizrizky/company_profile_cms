@@ -10,6 +10,8 @@ const NOT_TRANSLATABLE = new Set([
   'email',
   'phone',
   'whatsappNumber',
+  // Upload collections' own file name (Media overrides its list cell).
+  'filename',
 ])
 
 /**
