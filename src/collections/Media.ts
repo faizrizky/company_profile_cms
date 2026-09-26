@@ -49,7 +49,8 @@ export const Media: CollectionConfig = {
       const sizes = doc.sizes as Record<string, { filename?: string | null } | undefined> | undefined
       const filename = sizes?.thumbnail?.filename || (typeof doc.filename === 'string' ? doc.filename : null)
       if (!filename) return null
-      const base = env.S3_PUBLIC_URL && /^https?:/.test(env.S3_PUBLIC_URL) ? env.S3_PUBLIC_URL : null
+      // Public URL or a proxied path such as /media (local MinIO).
+      const base = env.S3_PUBLIC_URL?.replace(/\/$/, '') || null
       return base ? `${base}/${encodeURIComponent(filename)}` : `/api/media/file/${encodeURIComponent(filename)}`
     },
     focalPoint: true,
