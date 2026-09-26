@@ -579,7 +579,10 @@ export interface Certification {
   description?: string | null;
   icon: number | Media;
   iconShape?: ('square' | 'wide' | 'narrow') | null;
-  certificate: number | Media;
+  /**
+   * Opsional. Tanpa gambar, sertifikasi tidak tampil di galeri sertifikat.
+   */
+  certificate?: (number | null) | Media;
   certificateFocus?: ('center' | 'top') | null;
   updatedAt: string;
   createdAt: string;

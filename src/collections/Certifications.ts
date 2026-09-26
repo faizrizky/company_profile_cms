@@ -50,7 +50,10 @@ export const Certifications: CollectionConfig = {
       {
         type: 'row',
         fields: [
-          imageField('certificate', { required: true, label: 'Certificate image', admin: { width: '50%' } }),
+          imageField('certificate', {
+            label: 'Certificate image',
+            admin: { width: '50%', description: 'Opsional. Tanpa gambar, sertifikasi tidak tampil di galeri sertifikat.' },
+          }),
           {
             name: 'certificateFocus',
             type: 'select',
