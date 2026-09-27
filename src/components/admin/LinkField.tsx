@@ -1,8 +1,10 @@
 'use client'
 
-import { FieldDescription, FieldError, FieldLabel, useConfig, useField, useTranslation } from '@payloadcms/ui'
+import { FieldDescription, FieldError, FieldLabel, useConfig, useField } from '@payloadcms/ui'
 import type { TextFieldClientComponent } from 'payload'
 import { useEffect, useId, useMemo, useState, type CSSProperties } from 'react'
+
+import { useAdminText } from './useAdminText'
 
 type Option = { label: string; href: string }
 type Group = { label: string; options: Option[] }
@@ -67,8 +69,7 @@ export const LinkField: TextFieldClientComponent = ({ field, path: pathFromProps
   const path = pathFromProps ?? field.name
   const { value, setValue, showError, errorMessage } = useField<string>({ path })
   const { config } = useConfig()
-  const { i18n } = useTranslation()
-  const t = i18n.language === 'id' ? TEXT.id : TEXT.en
+  const t = useAdminText(TEXT)
   const id = useId()
   const [groups, setGroups] = useState<Group[]>([])
   const [custom, setCustom] = useState(false)

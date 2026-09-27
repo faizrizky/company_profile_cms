@@ -6,11 +6,11 @@ import {
   useConfig,
   useDocumentInfo,
   useLocale,
-  useTranslation,
-} from '@payloadcms/ui'
+  } from '@payloadcms/ui'
 import { useEffect, useRef, useState, type ComponentProps } from 'react'
 
 import { EditorSkeleton } from './skeletons'
+import { useAdminLang } from './useAdminText'
 
 /** Sent by the studio (frontend) once the editor has mounted. */
 const READY_MESSAGE = 'falah-studio:ready'
@@ -38,7 +38,6 @@ export function VisualEditorView({ frontendUrl, ...props }: Props) {
   } = useConfig()
   const collectionConfig = collectionSlug ? getEntityConfig({ collectionSlug }) : undefined
   const locale = useLocale()
-  const { i18n } = useTranslation()
   const ref = useRef<HTMLDivElement>(null)
   const [height, setHeight] = useState<number>()
   // The editor URL whose studio reported ready (switching language reloads it).
@@ -63,7 +62,7 @@ export function VisualEditorView({ frontendUrl, ...props }: Props) {
     }
   }, [])
 
-  const ui = i18n.language === 'id' ? 'id' : 'en'
+  const ui = useAdminLang()
   const src = id ? `${frontendUrl}/studio/pages/${id}?locale=${locale.code}&ui=${ui}&embed=1` : ''
 
   // Show the editor skeleton until the studio says it's ready.

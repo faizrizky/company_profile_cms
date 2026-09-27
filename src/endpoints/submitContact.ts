@@ -1,9 +1,8 @@
-import { timingSafeEqual } from 'node:crypto'
-
 import type { Endpoint } from 'payload'
 import { z } from 'zod'
 
 import { env } from '@/lib/env'
+import { jsonResponse, safeEqual } from '@/lib/http'
 import { createRateLimiter } from '@/lib/rateLimit'
 
 /** Shared with the frontend's form validation (FE `lib/contact-schema.ts`). */
@@ -32,13 +31,8 @@ const globalLimiter = createRateLimiter({ limit: 30, windowMs: 60_000 })
 
 function isValidKey(header: string | null): boolean {
   if (!header) return false
-  const expected = Buffer.from(env.CONTACT_API_KEY)
-  const received = Buffer.from(header)
-  return received.length === expected.length && timingSafeEqual(received, expected)
+  return safeEqual(header, env.CONTACT_API_KEY)
 }
-
-const json = (body: unknown, status: number, headers?: HeadersInit) =>
-  Response.json(body, { status, headers })
 
 /**
  * POST /api/contact-submissions/submit
@@ -49,24 +43,24 @@ export const submitContactEndpoint: Endpoint = {
   method: 'post',
   handler: async (req) => {
     if (!isValidKey(req.headers.get('x-contact-key'))) {
-      return json({ error: 'Unauthorized' }, 401)
+      return jsonResponse({ error: 'Unauthorized' }, 401)
     }
 
     const limit = globalLimiter.check('global')
     if (!limit.ok) {
-      return json({ error: 'Too many requests' }, 429, { 'retry-after': String(limit.retryAfterSeconds) })
+      return jsonResponse({ error: 'Too many requests' }, 429, { 'retry-after': String(limit.retryAfterSeconds) })
     }
 
     let payloadBody: unknown
     try {
       payloadBody = await req.json?.()
     } catch {
-      return json({ error: 'Invalid JSON' }, 400)
+      return jsonResponse({ error: 'Invalid JSON' }, 400)
     }
 
     const parsed = bodySchema.safeParse(payloadBody)
     if (!parsed.success) {
-      return json({ error: 'Invalid submission', issues: z.flattenError(parsed.error).fieldErrors }, 400)
+      return jsonResponse({ error: 'Invalid submission', issues: z.flattenError(parsed.error).fieldErrors }, 400)
     }
 
     const { submission, client } = parsed.data
@@ -77,6 +71,6 @@ export const submitContactEndpoint: Endpoint = {
       data: { ...submission, status: 'new', meta: client },
     })
 
-    return json({ ok: true }, 201)
+    return jsonResponse({ ok: true }, 201)
   },
 }

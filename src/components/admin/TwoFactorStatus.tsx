@@ -1,12 +1,13 @@
 'use client'
 
-import { toast, useAuth, useConfig, useDocumentInfo, useField, useTranslation } from '@payloadcms/ui'
+import { toast, useAuth, useConfig, useDocumentInfo, useField } from '@payloadcms/ui'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import type { User } from '@/payload-types'
 
 import { TWO_FACTOR_SETUP_EVENT } from './TwoFactorGate'
+import { useAdminText } from './useAdminText'
 
 const TEXT = {
   en: {
@@ -40,9 +41,8 @@ export function TwoFactorStatus() {
   const { id } = useDocumentInfo()
   const { user } = useAuth<User>()
   const { config } = useConfig()
-  const { i18n } = useTranslation()
   const router = useRouter()
-  const t = i18n.language === 'id' ? TEXT.id : TEXT.en
+  const t = useAdminText(TEXT)
   const [busy, setBusy] = useState(false)
 
   if (!id) return null

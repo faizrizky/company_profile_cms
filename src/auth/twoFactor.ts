@@ -4,6 +4,7 @@ import QRCode from 'qrcode'
 import { hasRole } from '@/access'
 import { isTwoFactorVerified, stateOf, type TwoFactorState, type TwoFactorUser } from '@/auth/twoFactorState'
 import { writeAudit } from '@/hooks/auditLog'
+import { jsonResponse } from '@/lib/http'
 import { notifySecurity } from '@/lib/securityAlert'
 import {
   decryptSecret,
@@ -28,9 +29,6 @@ import {
 
 const MAX_FAILURES = 5
 const LOCK_MS = 15 * 60 * 1000
-
-const json = (body: unknown, status = 200) =>
-  Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } })
 
 async function readBody(req: PayloadRequest): Promise<Record<string, unknown>> {
   try {
@@ -91,7 +89,7 @@ async function recordFailure(req: PayloadRequest, user: TwoFactorUser, state: Tw
     await writeAudit(req, { action: 'security', resource: 'users.2fa-locked', documentId: String(user.id) })
     await notifySecurity(req, `🔒 2FA dikunci 15 menit setelah ${MAX_FAILURES}x kode salah: ${user.email}`)
   }
-  return json({ error: locked ? 'locked' : 'invalid', retryAfter: locked ? LOCK_MS / 1000 : undefined }, locked ? 429 : 400)
+  return jsonResponse({ error: locked ? 'locked' : 'invalid', retryAfter: locked ? LOCK_MS / 1000 : undefined }, locked ? 429 : 400)
 }
 
 // ── Endpoints (mounted on the users collection: /api/users/2fa/…) ────────
@@ -102,10 +100,10 @@ const status: Endpoint = {
   method: 'get',
   handler: async (req) => {
     const user = await loadUser(req)
-    if (!user) return json({ error: 'unauthorized' }, 401)
+    if (!user) return jsonResponse({ error: 'unauthorized' }, 401)
     const state = stateOf(user)
     const enabled = Boolean(user.totpEnabled && decryptSecret(state.secret))
-    return json({
+    return jsonResponse({
       enabled,
       verified: enabled && isTwoFactorVerified(user),
       recoveryCodesLeft: state.recoveryCodes?.length ?? 0,
@@ -120,17 +118,17 @@ const setup: Endpoint = {
   method: 'post',
   handler: async (req) => {
     const user = await loadUser(req)
-    if (!user) return json({ error: 'unauthorized' }, 401)
+    if (!user) return jsonResponse({ error: 'unauthorized' }, 401)
     const state = stateOf(user)
     // Replacing a working setup needs this session to be verified first.
     if (user.totpEnabled && decryptSecret(state.secret) && !isTwoFactorVerified(user)) {
-      return json({ error: 'verify-first' }, 403)
+      return jsonResponse({ error: 'verify-first' }, 403)
     }
     const secret = generateSecret()
     await save(req, user.id, { twoFactor: { ...state, pendingSecret: encryptSecret(secret) } })
     const url = otpauthUrl(secret, user.email ?? String(user.id))
     const qr = await QRCode.toString(url, { type: 'svg', margin: 1, errorCorrectionLevel: 'M' })
-    return json({ secret, qr })
+    return jsonResponse({ secret, qr })
   },
 }
 
@@ -140,12 +138,12 @@ const enable: Endpoint = {
   method: 'post',
   handler: async (req) => {
     const user = await loadUser(req)
-    if (!user) return json({ error: 'unauthorized' }, 401)
+    if (!user) return jsonResponse({ error: 'unauthorized' }, 401)
     const state = stateOf(user)
     const wait = lockedFor(state)
-    if (wait) return json({ error: 'locked', retryAfter: wait }, 429)
+    if (wait) return jsonResponse({ error: 'locked', retryAfter: wait }, 429)
     const pending = decryptSecret(state.pendingSecret)
-    if (!pending) return json({ error: 'no-setup' }, 400)
+    if (!pending) return jsonResponse({ error: 'no-setup' }, 400)
 
     const { code } = await readBody(req)
     const step = verifyCode(pending, String(code ?? ''))
@@ -164,7 +162,7 @@ const enable: Endpoint = {
     })
     await writeAudit(req, { action: 'security', resource: 'users.2fa-enabled', documentId: String(user.id) })
     await notifySecurity(req, `🔐 2FA diaktifkan: ${user.email}`)
-    return json({ ok: true, recoveryCodes: recovery.codes })
+    return jsonResponse({ ok: true, recoveryCodes: recovery.codes })
   },
 }
 
@@ -174,12 +172,12 @@ const verify: Endpoint = {
   method: 'post',
   handler: async (req) => {
     const user = await loadUser(req)
-    if (!user) return json({ error: 'unauthorized' }, 401)
+    if (!user) return jsonResponse({ error: 'unauthorized' }, 401)
     const state = stateOf(user)
     const secret = decryptSecret(state.secret)
-    if (!user.totpEnabled || !secret) return json({ error: 'not-enabled' }, 400)
+    if (!user.totpEnabled || !secret) return jsonResponse({ error: 'not-enabled' }, 400)
     const wait = lockedFor(state)
-    if (wait) return json({ error: 'locked', retryAfter: wait }, 429)
+    if (wait) return jsonResponse({ error: 'locked', retryAfter: wait }, 429)
 
     const { code, recoveryCode } = await readBody(req)
     let next: TwoFactorState | null = null
@@ -203,7 +201,7 @@ const verify: Endpoint = {
     await save(req, user.id, {
       twoFactor: { ...next, verifiedSessions: withVerifiedSession(user, next), failures: 0, lockedUntil: undefined },
     })
-    return json({ ok: true, recoveryCodesLeft: next.recoveryCodes?.length ?? 0 })
+    return jsonResponse({ ok: true, recoveryCodesLeft: next.recoveryCodes?.length ?? 0 })
   },
 }
 
@@ -212,14 +210,14 @@ const reset: Endpoint = {
   path: '/2fa/reset/:id',
   method: 'post',
   handler: async (req) => {
-    if (!hasRole(req.user, 'admin')) return json({ error: 'forbidden' }, 403)
+    if (!hasRole(req.user, 'admin')) return jsonResponse({ error: 'forbidden' }, 403)
     const id = req.routeParams?.id as string | undefined
-    if (!id) return json({ error: 'missing-id' }, 400)
+    if (!id) return jsonResponse({ error: 'missing-id' }, 400)
     const target = await req.payload.findByID({ collection: 'users', id, depth: 0, overrideAccess: true })
     await save(req, target.id, { totpEnabled: false, twoFactor: {} })
     await writeAudit(req, { action: 'security', resource: 'users.2fa-reset', documentId: String(target.id) })
     await notifySecurity(req, `♻️ 2FA di-reset oleh ${req.user?.email}: ${target.email}`)
-    return json({ ok: true })
+    return jsonResponse({ ok: true })
   },
 }
 

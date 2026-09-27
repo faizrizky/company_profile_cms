@@ -2,10 +2,12 @@
 
 import 'leaflet/dist/leaflet.css'
 
-import { useField, useTranslation } from '@payloadcms/ui'
+import { useField } from '@payloadcms/ui'
 import type { UIFieldClientComponent } from 'payload'
 import type { Map as LeafletMap, Marker } from 'leaflet'
 import { useEffect, useRef, useState } from 'react'
+
+import { useAdminText } from './useAdminText'
 
 /** Falah HQ, Jakarta — where the map opens before a pin is set. */
 const FALLBACK: [number, number] = [-6.2444, 106.8295]
@@ -105,8 +107,7 @@ export const MapPicker: UIFieldClientComponent = ({ path }) => {
   const lat = useField<number | null>({ path: at('latitude') })
   const lng = useField<number | null>({ path: at('longitude') })
   const address = useField<string>({ path: at('address') })
-  const { i18n } = useTranslation()
-  const t = i18n.language === 'id' ? TEXT.id : TEXT.en
+  const t = useAdminText(TEXT)
 
   const box = useRef<HTMLDivElement>(null)
   const map = useRef<LeafletMap | null>(null)

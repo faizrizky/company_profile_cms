@@ -1,6 +1,7 @@
-import { createCipheriv, createDecipheriv, createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto'
+import { createCipheriv, createDecipheriv, createHash, createHmac, randomBytes } from 'node:crypto'
 
 import { env } from '@/lib/env'
+import { safeEqual } from '@/lib/http'
 
 /**
  * Time-based one-time passwords (RFC 6238), as used by Google / Microsoft
@@ -62,12 +63,6 @@ function codeAt(secret: string, step: number): string {
 
 const currentStep = (now = Date.now()) => Math.floor(now / 1000 / STEP_SECONDS)
 
-const sameText = (a: string, b: string) => {
-  const x = Buffer.from(a)
-  const y = Buffer.from(b)
-  return x.length === y.length && timingSafeEqual(x, y)
-}
-
 /**
  * The time step a code belongs to, or null when it's wrong. Steps at or
  * before `lastUsedStep` are refused so a code can't be replayed.
@@ -77,7 +72,7 @@ export function verifyCode(secret: string, code: string, lastUsedStep = -1): num
   if (!/^\d{6}$/.test(clean)) return null
   const now = currentStep()
   for (let step = now - WINDOW; step <= now + WINDOW; step++) {
-    if (step > lastUsedStep && sameText(codeAt(secret, step), clean)) return step
+    if (step > lastUsedStep && safeEqual(codeAt(secret, step), clean)) return step
   }
   return null
 }
@@ -132,5 +127,5 @@ export function generateRecoveryCodes(count = 10): { codes: string[]; hashes: st
 /** Index of the matching recovery code hash, or -1. */
 export function findRecoveryCode(hashes: string[], code: string): number {
   const hash = hashCode(code)
-  return hashes.findIndex((h) => sameText(h, hash))
+  return hashes.findIndex((h) => safeEqual(h, hash))
 }

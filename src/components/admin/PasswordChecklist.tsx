@@ -1,10 +1,12 @@
 'use client'
 
-import { useFormFields, useTranslation } from '@payloadcms/ui'
+import { useFormFields } from '@payloadcms/ui'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { passwordRules } from '@/lib/passwordRules'
+
+import { useAdminLang } from './useAdminText'
 
 const PASSWORD_FIELD = '.auth-fields__changing-password .field-type.password'
 const CONFIRM_FIELD = '.auth-fields__changing-password .field-type.confirm-password'
@@ -41,7 +43,6 @@ function useFieldState(el: Element | null, state: State) {
  * password is being set, through portals.
  */
 export function PasswordChecklist() {
-  const { i18n } = useTranslation()
   const password = useFormFields(([fields]) => fields.password?.value)
   const confirm = useFormFields(([fields]) => fields['confirm-password']?.value)
   const email = useFormFields(([fields]) => fields.email?.value)
@@ -69,7 +70,7 @@ export function PasswordChecklist() {
     return () => observer.disconnect()
   }, [])
 
-  const lang = i18n.language === 'id' ? 'id' : 'en'
+  const lang = useAdminLang()
   const value = typeof password === 'string' ? password : ''
   const confirmValue = typeof confirm === 'string' ? confirm : ''
   const started = value.length > 0

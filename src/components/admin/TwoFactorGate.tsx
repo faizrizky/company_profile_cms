@@ -1,7 +1,9 @@
 'use client'
 
-import { useAuth, useConfig, useTranslation } from '@payloadcms/ui'
+import { useAuth, useConfig } from '@payloadcms/ui'
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
+
+import { useAdminText } from './useAdminText'
 
 type Status = { enabled: boolean; verified: boolean; recoveryCodesLeft: number; lockedFor: number }
 type Step = 'verify' | 'intro' | 'scan' | 'recovery'
@@ -74,8 +76,7 @@ const TEXT = {
 export function TwoFactorGateProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth()
   const { config } = useConfig()
-  const { i18n } = useTranslation()
-  const t = i18n.language === 'id' ? TEXT.id : TEXT.en
+  const t = useAdminText(TEXT)
   const api = `${config.serverURL}${config.routes.api}/users/2fa`
 
   // Keyed by user: a status fetched for someone else (after logout/login) is ignored.
