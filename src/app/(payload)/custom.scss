@@ -718,23 +718,48 @@ body {
   color: var(--falah-accent);
 }
 
-/* Header buttons ("Create New" = primary, others like "Bulk Upload" = soft). */
-.list-header__title-actions .btn--style-pill {
-  height: 32px;
-  padding-inline: 14px;
-  border-radius: 999px;
-  --bg-color: rgb(255 255 255 / 0.8);
-  --hover-bg: #fff;
-  border: 1px solid var(--falah-line);
-  box-shadow: 0 6px 16px -10px rgb(30 90 160 / 0.45);
+/* Header buttons ("Create New" = primary, others like "Bulk Upload" = soft),
+   sized like the document header's Edit / API pills and centred on the title. */
+.list-header__title-and-actions {
+  align-items: center;
+  gap: 16px;
 }
 
+.list-header__title-actions {
+  margin-bottom: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.list-header__title-actions .btn,
+.list-header__title-actions .btn--style-pill {
+  height: 40px;
+  margin: 0;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  --bg-color: #fff;
+  --hover-bg: #fff;
+  border: 1px solid #d3e2f3;
+  background-color: #fff;
+  color: var(--falah-ink);
+  box-shadow: 0 6px 16px -12px rgb(30 90 160 / 0.45);
+}
+
+/* Create New: one clean gradient pill — no border, so no darker edge. */
 .list-header__title-actions .list-create-new-doc__create-new-button {
   --color: #fff;
   --hover-color: #fff;
-  border-color: transparent;
-  background-image: var(--falah-accent-gradient);
-  box-shadow: 0 8px 20px -10px rgb(31 122 224 / 0.8);
+  border: 0;
+  background: var(--falah-accent-gradient) border-box;
+  color: #fff;
+  box-shadow: 0 10px 22px -12px rgb(31 122 224 / 0.8);
+}
+
+.list-header__title-actions .list-create-new-doc__create-new-button:hover {
+  filter: brightness(1.05);
 }
 
 /* Table: clean rows with hairline dividers and a soft hover. */
