@@ -9,7 +9,7 @@ import type {
 import { getClientIp, getUserAgent } from '@/lib/request'
 
 type AuditEntry = {
-  action: 'create' | 'update' | 'delete' | 'login'
+  action: 'create' | 'update' | 'delete' | 'login' | 'security'
   resource: string
   documentId?: string
   changedFields?: string[]
@@ -24,7 +24,7 @@ function changedFields(doc: Record<string, unknown>, previousDoc?: Record<string
   )
 }
 
-async function writeAudit(req: PayloadRequest, entry: AuditEntry) {
+export async function writeAudit(req: PayloadRequest, entry: AuditEntry) {
   if (req.context?.disableAudit) return
 
   try {

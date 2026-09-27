@@ -32,6 +32,11 @@ const schema = z
      * Leave unset locally (localhost cookies are shared across ports).
      */
     COOKIE_DOMAIN: optional(z.string()),
+    /**
+     * Incoming webhook for security alerts (logins, new users, role and 2FA
+     * changes): Discord, Slack or Google Chat. Leave unset to only audit-log.
+     */
+    SECURITY_WEBHOOK_URL: optional(z.string().url().startsWith('https://')),
 
     // Optional S3-compatible storage (Cloudflare R2 / AWS S3 / Supabase).
     S3_BUCKET: optional(z.string()),

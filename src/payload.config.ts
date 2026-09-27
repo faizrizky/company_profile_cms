@@ -104,6 +104,8 @@ export default buildConfig({
         '/components/admin/TabTransitions#TabTransitionsProvider',
         // First frame as the thumbnail of video files (Payload only previews images).
         '/components/admin/VideoThumbnails#VideoThumbnailsProvider',
+        // Two-step verification after the password (see src/auth/twoFactor.ts).
+        '/components/admin/TwoFactorGate#TwoFactorGateProvider',
       ],
     },
   },

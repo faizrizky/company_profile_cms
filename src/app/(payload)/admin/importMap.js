@@ -6,6 +6,7 @@ import { VisualEditorView as VisualEditorView_61cd617b938842b661c9f6d1678c1c79 }
 import { DefaultEditView as DefaultEditView_3817bf644402e67bfe6577f60ef982de } from '@payloadcms/ui'
 import { MediaFileCell as MediaFileCell_43b49a85fdeabccf4cc8d1c9210a9a19 } from '../../../components/admin/MediaFileCell'
 import { PasswordChecklist as PasswordChecklist_04392dd84d621fdceface601f994cac6 } from '../../../components/admin/PasswordChecklist'
+import { TwoFactorStatus as TwoFactorStatus_380291c26ced0491ded072106ac7f617 } from '../../../components/admin/TwoFactorStatus'
 import { MapPicker as MapPicker_d50713359d9f0b3960c18e52c90ab2a7 } from '../../../components/admin/MapPicker'
 import { FalahNav as FalahNav_eb31d88043f9ccfcb1413c23d153637e } from '../../../components/admin/nav/FalahNav'
 import { Icon as Icon_dfe4008080d895d460898c3a6155e9ba } from '../../../components/admin/Icon'
@@ -17,6 +18,7 @@ import { DocTabIconsProvider as DocTabIconsProvider_0bc762eb01cf68d6de5177723b30
 import { TooltipProvider as TooltipProvider_c223ece3f81b8d234bcefe15bd88a75f } from '../../../components/admin/Tooltips'
 import { TabTransitionsProvider as TabTransitionsProvider_e5d80046e735f8964b2c7daad81da067 } from '../../../components/admin/TabTransitions'
 import { VideoThumbnailsProvider as VideoThumbnailsProvider_f7d05f63326cd647cf57b0f4eaf0c97a } from '../../../components/admin/VideoThumbnails'
+import { TwoFactorGateProvider as TwoFactorGateProvider_bd1354467d11b81d7d9b3ed628382398 } from '../../../components/admin/TwoFactorGate'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
@@ -30,6 +32,7 @@ export const importMap = {
   "@payloadcms/ui#DefaultEditView": DefaultEditView_3817bf644402e67bfe6577f60ef982de,
   "/components/admin/MediaFileCell#MediaFileCell": MediaFileCell_43b49a85fdeabccf4cc8d1c9210a9a19,
   "/components/admin/PasswordChecklist#PasswordChecklist": PasswordChecklist_04392dd84d621fdceface601f994cac6,
+  "/components/admin/TwoFactorStatus#TwoFactorStatus": TwoFactorStatus_380291c26ced0491ded072106ac7f617,
   "/components/admin/MapPicker#MapPicker": MapPicker_d50713359d9f0b3960c18e52c90ab2a7,
   "/components/admin/nav/FalahNav#FalahNav": FalahNav_eb31d88043f9ccfcb1413c23d153637e,
   "/components/admin/Icon#Icon": Icon_dfe4008080d895d460898c3a6155e9ba,
@@ -41,6 +44,7 @@ export const importMap = {
   "/components/admin/Tooltips#TooltipProvider": TooltipProvider_c223ece3f81b8d234bcefe15bd88a75f,
   "/components/admin/TabTransitions#TabTransitionsProvider": TabTransitionsProvider_e5d80046e735f8964b2c7daad81da067,
   "/components/admin/VideoThumbnails#VideoThumbnailsProvider": VideoThumbnailsProvider_f7d05f63326cd647cf57b0f4eaf0c97a,
+  "/components/admin/TwoFactorGate#TwoFactorGateProvider": TwoFactorGateProvider_bd1354467d11b81d7d9b3ed628382398,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

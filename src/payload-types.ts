@@ -1010,6 +1010,16 @@ export interface ContactSubmission {
  */
 export interface User {
   id: number;
+  totpEnabled?: boolean | null;
+  twoFactor?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   name?: string | null;
   /**
    * Admin: manage users & settings. Editor: content only.
@@ -1043,7 +1053,7 @@ export interface User {
  */
 export interface AuditLog {
   id: number;
-  action: 'create' | 'update' | 'delete' | 'login';
+  action: 'create' | 'update' | 'delete' | 'login' | 'security';
   resource: string;
   documentId?: string | null;
   changedFields?: string[] | null;
@@ -2011,6 +2021,8 @@ export interface ContactSubmissionsSelect<T extends boolean = true> {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  totpEnabled?: T;
+  twoFactor?: T;
   name?: T;
   roles?: T;
   updatedAt?: T;
