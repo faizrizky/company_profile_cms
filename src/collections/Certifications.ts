@@ -1,28 +1,19 @@
 import type { CollectionConfig } from 'payload'
 
-import { anyone, isAdmin, isAuthenticated } from '@/access'
+import { contentAccess, contentHooks } from '@/collections/content'
 import { fieldCard } from '@/fields/card'
 import { imageField } from '@/fields/section'
-import { auditCollection } from '@/hooks/auditLog'
-import { revalidateCollection } from '@/hooks/revalidateFrontend'
-
-const audit = auditCollection('certifications')
-const revalidate = revalidateCollection('certifications')
 
 export const Certifications: CollectionConfig = {
   slug: 'certifications',
   orderable: true,
-  admin: { useAsTitle: 'title', defaultColumns: ['title', 'subtitle', 'updatedAt'], group: 'Content' },
-  access: {
-    read: anyone,
-    create: isAuthenticated,
-    update: isAuthenticated,
-    delete: isAdmin,
+  admin: {
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'subtitle', 'updatedAt'],
+    group: 'Content',
   },
-  hooks: {
-    afterChange: [...audit.afterChange, ...revalidate.afterChange],
-    afterDelete: [...audit.afterDelete, ...revalidate.afterDelete],
-  },
+  access: contentAccess(),
+  hooks: contentHooks('certifications'),
   fields: [
     fieldCard({ en: 'Content', id: 'Konten' }, [
       { name: 'title', type: 'text', required: true, maxLength: 120 },

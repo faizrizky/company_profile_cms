@@ -1,33 +1,22 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { contentAccess, contentHooks } from '@/collections/content'
 import { env } from '@/lib/env'
 import type { CollectionConfig } from 'payload'
 
-import { anyone, isAdmin, isAuthenticated } from '@/access'
 import { fieldCard } from '@/fields/card'
-import { auditCollection } from '@/hooks/auditLog'
-import { revalidateCollection } from '@/hooks/revalidateFrontend'
 import { ALLOWED_MIME_TYPES, secureUpload } from '@/hooks/secureUpload'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
-const audit = auditCollection('media')
-const revalidate = revalidateCollection('media')
-
 export const Media: CollectionConfig = {
   slug: 'media',
   admin: { group: 'Content', defaultColumns: ['filename', 'alt', 'mimeType', 'updatedAt'] },
-  access: {
-    read: anyone,
-    create: isAuthenticated,
-    update: isAuthenticated,
-    delete: isAdmin,
-  },
+  access: contentAccess(),
   hooks: {
     beforeOperation: [secureUpload],
-    afterChange: [...audit.afterChange, ...revalidate.afterChange],
-    afterDelete: [...audit.afterDelete, ...revalidate.afterDelete],
+    ...contentHooks('media'),
   },
   upload: {
     mimeTypes: ALLOWED_MIME_TYPES,
@@ -46,12 +35,16 @@ export const Media: CollectionConfig = {
     adminThumbnail: ({ doc }) => {
       // Videos / PDFs get Payload's file icon.
       if (typeof doc.mimeType !== 'string' || !doc.mimeType.startsWith('image/')) return null
-      const sizes = doc.sizes as Record<string, { filename?: string | null } | undefined> | undefined
-      const filename = sizes?.thumbnail?.filename || (typeof doc.filename === 'string' ? doc.filename : null)
+      const sizes = doc.sizes as
+        Record<string, { filename?: string | null } | undefined> | undefined
+      const filename =
+        sizes?.thumbnail?.filename || (typeof doc.filename === 'string' ? doc.filename : null)
       if (!filename) return null
       // Public URL or a proxied path such as /media (local MinIO).
       const base = env.S3_PUBLIC_URL?.replace(/\/$/, '') || null
-      return base ? `${base}/${encodeURIComponent(filename)}` : `/api/media/file/${encodeURIComponent(filename)}`
+      return base
+        ? `${base}/${encodeURIComponent(filename)}`
+        : `/api/media/file/${encodeURIComponent(filename)}`
     },
     focalPoint: true,
   },
@@ -61,7 +54,10 @@ export const Media: CollectionConfig = {
         name: 'alt',
         type: 'text',
         maxLength: 200,
-        admin: { description: 'Teks alternatif untuk aksesibilitas & SEO. Kosongkan untuk gambar dekoratif.' },
+        admin: {
+          description:
+            'Teks alternatif untuk aksesibilitas & SEO. Kosongkan untuk gambar dekoratif.',
+        },
       },
     ]),
     // Merged into Payload's own upload field of the same name: only the list

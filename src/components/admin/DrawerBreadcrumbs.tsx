@@ -1,6 +1,8 @@
 'use client'
 
-import { useEffect, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
+
+import { useDomScan } from './useDomScan'
 
 /** The page trail from Payload's top-bar breadcrumb (without the home icon). */
 function pageTrail(): string[] {
@@ -36,31 +38,18 @@ function decorate(header: HTMLElement) {
   header.prepend(crumbs)
 }
 
+const scanDrawers = () => {
+  document
+    .querySelectorAll<HTMLElement>('.drawer .drawer__header:not([data-crumbs])')
+    .forEach(decorate)
+}
 /**
  * Admin-wide provider: every drawer (image sizes, related documents, pickers)
  * gets a breadcrumb of the page it was opened from above its title, so it's
  * clear where you are.
  */
 export function DrawerBreadcrumbsProvider({ children }: { children: ReactNode }) {
-  useEffect(() => {
-    let timer = 0
-    const scan = () => {
-      timer = 0
-      document
-        .querySelectorAll<HTMLElement>('.drawer .drawer__header:not([data-crumbs])')
-        .forEach(decorate)
-    }
-    const schedule = () => {
-      if (!timer) timer = window.setTimeout(scan, 0)
-    }
-    scan()
-    const observer = new MutationObserver(schedule)
-    observer.observe(document.body, { childList: true, subtree: true })
-    return () => {
-      observer.disconnect()
-      window.clearTimeout(timer)
-    }
-  }, [])
+  useDomScan(scanDrawers)
 
   return children
 }

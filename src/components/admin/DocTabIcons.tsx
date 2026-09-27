@@ -1,6 +1,8 @@
 'use client'
 
-import { useEffect, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
+
+import { useDomScan } from './useDomScan'
 
 const VIEWS = new Set(['form', 'api', 'preview'])
 
@@ -22,34 +24,23 @@ function tag(tab: HTMLElement) {
   if (tab.dataset.falahTab !== key) tab.setAttribute('data-falah-tab', key)
 }
 
+const scanDocTabs = () => {
+  document.querySelectorAll<HTMLElement>('.doc-tabs .doc-tab').forEach(tag)
+}
 /**
  * Admin-wide provider: marks each document tab (Edit / Visual, Form,
  * Versions, API, Live preview) with the view it opens, so the theme can give
  * it an icon (see custom.scss).
  */
 export function DocTabIconsProvider({ children }: { children: ReactNode }) {
-  useEffect(() => {
-    let timer = 0
-    const scan = () => {
-      timer = 0
-      document.querySelectorAll<HTMLElement>('.doc-tabs .doc-tab').forEach(tag)
-    }
-    const schedule = () => {
-      if (!timer) timer = window.setTimeout(scan, 0)
-    }
-    scan()
-    const observer = new MutationObserver(schedule)
-    observer.observe(document.body, {
+  useDomScan(scanDocTabs, {
+    observe: {
       childList: true,
       subtree: true,
       attributes: true,
       attributeFilter: ['href', 'class'],
-    })
-    return () => {
-      observer.disconnect()
-      window.clearTimeout(timer)
-    }
-  }, [])
+    },
+  })
 
   return children
 }

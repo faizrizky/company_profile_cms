@@ -1,6 +1,8 @@
 'use client'
 
-import { useEffect, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
+
+import { useDomScan } from './useDomScan'
 
 const VIDEO_FILE = /\.(mp4|webm|mov|m4v|ogv)$/i
 /** Where Payload shows a file with its thumbnail: upload fields and the media edit page. */
@@ -38,29 +40,16 @@ function enhance(thumbnail: HTMLElement) {
   thumbnail.append(video)
 }
 
+const scanThumbnails = () => {
+  document.querySelectorAll<HTMLElement>(`:is(${CARD}) .thumbnail`).forEach(enhance)
+}
 /**
  * Admin-wide provider: Payload only previews images, so video files show a
  * blank file icon. This paints the video's first frame in their thumbnail
  * (upload fields, media edit page). Same approach as MediaFileCell.
  */
 export function VideoThumbnailsProvider({ children }: { children: ReactNode }) {
-  useEffect(() => {
-    let timer = 0
-    const scan = () => {
-      timer = 0
-      document.querySelectorAll<HTMLElement>(`:is(${CARD}) .thumbnail`).forEach(enhance)
-    }
-    const schedule = () => {
-      if (!timer) timer = window.setTimeout(scan, 0)
-    }
-    scan()
-    const observer = new MutationObserver(schedule)
-    observer.observe(document.body, { childList: true, subtree: true })
-    return () => {
-      observer.disconnect()
-      window.clearTimeout(timer)
-    }
-  }, [])
+  useDomScan(scanThumbnails)
 
   return children
 }

@@ -1,14 +1,9 @@
 import type { CollectionConfig } from 'payload'
 
-import { anyone, isAdmin, isAuthenticated } from '@/access'
+import { contentAccess, contentHooks } from '@/collections/content'
 import { fieldCard } from '@/fields/card'
 import { imageField } from '@/fields/section'
 import { slugField } from '@/fields/slug'
-import { auditCollection } from '@/hooks/auditLog'
-import { revalidateCollection } from '@/hooks/revalidateFrontend'
-
-const audit = auditCollection('products')
-const revalidate = revalidateCollection('products')
 
 export const Products: CollectionConfig = {
   slug: 'products',
@@ -20,16 +15,8 @@ export const Products: CollectionConfig = {
     description:
       'Kartu produk di Solution Overview dan mega menu (produk pertama tiap kategori jadi kartu besar). Geser untuk mengatur urutan.',
   },
-  access: {
-    read: anyone,
-    create: isAuthenticated,
-    update: isAuthenticated,
-    delete: isAdmin,
-  },
-  hooks: {
-    afterChange: [...audit.afterChange, ...revalidate.afterChange],
-    afterDelete: [...audit.afterDelete, ...revalidate.afterDelete],
-  },
+  access: contentAccess(),
+  hooks: contentHooks('products'),
   fields: [
     fieldCard({ en: 'Content', id: 'Konten' }, [
       { name: 'title', type: 'text', required: true, maxLength: 120 },
