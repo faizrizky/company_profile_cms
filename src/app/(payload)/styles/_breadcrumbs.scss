@@ -1,0 +1,218 @@
+/* ── Breadcrumb: overlapping pills, current page in blue ──────────────── */
+
+.step-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0;
+  min-width: 0;
+  padding: 6px 0;
+}
+
+.step-nav::after {
+  display: none;
+}
+
+/* The "/" separators. */
+.step-nav > span:not(.step-nav__last) {
+  display: none;
+}
+
+.step-nav > a,
+.step-nav > .step-nav__last,
+.falah-drawer-crumbs__item {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  margin-left: -22px;
+  padding: 0 18px 0 36px;
+  border-radius: 999px;
+  background: #fff;
+  color: #7d93ad;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.9), 10px 0 18px -10px rgb(6 41 79 / 0.35);
+  transition: color 0.2s ease;
+}
+
+.step-nav > a:hover {
+  color: var(--falah-ink);
+  text-decoration: none;
+}
+
+.step-nav > a:first-child,
+.falah-drawer-crumbs__item:first-child {
+  margin-left: 0;
+  padding-left: 16px;
+}
+
+/* Home: just the brand mark. */
+.step-nav > .step-nav__home,
+.step-nav .step-nav__home {
+  width: auto;
+  height: 34px;
+  padding-right: 16px;
+}
+
+.step-nav__home > span {
+  display: grid;
+  place-items: center;
+}
+
+.step-nav__home .falah-brand__mark--sm {
+  width: 20px;
+  height: 20px;
+}
+
+/* Crumbs without a sidebar icon (a document, a sub-view) get a document
+   icon; zero specificity, so every collection/global icon still wins. */
+:where(.step-nav > a) {
+  --falah-nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z'/%3E%3Cpath d='M14 2v5a1 1 0 0 0 1 1h5'/%3E%3Cpath d='m10 13 2 2 3-3'/%3E%3C/svg%3E");
+}
+
+/* Collection / global crumbs carry the sidebar icon. */
+.step-nav > a:not(.step-nav__home)::before {
+  content: '';
+  flex: none;
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  -webkit-mask: var(--falah-nav-icon, none) center / contain no-repeat;
+  mask: var(--falah-nav-icon, none) center / contain no-repeat;
+}
+
+.step-nav > .step-nav__last,
+.falah-drawer-crumbs__item:last-child {
+  display: inline-block;
+  max-width: 42ch;
+  overflow: hidden;
+  padding-top: 0;
+  line-height: 34px;
+  background: linear-gradient(135deg, #38bdf8 0%, #1f7ae0 100%);
+  color: #fff;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  box-shadow: 0 8px 18px -10px rgb(31 122 224 / 0.8);
+}
+
+/* Earlier crumbs sit on top of later ones. */
+.step-nav > :nth-child(1),
+.falah-drawer-crumbs > :nth-child(1) { z-index: 9; }
+.step-nav > :nth-child(3),
+.falah-drawer-crumbs > :nth-child(3) { z-index: 8; }
+.step-nav > :nth-child(5),
+.falah-drawer-crumbs > :nth-child(5) { z-index: 7; }
+.step-nav > :nth-child(7),
+.falah-drawer-crumbs > :nth-child(7) { z-index: 6; }
+.step-nav > :nth-child(9),
+.falah-drawer-crumbs > :nth-child(9) { z-index: 5; }
+
+.falah-drawer-crumbs .falah-drawer-crumbs__sep {
+  display: none;
+}
+
+.falah-drawer-crumbs {
+  gap: 0;
+  padding: 2px 0 6px;
+}
+
+.falah-drawer-crumbs__item:first-child {
+  color: #7d93ad;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .step-nav > a,
+  .step-nav > .step-nav__last,
+  .falah-drawer-crumbs__item {
+    height: 30px;
+    margin-left: -18px;
+    padding: 0 12px 0 28px;
+    font-size: 12px;
+  }
+
+  .step-nav > .step-nav__last,
+  .falah-drawer-crumbs__item:last-child {
+    max-width: 22ch;
+    line-height: 30px;
+  }
+}
+
+/* Dashboard: the last crumb is Payload's dashboard switcher (a select). */
+.step-nav > .step-nav__last:has(.dashboard-breadcrumb-select, .dashboard-breadcrumb-dropdown__editing) {
+  display: inline-flex;
+  align-items: center;
+  max-width: none;
+  overflow: visible;
+  padding-top: 0;
+  padding-right: 10px;
+}
+
+.step-nav__last .dashboard-breadcrumb-select .rs__control,
+.step-nav__last .dashboard-breadcrumb-select .rs__control--is-focused {
+  min-height: 0;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  cursor: pointer;
+}
+
+.step-nav__last .dashboard-breadcrumb-select .rs__value-container {
+  padding: 0;
+}
+
+.step-nav__last .dashboard-breadcrumb-select :is(.rs__single-value, .rs__indicator) {
+  color: #fff;
+}
+
+.step-nav__last .dashboard-breadcrumb-select .rs__indicator {
+  padding: 0 0 0 6px;
+}
+
+.step-nav__last .dashboard-breadcrumb-select .rs__indicator-separator {
+  display: none;
+}
+
+/* Payload fades links while pressed / focused by mouse (opacity .7–.8). On
+   the overlapping breadcrumb pills, the sidebar tabs and the account menu
+   that makes the shapes behind show through, so keep them opaque and give
+   a small press instead. */
+.step-nav a:is(:active, :focus),
+.nav a:is(:active, :focus),
+.falah-account__item:is(:active, :focus) {
+  opacity: 1;
+}
+
+.step-nav > a {
+  transition: color 0.2s ease, transform 0.12s ease;
+}
+
+.step-nav > a:active {
+  transform: scale(0.97);
+}
+
+/* Taller top bar for the breadcrumb pills (sticky bars, the sidebar and the
+   menu button all follow this variable), plus breathing room between the
+   breadcrumb and the page title below it. */
+:root {
+  --app-header-height: 68px;
+}
+
+.template-default__wrap > .app-header + * {
+  padding-top: 14px;
+}
+
+/* Header buttons: "Create New" is a link (block) — centre its label like
+   the <button>s next to it. */
+.list-header__title-actions .btn,
+.doc-header .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

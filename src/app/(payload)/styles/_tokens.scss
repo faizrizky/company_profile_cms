@@ -1,0 +1,71 @@
+/*
+ * Falah CMS — sky-blue→navy sidebar, sky-blue workspace, frosted white
+ * panels, blue accent. Same theme as the visual editor. Panels are joined,
+ * not floating cards. Payload's own styles live in `@layer payload-default`;
+ * these rules win.
+ */
+
+:root,
+html[data-theme='light'] {
+  /* Cool slate-blue neutral scale (drives every --theme-elevation-*). */
+  --color-base-0: #ffffff;
+  --color-base-50: #f6f9fc;
+  --color-base-100: #eef4fa;
+  --color-base-150: #e3ecf6;
+  --color-base-200: #d3e0ee;
+  --color-base-250: #c3d3e5;
+  --color-base-300: #b0c3d9;
+  --color-base-350: #9db3cc;
+  --color-base-400: #8aa2bf;
+  --color-base-450: #7891b1;
+  --color-base-500: #6781a3;
+  --color-base-550: #587293;
+  --color-base-600: #4a6383;
+  --color-base-650: #3e5673;
+  --color-base-700: #334964;
+  --color-base-750: #293d55;
+  --color-base-800: #203247;
+  --color-base-850: #18283a;
+  --color-base-900: #111e2e;
+  --color-base-950: #0b1522;
+  --color-base-1000: #060d18;
+
+  --falah-accent: #1f7ae0;
+  --falah-accent-hover: #1864c2;
+  --falah-accent-gradient: linear-gradient(135deg, #38bdf8 0%, #1f7ae0 100%);
+  --falah-rail: linear-gradient(180deg, #38bdf8 0%, #1f7ae0 45%, #0b2e7a 100%);
+  --falah-ink: #0f2742;
+  --falah-muted: #56708f;
+  --falah-glass: rgb(255 255 255 / 0.55);
+  --falah-line: rgb(255 255 255 / 0.75);
+
+  --theme-bg: transparent;
+  --theme-text: var(--falah-ink);
+  --theme-input-bg: rgb(255 255 255 / 0.85);
+  --theme-border-color: var(--falah-line);
+  --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --style-radius-s: 8px;
+  --style-radius-m: 10px;
+  --style-radius-l: 14px;
+  --falah-visual-gap: 20px;
+
+  /* The page backdrop. Reused (fixed to the viewport) by the active sidebar
+     tab so the tab is pixel-identical to the page next to it. */
+  --falah-page-bg:
+    radial-gradient(40rem 34rem at 85% 5%, rgb(125 211 252 / 0.45), transparent 62%),
+    radial-gradient(36rem 36rem at 100% 75%, rgb(56 189 248 / 0.3), transparent 60%),
+    radial-gradient(34rem 30rem at 20% 0%, rgb(224 242 254 / 0.9), transparent 62%),
+    linear-gradient(135deg, #e7f5fe 0%, #d6edfb 50%, #c4e6f9 100%);
+}
+
+html,
+body {
+  background: var(--falah-page-bg);
+  background-attachment: fixed;
+  color: var(--falah-ink);
+}
+
+.template-default,
+.template-minimal {
+  background: transparent;
+}

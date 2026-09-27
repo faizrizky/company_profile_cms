@@ -1,0 +1,291 @@
+/* ── Account block at the foot of the sidebar ─────────────────────────── */
+
+.falah-account {
+  margin-top: auto;
+  padding-top: 20px;
+  width: 100%;
+}
+
+.falah-account__button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 10px 8px 8px;
+  border: 0;
+  border-radius: 14px;
+  background: rgb(255 255 255 / 0.1);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16);
+  color: #fff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.16s ease;
+}
+
+.falah-account__button:hover,
+.falah-account__button[aria-expanded='true'] {
+  background: rgb(255 255 255 / 0.2);
+}
+
+.falah-account__button:active {
+  transform: scale(0.97);
+}
+
+.falah-account__avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fff, #d6edfb);
+  color: #0b2e7a;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 12px rgb(6 41 79 / 0.3);
+}
+
+.falah-account__text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.falah-account__name {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.falah-account__role {
+  color: rgb(255 255 255 / 0.7);
+  font-size: 12px;
+}
+
+.falah-account__chevron {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.8;
+}
+
+.falah-account--compact .falah-account__button {
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.falah-account--compact .falah-account__button:hover .falah-account__avatar,
+.falah-account--compact .falah-account__button[aria-expanded='true'] .falah-account__avatar {
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 0.45), 0 4px 12px rgb(6 41 79 / 0.3);
+}
+
+.falah-account__menu {
+  position: fixed;
+  z-index: var(--z-popup);
+  min-width: 220px;
+  padding: 6px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--falah-line), 0 18px 40px rgb(6 41 79 / 0.22);
+  animation: falah-pop 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+.falah-account__menu-head {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px 10px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--falah-line);
+}
+
+.falah-account__menu-name {
+  color: var(--falah-ink);
+  font-weight: 600;
+}
+
+.falah-account__menu-email {
+  color: var(--falah-muted);
+  font-size: 12px;
+}
+
+.falah-account__langs {
+  padding: 6px 4px 8px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--falah-line);
+}
+
+.falah-account__section {
+  display: block;
+  padding: 2px 6px 8px;
+  color: var(--falah-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.falah-account__lang-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 12px;
+  background: #eef6fd;
+}
+
+.falah-account__lang {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--falah-muted);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.falah-account__lang:hover {
+  color: var(--falah-ink);
+}
+
+.falah-account__lang.is-active {
+  background: #fff;
+  color: var(--falah-ink);
+  box-shadow: 0 1px 2px rgb(6 41 79 / 0.08), 0 4px 10px -4px rgb(6 41 79 / 0.2);
+  cursor: default;
+}
+
+.falah-account__flag {
+  display: block;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgb(15 39 66 / 0.12);
+}
+
+.falah-account__flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.falah-account__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  color: var(--falah-ink);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.falah-account__item:hover {
+  background: #e7f5fe;
+  text-decoration: none;
+}
+
+.falah-account__item svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.falah-account__item--danger {
+  color: #dc2626;
+}
+
+.falah-account__item--danger:hover {
+  background: #fef2f2;
+}
+
+/* Payload's own account avatar, logout and settings buttons are replaced by the block above. */
+.app-header__account,
+.nav__controls {
+  display: none;
+}
+
+/* Content language is switched from the account menu; Payload's top-bar
+   localizer is hidden. */
+.app-header__localizer,
+.app-header__localizer-spacing {
+  display: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Menu toggle: frosted on the pastel page, white-on-violet over the open sidebar. */
+.hamburger {
+  border-radius: 8px;
+  background-color: rgb(255 255 255 / 0.6);
+  box-shadow: 0 0 0 1px var(--falah-line);
+}
+
+.hamburger .stroke {
+  stroke: currentColor;
+}
+
+.template-default--nav-open .template-default__nav-toggler .hamburger {
+  color: #fff;
+  background-color: rgb(255 255 255 / 0.14);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.45);
+}
+
+.template-default--nav-open .template-default__nav-toggler .hamburger:hover {
+  background-color: rgb(255 255 255 / 0.24);
+}
+
+/* Breadcrumbs start at the section name — no logo mark in front. */
+
+
+/* No dividers anywhere on document screens: everything sits on one surface. */
+.doc-header:after,
+.doc-controls__divider {
+  display: none;
+}
+
+.doc-controls__controls-wrapper {
+  background-color: transparent;
+  border-top: 0;
+}
+
+.document-fields--has-sidebar {
+  --main-border: none;
+}
+
+.live-preview-toolbar--static {
+  border-bottom: 0;
+}

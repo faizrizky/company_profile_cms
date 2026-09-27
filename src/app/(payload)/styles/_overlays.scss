@@ -1,0 +1,219 @@
+/* ── Dropdowns (react-select): solid card, soft highlight ──────────────── */
+
+.rs__menu {
+  margin-top: 6px;
+  padding: 6px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--falah-line), 0 18px 40px -12px rgb(6 41 79 / 0.3);
+  z-index: 50;
+}
+
+.rs__option {
+  margin: 0;
+  padding: 9px 12px;
+  border-radius: 10px;
+  color: var(--falah-ink);
+  font-size: 14px;
+}
+
+.rs__option--is-focused {
+  background-color: #eef6fd;
+}
+
+.rs__option--is-selected {
+  background-color: #dfeeff;
+  color: #0b4a9e;
+  font-weight: 600;
+}
+
+/* ── Drawers (document, list, image sizes…): one big sheet ─────────────── */
+
+/* The sheet runs edge to edge on the right with rounded leading corners; the
+   area to its left is just the blurred page (no tinted strip). */
+.drawer__content {
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0;
+  border-left: 1px solid rgb(255 255 255 / 0.9);
+  border-radius: 28px 0 0 28px;
+  background: linear-gradient(180deg, #f7fbff 0%, #edf5fd 100%);
+  box-shadow: -24px 0 60px -30px rgb(6 41 79 / 0.45);
+}
+
+.drawer__blur-bg-content {
+  display: none;
+}
+
+.drawer__close,
+.drawer .drawer__close {
+  background: transparent;
+  opacity: 1;
+}
+
+.drawer__header {
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 28px;
+}
+
+.falah-drawer-crumbs {
+  display: flex;
+  flex: 1 0 100%;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--falah-muted);
+  font-size: 13px;
+}
+
+.falah-drawer-crumbs__item {
+  overflow: hidden;
+  max-width: 40ch;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.falah-drawer-crumbs__item:first-child {
+  color: var(--falah-ink);
+  font-weight: 600;
+}
+
+.falah-drawer-crumbs__sep {
+  color: #9fb3c8;
+}
+
+.drawer__header__title {
+  min-width: 0;
+  font-size: 26px;
+  overflow-wrap: anywhere;
+}
+
+.drawer__header__close {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--falah-line), 0 4px 12px -6px rgb(6 41 79 / 0.3);
+  transition: background-color 0.2s ease;
+}
+
+.drawer__header__close:hover {
+  background: #eef6fd;
+}
+
+.drawer__header__close svg {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+}
+
+/* Image sizes: preview card + a slim list of sizes, both as tall as their
+   content. */
+.preview-sizes {
+  align-items: flex-start;
+  gap: 20px;
+  height: auto;
+  max-height: none;
+  margin: 12px 0 28px;
+  border-top: 0;
+}
+
+.preview-sizes__imageWrap,
+.preview-sizes__listWrap {
+  overflow: hidden;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--falah-line), 0 18px 36px -26px rgb(6 41 79 / 0.4);
+}
+
+.preview-sizes__imageWrap {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.preview-sizes__listWrap {
+  flex: none;
+  width: 300px;
+  height: auto;
+  padding: 0;
+}
+
+/* Payload pads the end of the list with an 80px spacer. */
+.preview-sizes__listWrap::after {
+  display: none;
+}
+
+.preview-sizes__meta {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--falah-line);
+}
+
+.preview-sizes__preview {
+  box-sizing: border-box;
+  width: 100%;
+  max-height: calc(100vh - 300px);
+  padding: 20px;
+  object-fit: contain;
+}
+
+.preview-sizes__list {
+  align-items: stretch;
+  gap: 6px;
+  padding: 10px;
+}
+
+.preview-sizes__sizeOption {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.preview-sizes__sizeOption:hover {
+  background: #f5faff;
+}
+
+.preview-sizes--selected,
+.preview-sizes--selected:hover {
+  background: #eef6fd;
+  box-shadow: inset 0 0 0 1px rgb(31 122 224 / 0.25);
+}
+
+.preview-sizes__image {
+  width: 96px;
+  min-width: 96px;
+}
+
+.preview-sizes__image img {
+  border-radius: 10px;
+}
+
+.preview-sizes__sizeMeta {
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .preview-sizes {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .preview-sizes__listWrap {
+    width: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .drawer__content {
+    border-radius: 20px 20px 0 0;
+  }
+}

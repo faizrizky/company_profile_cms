@@ -1,0 +1,110 @@
+/* ── Motion ───────────────────────────────────────────────────────────── */
+
+@keyframes falah-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes falah-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}
+
+@keyframes falah-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Opening a page: header, controls and content glide in. */
+.list-header,
+.doc-header,
+.dashboard,
+.list-controls,
+.falah-selection,
+.collection-list .table,
+.document-fields,
+.falah-visual,
+.template-minimal__wrap {
+  /* "backwards", not "both": once finished the animation must leave no
+     transform behind — a lingering transform makes these boxes the
+     containing block for position:fixed children (drag previews, popups). */
+  animation: falah-enter 0.38s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.list-controls {
+  animation-delay: 40ms;
+}
+
+.collection-list .table,
+.document-fields,
+.falah-visual {
+  animation-delay: 80ms;
+}
+
+/* Table rows cascade in. */
+.table tbody tr {
+  animation: falah-enter 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.table tbody tr:nth-child(1) { animation-delay: 110ms; }
+.table tbody tr:nth-child(2) { animation-delay: 140ms; }
+.table tbody tr:nth-child(3) { animation-delay: 170ms; }
+.table tbody tr:nth-child(4) { animation-delay: 200ms; }
+.table tbody tr:nth-child(5) { animation-delay: 230ms; }
+.table tbody tr:nth-child(6) { animation-delay: 260ms; }
+.table tbody tr:nth-child(7) { animation-delay: 290ms; }
+.table tbody tr:nth-child(8) { animation-delay: 320ms; }
+.table tbody tr:nth-child(n + 9) { animation-delay: 350ms; }
+
+/* Actions: every button responds to hover and press. */
+.btn,
+.pill,
+.falah-row-actions__btn,
+.nav__link,
+.card {
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.btn:not(:disabled):hover,
+.falah-row-actions__btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:not(:disabled):active,
+.pill:active,
+.falah-row-actions__btn:active {
+  transform: translateY(0) scale(0.96);
+}
+
+.falah-selection .list-selection {
+  animation: falah-pop 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+.nav .nav__link:has(.nav__link-indicator) {
+  animation: falah-fade 0.25s ease both;
+}
+
+/* Toasts slide in. */
+[data-sonner-toast] {
+  border-radius: 14px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+  }
+}

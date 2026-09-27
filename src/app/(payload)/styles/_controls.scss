@@ -1,0 +1,170 @@
+/* ── Controls ─────────────────────────────────────────────────────────── */
+
+.btn--style-primary {
+  --color: #fff;
+  --bg-color: var(--falah-accent);
+  --hover-bg: var(--falah-accent-hover);
+  --hover-color: #fff;
+  border-color: transparent;
+  background-image: var(--falah-accent-gradient);
+  background-origin: border-box;
+  box-shadow: 0 8px 20px -10px rgb(31 122 224 / 0.8);
+}
+
+/* Split button (Publish changes ▾): one gradient pill; the halves are
+   transparent over it, split by a thin divider. */
+.btn--style-primary.btn--withPopup {
+  display: inline-flex;
+  overflow: hidden;
+  border-radius: 999px;
+}
+
+.btn--style-primary.btn--withPopup > .btn,
+.btn--style-primary.btn--withPopup .popup-button {
+  border-color: transparent;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #fff;
+}
+
+.btn--style-primary.btn--withPopup > .btn {
+  padding-inline: 20px 16px;
+}
+
+.btn--style-primary.btn--withPopup .popup-button {
+  height: 100%;
+  padding-inline: 10px 14px;
+  border-left: 1px solid rgb(255 255 255 / 0.35);
+}
+
+.btn--style-primary.btn--withPopup > .btn:not(:disabled):hover,
+.btn--style-primary.btn--withPopup .popup-button:not(.popup-button--disabled):hover {
+  background: rgb(255 255 255 / 0.14);
+}
+
+.btn--style-primary.btn--withPopup.btn--disabled {
+  opacity: 0.6;
+}
+
+.btn--style-secondary {
+  --bg-color: rgb(255 255 255 / 0.8);
+  --hover-bg: #fff;
+}
+
+input:focus,
+textarea:focus,
+.react-select .rs__control--is-focused {
+  border-color: rgb(125 190 245) !important;
+  box-shadow: 0 0 0 3px rgb(31 122 224 / 0.18) !important;
+}
+
+/* ── Brand ────────────────────────────────────────────────────────────── */
+
+.falah-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.falah-brand__mark {
+  display: block;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.falah-brand__mark--sm {
+  width: 22px;
+  height: 22px;
+}
+
+.falah-brand__name {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--falah-ink);
+}
+
+/* ── Pages: visual editor view ────────────────────────────────────────── */
+
+/* The editor sits in one large glass card, like the list tables, inset by
+   the admin's gutter. Height is set inline to fill the window below the
+   document header (minus the card's bottom spacing). */
+/* No backdrop-filter on or over the editor: Chrome (GPU compositing) stops
+   painting an iframe that sits under a blurred layer, leaving a blank canvas
+   after a scroll or resize. The card uses a near-opaque fill instead. */
+.falah-visual {
+  min-height: 560px;
+  margin: 4px var(--gutter-h) var(--falah-visual-gap);
+  overflow: hidden;
+  background: rgb(255 255 255 / 0.82);
+  border: 1px solid var(--falah-line);
+  border-radius: var(--style-radius-l);
+  box-shadow: 0 14px 40px -20px rgb(30 90 160 / 0.4);
+}
+
+body:has(.falah-visual) .app-header__bg,
+body:has(.falah-visual) .doc-controls:before {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.falah-visual__frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color-scheme: light;
+}
+
+/* ── Confirmation modals: a card on a blurred backdrop ────────────────── */
+
+.confirmation-modal:before {
+  background: rgb(15 39 66 / 0.18);
+  opacity: 1;
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+.confirmation-modal__wrapper {
+  width: min(440px, calc(100vw - 32px));
+  gap: 20px;
+  padding: 28px;
+  border: 1px solid rgb(255 255 255 / 0.9);
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.92);
+  box-shadow: 0 30px 80px -24px rgb(15 39 66 / 0.45), 0 2px 8px rgb(15 39 66 / 0.08);
+  animation: falah-pop 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+.confirmation-modal__content h1,
+.confirmation-modal__content h2,
+.confirmation-modal__content h3 {
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.confirmation-modal__content p {
+  color: var(--falah-muted);
+  line-height: 1.55;
+}
+
+.confirmation-modal__controls {
+  justify-content: flex-end;
+}
+
+.confirmation-modal__controls .btn {
+  min-width: 96px;
+  border-radius: 999px;
+}
+
+/* Destructive confirmations (row delete) use a red primary button. */
+.falah-confirm--danger .confirmation-modal__controls .btn--style-primary {
+  --bg-color: #e0455f;
+  --hover-bg: #c7314b;
+  background-image: none;
+  box-shadow: 0 8px 20px -10px rgb(224 69 95 / 0.8);
+}

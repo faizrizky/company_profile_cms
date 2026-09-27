@@ -1,0 +1,181 @@
+/* ── Pagination: compact white pills, current page as a blue dot ─────── */
+
+.page-controls {
+  align-items: center;
+  gap: 10px;
+}
+
+.paginator,
+.page-controls__page-info,
+.per-page .popup-button {
+  box-sizing: border-box;
+  height: 38px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 10px 28px -14px rgb(56 189 248 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.9);
+}
+
+.paginator {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 8px;
+}
+
+.paginator__page,
+.paginator .clickable-arrow {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  color: var(--falah-muted);
+  font-size: 12.5px;
+  line-height: 1;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.paginator .clickable-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+.paginator__page:hover {
+  background: #eef6fd;
+  color: var(--falah-ink);
+}
+
+.paginator__page--is-current,
+.paginator__page--is-current:hover {
+  background: linear-gradient(135deg, #38bdf8 0%, #1f7ae0 100%);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 5px 12px -6px rgb(31 122 224 / 0.8);
+}
+
+.paginator__separator {
+  margin: 0;
+  padding: 0 2px;
+  color: #9fb3c8;
+}
+
+.paginator .clickable-arrow .stroke {
+  stroke: var(--falah-ink);
+  stroke-width: 1.6px;
+}
+
+.paginator .clickable-arrow:not(.clickable-arrow--is-disabled):hover {
+  background: #eef6fd;
+}
+
+.paginator .clickable-arrow--is-disabled .stroke {
+  stroke: #c5d3e2;
+}
+
+/* Right side: "1–10 of 93" and the per-page menu as matching pills. */
+.page-controls__page-info {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 16px;
+  color: var(--falah-muted);
+  font-size: 12.5px;
+}
+
+.per-page .popup-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 14px;
+}
+
+.per-page__base-button {
+  gap: 6px;
+  color: var(--falah-ink);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.per-page .popup-button:hover {
+  background: #f5faff;
+}
+
+/* Payload renders both arrows first; show them as ‹ pages › instead. */
+.paginator > * {
+  order: 1;
+}
+
+.paginator > .clickable-arrow--left {
+  order: 0;
+}
+
+.paginator > .clickable-arrow--right {
+  order: 2;
+}
+
+/* "…" rather than a dash between page ranges. */
+.paginator__separator {
+  font-size: 0;
+}
+
+.paginator__separator::after {
+  content: '…';
+  font-size: 12.5px;
+}
+
+/* ── Tablet & mobile ──────────────────────────────────────────────────── */
+
+/* Tables scroll sideways inside their card instead of spilling out.
+   (Payload pulls the table out to the screen edges on smaller screens; as a
+   card it stays inside the gutter.) */
+.collection-list .table {
+  left: 0;
+  width: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 1024px) {
+  /* Status / last modified / created wrap instead of scrolling off-screen. */
+  .doc-controls__content {
+    overflow: visible;
+  }
+
+  .doc-controls__meta {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+
+  .doc-controls__wrapper {
+    align-items: center;
+    height: auto;
+    min-height: var(--doc-controls-height);
+    padding-block: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Only the top-bar menu button on phones (the sidebar one is for desktop). */
+  .template-default__nav-toggler-wrapper {
+    display: none;
+  }
+
+  .collection-list .table table {
+    min-width: 640px;
+  }
+
+  .page-controls {
+    justify-content: space-between;
+    row-gap: 10px;
+  }
+
+  .page-controls .paginator {
+    width: auto;
+    margin: 0 auto 0 0;
+  }
+
+  .page-controls__page-info {
+    margin-left: 0;
+  }
+}
