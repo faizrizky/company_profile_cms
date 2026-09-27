@@ -20,7 +20,7 @@ export const CtaBlock: Block = {
     },
     sectionHeaderField(),
     ...backgroundFields({ mobile: true, required: true }),
-    buttonsField(2),
+    buttonsField(),
     imageField('media', { admin: { condition: (_, s) => s?.variant === 'withMedia' } }),
     videoField('video', {
       admin: {

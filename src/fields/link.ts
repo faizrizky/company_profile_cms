@@ -71,7 +71,7 @@ export const linkFields = ({ withStyle = false }: { withStyle?: boolean } = {}):
   },
 ]
 
-export const buttonsField = (maxRows = 2): Field => ({
+export const buttonsField = (maxRows = 4): Field => ({
   name: 'buttons',
   type: 'array',
   maxRows,

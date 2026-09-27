@@ -23,7 +23,7 @@ export const HeroBlock: Block = {
     { name: 'title', type: 'textarea', required: true, maxLength: 200, admin: { rows: 2 } },
     { name: 'description', type: 'textarea', maxLength: 400, admin: { rows: 3 } },
     ...backgroundFields({ mobile: true, required: true }),
-    buttonsField(2),
+    buttonsField(),
     {
       type: 'row',
       fields: [
