@@ -31,24 +31,60 @@ const label = (text: unknown) => bilingual(text, LABELS_ID, LABELS_EN)
 const isMediaField = (f: Field): boolean =>
   f.type === 'upload' || (f.type === 'row' && f.fields.length > 0 && f.fields.every((x) => x.type === 'upload'))
 
+type Kind = 'media' | 'content' | 'keep'
+
+const isHidden = (f: Field) => {
+  const admin = (f as { admin?: { hidden?: boolean; position?: string } }).admin
+  return Boolean(admin?.hidden || admin?.position === 'sidebar')
+}
+
+/** Containers already are cards/sections; loose inputs get grouped. */
+function kindOf(f: Field): Kind {
+  if (isHidden(f)) return 'keep'
+  if (isMediaField(f)) return 'media'
+  switch (f.type) {
+    case 'group':
+    case 'array':
+    case 'blocks':
+    case 'collapsible':
+    case 'tabs':
+    case 'ui':
+    case 'join':
+      return 'keep'
+    default:
+      return 'content'
+  }
+}
+
+const CARD_LABEL: Record<Exclude<Kind, 'keep'>, { en: string; id: string }> = {
+  media: { en: 'Media', id: 'Media' },
+  content: { en: 'Content', id: 'Konten' },
+}
+
 /**
- * Block forms: consecutive image/video fields (background, poster, video…)
- * share one "Media" card, like the Header group. Presentational only (a
- * collapsible), so the data shape doesn't change.
+ * Loose fields become cards, like the groups (Header): consecutive inputs
+ * share a "Content" card, consecutive images/videos a "Media" card.
+ * Presentational only (collapsibles): the data shape doesn't change.
  */
-function groupMediaFields(fields: Field[]): Field[] {
+function groupIntoCards(fields: Field[]): Field[] {
   const out: Field[] = []
   let run: Field[] = []
+  let runKind: Kind = 'keep'
   const flush = () => {
-    if (run.length) out.push(fieldCard({ en: 'Media', id: 'Media' }, run))
+    if (run.length && runKind !== 'keep') out.push(fieldCard(CARD_LABEL[runKind], run))
     run = []
   }
   for (const field of fields) {
-    if (isMediaField(field)) run.push(field)
-    else {
+    const kind = kindOf(field)
+    if (kind === 'keep') {
       flush()
       out.push(field)
+      runKind = 'keep'
+      continue
     }
+    if (kind !== runKind) flush()
+    runKind = kind
+    run.push(field)
   }
   flush()
   return out
@@ -77,7 +113,7 @@ function translateFields(fields: Field[]): Field[] {
         ...tab,
         label: label(tab.label) as Text,
         description: description(tab.description) as Text,
-        fields: translateFields(tab.fields),
+        fields: groupIntoCards(translateFields(tab.fields)),
       })) as typeof f.tabs
     }
     if (f.type === 'blocks') {
@@ -89,7 +125,7 @@ function translateFields(fields: Field[]): Field[] {
             singular: bilingual(labels.singular, BLOCKS_ID) as Text,
             plural: bilingual(labels.plural, BLOCKS_ID) as Text,
           },
-          fields: groupMediaFields(translateFields(block.fields)),
+          fields: groupIntoCards(translateFields(block.fields)),
         }
       })
     }
@@ -123,6 +159,6 @@ export function translateGlobal(global: GlobalConfig): GlobalConfig {
     ...global,
     label: bilingual(global.label ?? toWords(global.slug), ENTITIES_ID) as Text,
     admin: adminText(global.admin as Record<string, unknown>) as GlobalConfig['admin'],
-    fields: translateFields(global.fields),
+    fields: groupIntoCards(translateFields(global.fields)),
   }
 }
