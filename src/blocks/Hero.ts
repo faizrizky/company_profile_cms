@@ -37,7 +37,7 @@ export const HeroBlock: Block = {
           name: 'showCertificates',
           type: 'checkbox',
           label: 'Tampilkan tombol "Show Certificate"',
-          admin: { condition: (_, s) => s?.variant === 'centered' },
+          admin: { condition: (_, s) => s?.variant !== 'home' },
         },
         { name: 'showScrollHint', type: 'checkbox', label: 'Tampilkan ikon scroll', defaultValue: true },
       ],
