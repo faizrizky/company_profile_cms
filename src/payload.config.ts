@@ -102,6 +102,8 @@ export default buildConfig({
         // Themed tooltips ([data-falah-tooltip]) and tab-switch animation.
         '/components/admin/Tooltips#TooltipProvider',
         '/components/admin/TabTransitions#TabTransitionsProvider',
+        // First frame as the thumbnail of video files (Payload only previews images).
+        '/components/admin/VideoThumbnails#VideoThumbnailsProvider',
       ],
     },
   },

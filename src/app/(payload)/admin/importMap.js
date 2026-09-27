@@ -16,6 +16,7 @@ import { PageSkeletonProvider as PageSkeletonProvider_80ffe43b4688d8994a838646f5
 import { DocTabIconsProvider as DocTabIconsProvider_0bc762eb01cf68d6de5177723b30099a } from '../../../components/admin/DocTabIcons'
 import { TooltipProvider as TooltipProvider_c223ece3f81b8d234bcefe15bd88a75f } from '../../../components/admin/Tooltips'
 import { TabTransitionsProvider as TabTransitionsProvider_e5d80046e735f8964b2c7daad81da067 } from '../../../components/admin/TabTransitions'
+import { VideoThumbnailsProvider as VideoThumbnailsProvider_f7d05f63326cd647cf57b0f4eaf0c97a } from '../../../components/admin/VideoThumbnails'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
@@ -39,6 +40,7 @@ export const importMap = {
   "/components/admin/DocTabIcons#DocTabIconsProvider": DocTabIconsProvider_0bc762eb01cf68d6de5177723b30099a,
   "/components/admin/Tooltips#TooltipProvider": TooltipProvider_c223ece3f81b8d234bcefe15bd88a75f,
   "/components/admin/TabTransitions#TabTransitionsProvider": TabTransitionsProvider_e5d80046e735f8964b2c7daad81da067,
+  "/components/admin/VideoThumbnails#VideoThumbnailsProvider": VideoThumbnailsProvider_f7d05f63326cd647cf57b0f4eaf0c97a,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
