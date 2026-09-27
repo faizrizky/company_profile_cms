@@ -7,7 +7,10 @@ import { revalidateGlobal } from '@/hooks/revalidateFrontend'
 
 export const Footer: GlobalConfig = {
   slug: 'footer',
-  admin: { group: 'Settings', description: 'Alamat, email, telepon & sosial media diatur di Site Settings.' },
+  admin: {
+    group: 'Settings',
+    description: 'Alamat, email, telepon & sosial media diatur di Site Settings.',
+  },
   access: { read: anyone, update: isAuthenticated },
   hooks: { afterChange: [auditGlobal('footer'), revalidateGlobal('footer')] },
   fields: [

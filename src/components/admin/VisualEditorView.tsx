@@ -6,7 +6,7 @@ import {
   useConfig,
   useDocumentInfo,
   useLocale,
-  } from '@payloadcms/ui'
+} from '@payloadcms/ui'
 import { useEffect, useRef, useState, type ComponentProps } from 'react'
 
 import { EditorSkeleton } from './skeletons'
@@ -93,7 +93,8 @@ export function VisualEditorView({ frontendUrl, ...props }: Props) {
           method: 'POST',
           credentials: 'include',
         })
-        if (res.ok) token = ((await res.json()) as { refreshedToken?: string }).refreshedToken ?? null
+        if (res.ok)
+          token = ((await res.json()) as { refreshedToken?: string }).refreshedToken ?? null
       } catch {
         // No session: the studio shows its "please log in" screen.
       }

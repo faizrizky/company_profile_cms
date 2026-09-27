@@ -13,13 +13,24 @@ const audit = auditCollection('users')
 const never = () => false
 
 /** Security alerts for account changes (see SECURITY_WEBHOOK_URL). */
-const alertAccountChanges: CollectionAfterChangeHook = async ({ doc, previousDoc, operation, req }) => {
+const alertAccountChanges: CollectionAfterChangeHook = async ({
+  doc,
+  previousDoc,
+  operation,
+  req,
+}) => {
   if (req.context?.disableAudit) return doc
   const roles = (doc.roles ?? []).join(', ')
   if (operation === 'create') {
-    await notifySecurity(req, `👤 User baru dibuat: ${doc.email} (${roles}) oleh ${req.user?.email ?? 'sistem'}`)
+    await notifySecurity(
+      req,
+      `👤 User baru dibuat: ${doc.email} (${roles}) oleh ${req.user?.email ?? 'sistem'}`,
+    )
   } else if (JSON.stringify(doc.roles) !== JSON.stringify(previousDoc?.roles)) {
-    await notifySecurity(req, `🛡️ Role diubah: ${doc.email} → ${roles} oleh ${req.user?.email ?? 'sistem'}`)
+    await notifySecurity(
+      req,
+      `🛡️ Role diubah: ${doc.email} → ${roles} oleh ${req.user?.email ?? 'sistem'}`,
+    )
   }
   return doc
 }
@@ -61,7 +72,8 @@ export const Users: CollectionConfig = {
     afterChange: [...audit.afterChange, alertAccountChanges],
     afterDelete: [
       ...audit.afterDelete,
-      async ({ doc, req }) => notifySecurity(req, `🗑️ User dihapus: ${doc.email} oleh ${req.user?.email}`),
+      async ({ doc, req }) =>
+        notifySecurity(req, `🗑️ User dihapus: ${doc.email} oleh ${req.user?.email}`),
     ],
     afterLogin: [
       auditLogin,

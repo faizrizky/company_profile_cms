@@ -56,7 +56,13 @@ export const Navigation: GlobalConfig = {
         },
       },
       fields: [
-        { name: 'group', type: 'text', required: true, maxLength: 60, label: { en: 'Page', id: 'Halaman' } },
+        {
+          name: 'group',
+          type: 'text',
+          required: true,
+          maxLength: 60,
+          label: { en: 'Page', id: 'Halaman' },
+        },
         {
           name: 'links',
           type: 'array',
@@ -65,9 +71,19 @@ export const Navigation: GlobalConfig = {
             {
               type: 'row',
               fields: [
-                { name: 'label', type: 'text', required: true, maxLength: 80, admin: { width: '50%' } },
+                {
+                  name: 'label',
+                  type: 'text',
+                  required: true,
+                  maxLength: 80,
+                  admin: { width: '50%' },
+                },
                 // Free text here: this is where the choices are defined.
-                hrefField({ name: 'target', label: { en: 'Link', id: 'Link' }, admin: { width: '50%' } }),
+                hrefField({
+                  name: 'target',
+                  label: { en: 'Link', id: 'Link' },
+                  admin: { width: '50%' },
+                }),
               ],
             },
           ],

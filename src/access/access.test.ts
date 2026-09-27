@@ -1,7 +1,14 @@
 import type { PayloadRequest } from 'payload'
 import { describe, expect, it } from 'vitest'
 
-import { hasRole, isAdmin, isAdminOrOwnProfile, isAdminOrSelf, isAuthenticated, publishedOrAuthenticated } from '.'
+import {
+  hasRole,
+  isAdmin,
+  isAdminOrOwnProfile,
+  isAdminOrSelf,
+  isAuthenticated,
+  publishedOrAuthenticated,
+} from '.'
 
 /** A signed-in CMS user; `verified` = this session passed the 2FA step. */
 const user = (roles: string[], verified: boolean) => ({

@@ -37,7 +37,9 @@
   line-height: 1;
   text-decoration: none;
   white-space: nowrap;
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.9), 10px 0 18px -10px rgb(6 41 79 / 0.35);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.9),
+    10px 0 18px -10px rgb(6 41 79 / 0.35);
   transition: color 0.2s ease;
 }
 
@@ -103,15 +105,25 @@
 
 /* Earlier crumbs sit on top of later ones. */
 .step-nav > :nth-child(1),
-.falah-drawer-crumbs > :nth-child(1) { z-index: 9; }
+.falah-drawer-crumbs > :nth-child(1) {
+  z-index: 9;
+}
 .step-nav > :nth-child(3),
-.falah-drawer-crumbs > :nth-child(3) { z-index: 8; }
+.falah-drawer-crumbs > :nth-child(3) {
+  z-index: 8;
+}
 .step-nav > :nth-child(5),
-.falah-drawer-crumbs > :nth-child(5) { z-index: 7; }
+.falah-drawer-crumbs > :nth-child(5) {
+  z-index: 7;
+}
 .step-nav > :nth-child(7),
-.falah-drawer-crumbs > :nth-child(7) { z-index: 6; }
+.falah-drawer-crumbs > :nth-child(7) {
+  z-index: 6;
+}
 .step-nav > :nth-child(9),
-.falah-drawer-crumbs > :nth-child(9) { z-index: 5; }
+.falah-drawer-crumbs > :nth-child(9) {
+  z-index: 5;
+}
 
 .falah-drawer-crumbs .falah-drawer-crumbs__sep {
   display: none;
@@ -145,7 +157,8 @@
 }
 
 /* Dashboard: the last crumb is Payload's dashboard switcher (a select). */
-.step-nav > .step-nav__last:has(.dashboard-breadcrumb-select, .dashboard-breadcrumb-dropdown__editing) {
+.step-nav
+  > .step-nav__last:has(.dashboard-breadcrumb-select, .dashboard-breadcrumb-dropdown__editing) {
   display: inline-flex;
   align-items: center;
   max-width: none;
@@ -190,7 +203,9 @@
 }
 
 .step-nav > a {
-  transition: color 0.2s ease, transform 0.12s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.12s ease;
 }
 
 .step-nav > a:active {

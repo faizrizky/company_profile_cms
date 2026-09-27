@@ -26,7 +26,10 @@ export const AuditLogs: CollectionConfig = {
         type: 'select',
         required: true,
         index: true,
-        options: ['create', 'update', 'delete', 'login', 'security'].map((v) => ({ label: v, value: v })),
+        options: ['create', 'update', 'delete', 'login', 'security'].map((v) => ({
+          label: v,
+          value: v,
+        })),
       },
       { name: 'resource', type: 'text', required: true, index: true },
       { name: 'documentId', type: 'text' },

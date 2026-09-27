@@ -14,17 +14,20 @@ export function MediaFileCell({ cellData, rowData, link, linkURL }: DefaultCellC
   const url = typeof rowData?.url === 'string' ? rowData.url : undefined
   const thumb = typeof rowData?.thumbnailURL === 'string' ? rowData.thumbnailURL : url
 
-  const preview = mimeType.startsWith('video/') && url ? (
-    // #t=0.1 makes browsers paint the first frame without playing.
-    <video src={`${url}#t=0.1`} muted playsInline preload="metadata" aria-hidden />
-  ) : mimeType.startsWith('image/') && thumb ? (
-    // eslint-disable-next-line @next/next/no-img-element -- thumbnail from the media bucket
-    <img src={thumb} alt="" loading="lazy" />
-  ) : null
+  const preview =
+    mimeType.startsWith('video/') && url ? (
+      // #t=0.1 makes browsers paint the first frame without playing.
+      <video src={`${url}#t=0.1`} muted playsInline preload="metadata" aria-hidden />
+    ) : mimeType.startsWith('image/') && thumb ? (
+      // eslint-disable-next-line @next/next/no-img-element -- thumbnail from the media bucket
+      <img src={thumb} alt="" loading="lazy" />
+    ) : null
 
   const content = (
     <div className="file">
-      <div className="thumbnail thumbnail--size-small file__thumbnail falah-file-thumb">{preview}</div>
+      <div className="thumbnail thumbnail--size-small file__thumbnail falah-file-thumb">
+        {preview}
+      </div>
       <span className="file__filename">{filename}</span>
     </div>
   )

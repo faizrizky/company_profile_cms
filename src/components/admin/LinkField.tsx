@@ -12,8 +12,20 @@ type Group = { label: string; options: Option[] }
 const CUSTOM = '__custom__'
 
 const TEXT = {
-  en: { pages: 'Pages', solutions: 'Solutions', custom: 'Other (own URL)…', placeholder: 'e.g. /contact, #faq, https://…', empty: '— Choose a page —' },
-  id: { pages: 'Halaman', solutions: 'Solusi', custom: 'Lainnya (URL sendiri)…', placeholder: 'mis. /contact, #faq, https://…', empty: '— Pilih halaman —' },
+  en: {
+    pages: 'Pages',
+    solutions: 'Solutions',
+    custom: 'Other (own URL)…',
+    placeholder: 'e.g. /contact, #faq, https://…',
+    empty: '— Choose a page —',
+  },
+  id: {
+    pages: 'Halaman',
+    solutions: 'Solusi',
+    custom: 'Lainnya (URL sendiri)…',
+    placeholder: 'mis. /contact, #faq, https://…',
+    empty: '— Pilih halaman —',
+  },
 }
 
 /** Loaded once per admin session and shared by every link field. */
@@ -25,7 +37,9 @@ function loadGroups(api: string, t: (typeof TEXT)['en']): Promise<Group[]> {
       fetch(`${api}${path}`, { credentials: 'include' }).then((r) => (r.ok ? r.json() : null))
     const [pages, categories, navigation] = await Promise.all([
       get('/pages?limit=100&depth=0&sort=title&select[title]=true&select[slug]=true'),
-      get('/solution-categories?limit=100&depth=0&sort=_order&where[hasDetailPage][equals]=true&select[title]=true&select[slug]=true'),
+      get(
+        '/solution-categories?limit=100&depth=0&sort=_order&where[hasDetailPage][equals]=true&select[title]=true&select[slug]=true',
+      ),
       get('/globals/navigation?depth=0'),
     ])
     const groups: Group[] = [
@@ -44,14 +58,17 @@ function loadGroups(api: string, t: (typeof TEXT)['en']): Promise<Group[]> {
         })),
       },
       // "Links per page" from Settings → Navigation.
-      ...((navigation?.linkLibrary ?? []) as { group?: string; links?: { label?: string; target?: string }[] }[]).map(
-        (g) => ({
-          label: g.group || '—',
-          options: (g.links ?? [])
-            .filter((l) => l.target)
-            .map((l) => ({ label: l.label || l.target!, href: l.target! })),
-        }),
-      ),
+      ...(
+        (navigation?.linkLibrary ?? []) as {
+          group?: string
+          links?: { label?: string; target?: string }[]
+        }[]
+      ).map((g) => ({
+        label: g.group || '—',
+        options: (g.links ?? [])
+          .filter((l) => l.target)
+          .map((l) => ({ label: l.label || l.target!, href: l.target! })),
+      })),
     ]
     return groups.filter((g) => g.options.length)
   })().catch(() => {
@@ -76,13 +93,18 @@ export const LinkField: TextFieldClientComponent = ({ field, path: pathFromProps
 
   useEffect(() => {
     let active = true
-    void loadGroups(`${config.serverURL}${config.routes.api}`, t).then((g) => active && setGroups(g))
+    void loadGroups(`${config.serverURL}${config.routes.api}`, t).then(
+      (g) => active && setGroups(g),
+    )
     return () => {
       active = false
     }
   }, [config.serverURL, config.routes.api, t])
 
-  const known = useMemo(() => new Set(groups.flatMap((g) => g.options.map((o) => o.href))), [groups])
+  const known = useMemo(
+    () => new Set(groups.flatMap((g) => g.options.map((o) => o.href))),
+    [groups],
+  )
   const isCustom = custom || (!!value && groups.length > 0 && !known.has(value))
   const selectValue = isCustom ? CUSTOM : (value ?? '')
 

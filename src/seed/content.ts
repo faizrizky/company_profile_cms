@@ -16,8 +16,16 @@ const CTA_HEADER = {
     'Partner with Falah Inovasi Teknologi to develop immersive training systems, operational technologies, and digital solutions.',
 }
 
-const REQUEST_CONSULTATION = { label: 'Request Consultation', href: '/contact', style: 'fill' as const }
-const EXPLORE_SOLUTIONS = { label: 'Explore Our Solutions', href: '/solution', style: 'stroke' as const }
+const REQUEST_CONSULTATION = {
+  label: 'Request Consultation',
+  href: '/contact',
+  style: 'fill' as const,
+}
+const EXPLORE_SOLUTIONS = {
+  label: 'Explore Our Solutions',
+  href: '/solution',
+  style: 'stroke' as const,
+}
 
 // ── Collections ────────────────────────────────────────────────────────
 
@@ -25,22 +33,67 @@ const EXPLORE_SOLUTIONS = { label: 'Explore Our Solutions', href: '/solution', s
 export const partners = [
   { key: 'ilias', name: 'ILIAS', logo: '/home/partner-ilias.svg', showInHero: true },
   { key: 'plath', name: 'Plath', logo: '/home/partner-plath.svg', showInHero: true },
-  { key: 'bohemia', name: 'Bohemia', logo: '/home/0a753080592dcd342c94d545a636dcdf4da59a21.webp', showInHero: true },
+  {
+    key: 'bohemia',
+    name: 'Bohemia',
+    logo: '/home/0a753080592dcd342c94d545a636dcdf4da59a21.webp',
+    showInHero: true,
+  },
   { key: 'tni-ad', name: 'TNI AD', logo: '/home/partner-tni-ad.svg', showInHero: true },
   { key: 'trelix', name: 'Trelix', logo: '/home/partner-trelix.svg', showInHero: true },
   { key: 'everbridge', name: 'Everbridge', logo: '/home/partner-everbridge.svg', showInHero: true },
   { key: 'strojirna', name: 'Strojirna', logo: '/home/partner-strojirna.svg', showInHero: true },
   { key: 'tni-al', name: 'TNI AL', logo: '/home/partner-tni-al.svg', showInHero: true },
-  { key: 'bohemia-2', name: 'Bohemia', logo: '/home/8174b2638eb0e466077f2ffb86c994fd812fa97a-a1ab07.webp', showInHero: true },
-  { key: 'unity-2', name: 'Unity', logo: '/home/83f3ebf81d5491ee538a965e7e177167d72c9ec9-559a07.webp', showInHero: true },
-  { key: 'kemhan', name: 'KEMHAN', logo: '/home/88a046b82458ea063910ce5d1d8298a6d317580e.webp', showInHero: true },
-  { key: 'plath-2', name: 'Plath', logo: '/home/61b51db11d6cc6b101b8d66fabfcf795877e26e1-528ece.webp', showInHero: true },
+  {
+    key: 'bohemia-2',
+    name: 'Bohemia',
+    logo: '/home/8174b2638eb0e466077f2ffb86c994fd812fa97a-a1ab07.webp',
+    showInHero: true,
+  },
+  {
+    key: 'unity-2',
+    name: 'Unity',
+    logo: '/home/83f3ebf81d5491ee538a965e7e177167d72c9ec9-559a07.webp',
+    showInHero: true,
+  },
+  {
+    key: 'kemhan',
+    name: 'KEMHAN',
+    logo: '/home/88a046b82458ea063910ce5d1d8298a6d317580e.webp',
+    showInHero: true,
+  },
+  {
+    key: 'plath-2',
+    name: 'Plath',
+    logo: '/home/61b51db11d6cc6b101b8d66fabfcf795877e26e1-528ece.webp',
+    showInHero: true,
+  },
   { key: 'havelsan', name: 'Havelsan', logo: '/home/partner-havelsan.svg', showInHero: false },
   { key: 'unity', name: 'Unity', logo: '/home/partner-unity.svg', showInHero: false },
-  { key: 'al', name: 'AL', logo: '/home/a051f69397e0178c8c265dd8177d9a7264c4053b.webp', showInHero: false },
-  { key: 'ad', name: 'AD', logo: '/home/aa8414ca799ac8951862b25d4ad3b8c6365e2ef5.webp', showInHero: false },
-  { key: 'kemhan-2', name: 'KEMHAN', logo: '/home/d145f6c203a9e69198a2140716fa1ab3ab32f08e.webp', showInHero: false },
-  { key: 'au', name: 'AU', logo: '/home/cec994131a09cf856842b401d37d05540eab5457.webp', showInHero: false },
+  {
+    key: 'al',
+    name: 'AL',
+    logo: '/home/a051f69397e0178c8c265dd8177d9a7264c4053b.webp',
+    showInHero: false,
+  },
+  {
+    key: 'ad',
+    name: 'AD',
+    logo: '/home/aa8414ca799ac8951862b25d4ad3b8c6365e2ef5.webp',
+    showInHero: false,
+  },
+  {
+    key: 'kemhan-2',
+    name: 'KEMHAN',
+    logo: '/home/d145f6c203a9e69198a2140716fa1ab3ab32f08e.webp',
+    showInHero: false,
+  },
+  {
+    key: 'au',
+    name: 'AU',
+    logo: '/home/cec994131a09cf856842b401d37d05540eab5457.webp',
+    showInHero: false,
+  },
   { key: 'vectra', name: 'Vectra AI', logo: '/home/partner-vectra.svg', showInHero: false },
 ] as const
 
@@ -65,7 +118,8 @@ export const certifications = [
   {
     title: 'TKDN Certification',
     subtitle: 'Domestic Component Compliance',
-    description: 'Supporting national industry growth through locally compliant technology and operational solutions.',
+    description:
+      'Supporting national industry growth through locally compliant technology and operational solutions.',
     icon: '/home/cert-tkdn.svg',
     iconShape: 'wide',
     certificate: '/about/c9c4d051832f17cdfd69f36233a943e5aca0b3d6.webp',
@@ -154,7 +208,8 @@ export const virtualTrainingSuiteDetail = (media: MediaRef) => async () => ({
       },
       {
         name: 'Medical Training',
-        description: 'High-fidelity medical simulation for emergency response and clinical procedure training.',
+        description:
+          'High-fidelity medical simulation for emergency response and clinical procedure training.',
         tags: ['Emergency Care', 'Clinical', 'Team Response', 'Debrief'],
       },
     ],
@@ -202,7 +257,8 @@ export const products = [
   {
     slug: 'medical-training',
     title: 'Medical Training',
-    summary: 'High-fidelity medical simulation for emergency response and clinical procedure training.',
+    summary:
+      'High-fidelity medical simulation for emergency response and clinical procedure training.',
     image: '/solution/b8fab63d7cb82402b57018a514f8d26d1348ef94-67f37a.webp',
     imageMobile: '/solution/4821fcd72c10c59a24ff708b9b0f42948420fd13.webp',
   },
@@ -241,7 +297,10 @@ export const homeLayout = async (media: MediaRef, allCertifications: number[]): 
       { icon: await media('/home/risk-2.svg'), title: 'Theory Alone Is Not Enough' },
       { icon: await media('/home/risk-3.svg'), title: 'Conventional Training Limits Readiness' },
     ],
-    image: await media('/home/551e418bfd19a405d49ad61dcf057d03127ed7ec.webp', 'Immersive simulation training'),
+    image: await media(
+      '/home/551e418bfd19a405d49ad61dcf057d03127ed7ec.webp',
+      'Immersive simulation training',
+    ),
   },
   {
     blockType: 'videoShowcase',
@@ -252,7 +311,10 @@ export const homeLayout = async (media: MediaRef, allCertifications: number[]): 
         'Falah delivers realistic simulation that improve competency, reduce operational risk, and strengthen workforce readiness.',
     },
     background: await media('/home/88bc9a9201a3404fc882594e5ce830b89b38ea39.webp'),
-    poster: await media('/home/10a5d1245f72bfd89f17f50606b7e7305e297729.webp', 'Operational training simulator'),
+    poster: await media(
+      '/home/10a5d1245f72bfd89f17f50606b7e7305e297729.webp',
+      'Operational training simulator',
+    ),
     captionTitle: 'Operational Training',
     captionDescription: 'Advanced fixed-wing simulators for pilot readiness and mission training.',
   },
@@ -266,7 +328,10 @@ export const homeLayout = async (media: MediaRef, allCertifications: number[]): 
     },
     background: await media('/home/b9b70d4fc025e8a7a993bb8443a97e3de9688b6f.webp'),
     featured: {
-      image: await media('/home/11741bf42ede88699c0d4a8887fb08c6bc410913.webp', 'Virtual Training Suite'),
+      image: await media(
+        '/home/11741bf42ede88699c0d4a8887fb08c6bc410913.webp',
+        'Virtual Training Suite',
+      ),
       title: 'Virtual Training Suite',
       description: 'Technology-enhanced learning environments for modern educational institutions.',
       tagsLabel: 'Recommended For',
@@ -275,7 +340,10 @@ export const homeLayout = async (media: MediaRef, allCertifications: number[]): 
     },
     items: [
       {
-        image: await media('/home/ad08db80f2a754576b36c904e844bb37fb2dffba.webp', 'Training Simulator'),
+        image: await media(
+          '/home/ad08db80f2a754576b36c904e844bb37fb2dffba.webp',
+          'Training Simulator',
+        ),
         title: 'Training Simulator',
         href: '/solution',
       },
@@ -285,12 +353,18 @@ export const homeLayout = async (media: MediaRef, allCertifications: number[]): 
         href: '/solution',
       },
       {
-        image: await media('/home/58db185d52171011b7e5d439ed214da038ed6193.webp', 'Advanced Education Systems'),
+        image: await media(
+          '/home/58db185d52171011b7e5d439ed214da038ed6193.webp',
+          'Advanced Education Systems',
+        ),
         title: 'Advanced Education Systems',
         href: '/solution',
       },
       {
-        image: await media('/home/3ebc014598e8a2249d2813ba3224e7bcea7058d0.webp', 'Virtual Connect Suite'),
+        image: await media(
+          '/home/3ebc014598e8a2249d2813ba3224e7bcea7058d0.webp',
+          'Virtual Connect Suite',
+        ),
         title: 'Virtual Connect Suite',
         href: '/solution',
       },
@@ -392,7 +466,10 @@ export const homeLayout = async (media: MediaRef, allCertifications: number[]): 
     header: CTA_HEADER,
     background: await media('/home/72d60c1716d38f195a043cdb8338d0f47aa472c0.webp'),
     buttons: [REQUEST_CONSULTATION, EXPLORE_SOLUTIONS],
-    media: await media('/home/5867d85722b9f8d86edcabe75587f140fb96fa57-3dfac4.webp', 'Falah company video'),
+    media: await media(
+      '/home/5867d85722b9f8d86edcabe75587f140fb96fa57-3dfac4.webp',
+      'Falah company video',
+    ),
   },
 ]
 
@@ -498,7 +575,10 @@ export const aboutLayout = async (
     background: await media('/about/f317684d3b7a2149261ee251a36adcafe02d43ef-64dd8f.webp'),
     leaders: [
       {
-        photo: await media('/about/273b63f017554210d7990d10b7f6b9d97d942f01.webp', 'Deni Darodjat Muslim'),
+        photo: await media(
+          '/about/273b63f017554210d7990d10b7f6b9d97d942f01.webp',
+          'Deni Darodjat Muslim',
+        ),
         name: 'Deni Darodjat Muslim',
         roles: ['Founder', 'CEO', 'CTO'],
       },
@@ -509,7 +589,10 @@ export const aboutLayout = async (
         bio: 'Noviayana drives organizational transformation, financial strategy, and sustainable growth through agile and operationally focused leadership.',
       },
       {
-        photo: await media('/about/353100947f3ac0575f41b54ba9fa1999fbc43b07.webp', 'Canggih Sakina Hans'),
+        photo: await media(
+          '/about/353100947f3ac0575f41b54ba9fa1999fbc43b07.webp',
+          'Canggih Sakina Hans',
+        ),
         name: 'Canggih Sakina Hans',
         roles: ['COO'],
         bio: 'Canggih specializes in operational excellence, strategic planning, and scalable execution across complex organizational environments.',
@@ -650,8 +733,12 @@ type SocialPlatform = NonNullable<NonNullable<SiteSetting['socials']>[number]['p
 
 export const siteSettings = async (media: MediaRef) => ({
   siteName: 'Falah Inovasi Teknologi',
-  siteDescription: 'Simulation, training, and operational technology solutions for modern organizations.',
-  logo: await media('/home/4f0e49a6e733d436853e5c48772d58ef1c454c51.webp', 'Falah Inovasi Teknologi'),
+  siteDescription:
+    'Simulation, training, and operational technology solutions for modern organizations.',
+  logo: await media(
+    '/home/4f0e49a6e733d436853e5c48772d58ef1c454c51.webp',
+    'Falah Inovasi Teknologi',
+  ),
   contact: {
     address:
       'Jl. Mampang Prapatan XII Kel No.1, RT.8/RW.1, Tegal Parang, Kec. Mampang Prpt., Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12790',

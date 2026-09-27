@@ -32,22 +32,80 @@
   }
 }
 
-.falah-sk--title { width: min(320px, 60%); height: 40px; border-radius: 12px; }
-.falah-sk--heading { width: 160px; height: 26px; margin-bottom: 14px; }
-.falah-sk--pill { width: 104px; height: 32px; border-radius: 999px; }
-.falah-sk--small { width: 120px; height: 28px; }
-.falah-sk--accent { background: rgb(31 122 224 / 0.22); }
-.falah-sk--label { width: 34%; max-width: 180px; height: 12px; border-radius: 6px; }
-.falah-sk--strong { width: 120px; height: 16px; margin-bottom: 6px; }
-.falah-sk--input { height: 42px; border-radius: 12px; }
-.falah-sk--textarea { height: 96px; border-radius: 12px; }
-.falah-sk--meta { width: min(420px, 70%); height: 14px; margin: 18px 0 28px; border-radius: 6px; }
-.falah-sk--check { flex: none; width: 18px; height: 18px; border-radius: 50%; }
-.falah-sk--cell { flex: 1; height: 14px; border-radius: 6px; }
-.falah-sk--cell-lg { flex: 2; }
-.falah-sk--icon { width: 28px; height: 28px; border-radius: 8px; }
-.falah-sk--item { height: 40px; border-radius: 12px; }
-.falah-sk--frame { flex: 1; border-radius: 12px; }
+.falah-sk--title {
+  width: min(320px, 60%);
+  height: 40px;
+  border-radius: 12px;
+}
+.falah-sk--heading {
+  width: 160px;
+  height: 26px;
+  margin-bottom: 14px;
+}
+.falah-sk--pill {
+  width: 104px;
+  height: 32px;
+  border-radius: 999px;
+}
+.falah-sk--small {
+  width: 120px;
+  height: 28px;
+}
+.falah-sk--accent {
+  background: rgb(31 122 224 / 0.22);
+}
+.falah-sk--label {
+  width: 34%;
+  max-width: 180px;
+  height: 12px;
+  border-radius: 6px;
+}
+.falah-sk--strong {
+  width: 120px;
+  height: 16px;
+  margin-bottom: 6px;
+}
+.falah-sk--input {
+  height: 42px;
+  border-radius: 12px;
+}
+.falah-sk--textarea {
+  height: 96px;
+  border-radius: 12px;
+}
+.falah-sk--meta {
+  width: min(420px, 70%);
+  height: 14px;
+  margin: 18px 0 28px;
+  border-radius: 6px;
+}
+.falah-sk--check {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+}
+.falah-sk--cell {
+  flex: 1;
+  height: 14px;
+  border-radius: 6px;
+}
+.falah-sk--cell-lg {
+  flex: 2;
+}
+.falah-sk--icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+}
+.falah-sk--item {
+  height: 40px;
+  border-radius: 12px;
+}
+.falah-sk--frame {
+  flex: 1;
+  border-radius: 12px;
+}
 
 .falah-sk-page {
   display: flex;
@@ -66,7 +124,9 @@
   border: 1px solid rgb(255 255 255 / 0.9);
   border-radius: 20px;
   background: rgb(255 255 255 / 0.72);
-  box-shadow: 0 1px 2px rgb(6 41 79 / 0.04), 0 20px 40px -28px rgb(30 90 160 / 0.45);
+  box-shadow:
+    0 1px 2px rgb(6 41 79 / 0.04),
+    0 20px 40px -28px rgb(30 90 160 / 0.45);
 }
 
 .falah-sk-search {

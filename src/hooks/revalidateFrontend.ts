@@ -33,12 +33,17 @@ async function notifyFrontend(req: PayloadRequest, tags: CacheTag[]) {
       signal: AbortSignal.timeout(5_000),
     })
     if (!res.ok) {
-      req.payload.logger.warn(`Frontend revalidation failed (${res.status}) for tags: ${tags.join(', ')}`)
+      req.payload.logger.warn(
+        `Frontend revalidation failed (${res.status}) for tags: ${tags.join(', ')}`,
+      )
     }
   } catch (error) {
     // Never block an editor's save because the frontend is offline; the
     // next successful save (or a redeploy) refreshes the cache.
-    req.payload.logger.warn({ err: error }, `Frontend unreachable, skipped revalidation: ${tags.join(', ')}`)
+    req.payload.logger.warn(
+      { err: error },
+      `Frontend unreachable, skipped revalidation: ${tags.join(', ')}`,
+    )
   }
 }
 

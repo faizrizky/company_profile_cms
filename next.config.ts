@@ -21,7 +21,8 @@ const securityHeaders = [
   { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
   {
     key: 'Permissions-Policy',
-    value: 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()',
+    value:
+      'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()',
   },
   {
     // The admin UI needs inline scripts/styles (Next.js RSC payload, Payload UI).
@@ -44,13 +45,18 @@ const securityHeaders = [
       ...(isProduction ? ['upgrade-insecure-requests'] : []),
     ].join('; '),
   },
-  ...(isProduction ? [{ key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains' }] : []),
+  ...(isProduction
+    ? [{ key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains' }]
+    : []),
 ]
 
 // Uploaded files are data, never documents: even if a crafted file slipped
 // through, the browser won't run scripts or render it as a page.
 const mediaHeaders = [
-  { key: 'Content-Security-Policy', value: "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; sandbox" },
+  {
+    key: 'Content-Security-Policy',
+    value: "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; sandbox",
+  },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Cross-Origin-Resource-Policy', value: 'cross-origin' },
 ]

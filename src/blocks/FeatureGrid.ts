@@ -20,7 +20,10 @@ export const FeatureGridBlock: Block = {
     sectionHeaderField(),
     ...backgroundFields(),
     imageField('backgroundOverlay', {
-      admin: { condition: (_, s) => s?.variant === 'values', description: 'Layer gambar kedua di atas background.' },
+      admin: {
+        condition: (_, s) => s?.variant === 'values',
+        description: 'Layer gambar kedua di atas background.',
+      },
     }),
     {
       name: 'quote',

@@ -13,7 +13,9 @@ const SAFE_HREF = /^(\/(?!\/)|#|https:\/\/|mailto:|tel:)/i
 export const isSafeHref = (value: string): true | string => {
   const href = value.trim()
   if (/\s/.test(href) && !href.startsWith('mailto:')) return 'Link tidak boleh mengandung spasi.'
-  return SAFE_HREF.test(href) ? true : 'Gunakan path internal (/contact), anchor (#id), https://, mailto:, atau tel:.'
+  return SAFE_HREF.test(href)
+    ? true
+    : 'Gunakan path internal (/contact), anchor (#id), https://, mailto:, atau tel:.'
 }
 
 type HrefOverrides = {
@@ -42,7 +44,9 @@ export const hrefField = ({ admin, ...overrides }: HrefOverrides = {}): TextFiel
         id: 'Pilih halaman, atau "Lainnya" untuk URL sendiri (/contact, #faq, https://…).',
       },
       ...admin,
-      ...(PICKER_FIELDS.has(name) ? { components: { Field: '/components/admin/LinkField#LinkField' } } : {}),
+      ...(PICKER_FIELDS.has(name)
+        ? { components: { Field: '/components/admin/LinkField#LinkField' } }
+        : {}),
     },
     validate: withTextValidation(isSafeHref),
   }

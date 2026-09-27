@@ -4,7 +4,12 @@
 // https://<ref>.storage.supabase.co/storage/v1/s3.
 import { readFileSync } from 'node:fs'
 
-import { GetObjectCommand, HeadObjectCommand, ListObjectsV2Command, S3Client } from '@aws-sdk/client-s3'
+import {
+  GetObjectCommand,
+  HeadObjectCommand,
+  ListObjectsV2Command,
+  S3Client,
+} from '@aws-sdk/client-s3'
 import { Upload } from '@aws-sdk/lib-storage'
 
 function readEnv(file) {
@@ -36,9 +41,13 @@ let copied = 0
 let skipped = 0
 let token
 do {
-  const page = await from.send(new ListObjectsV2Command({ Bucket: fromBucket, ContinuationToken: token }))
+  const page = await from.send(
+    new ListObjectsV2Command({ Bucket: fromBucket, ContinuationToken: token }),
+  )
   for (const { Key, Size } of page.Contents ?? []) {
-    const existing = await to.send(new HeadObjectCommand({ Bucket: toBucket, Key })).catch(() => null)
+    const existing = await to
+      .send(new HeadObjectCommand({ Bucket: toBucket, Key }))
+      .catch(() => null)
     if (existing?.ContentLength === Size) {
       skipped++
       continue

@@ -10,7 +10,8 @@ export type Role = User['roles'][number]
  * step (two-factor). Every rule below goes through it, so a password alone
  * never grants access — not through the admin, the API or the visual editor.
  */
-export const signedIn = (user: PayloadRequest['user']) => (user && isTwoFactorVerified(user) ? user : null)
+export const signedIn = (user: PayloadRequest['user']) =>
+  user && isTwoFactorVerified(user) ? user : null
 
 export const hasRole = (user: PayloadRequest['user'], role: Role): boolean => {
   const u = signedIn(user)

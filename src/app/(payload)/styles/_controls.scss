@@ -134,7 +134,9 @@ body:has(.falah-visual) .doc-controls:before {
   border: 1px solid rgb(255 255 255 / 0.9);
   border-radius: 20px;
   background: rgb(255 255 255 / 0.92);
-  box-shadow: 0 30px 80px -24px rgb(15 39 66 / 0.45), 0 2px 8px rgb(15 39 66 / 0.08);
+  box-shadow:
+    0 30px 80px -24px rgb(15 39 66 / 0.45),
+    0 2px 8px rgb(15 39 66 / 0.08);
   animation: falah-pop 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
 }
 

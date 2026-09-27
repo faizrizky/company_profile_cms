@@ -77,7 +77,9 @@ export const secureUpload: CollectionBeforeOperationHook = async ({ args, operat
   } else {
     const text = file.data.toString('utf8')
     if (!/<svg[\s>]/i.test(text)) {
-      throw reject('Tipe file tidak dikenali. Gunakan JPG, PNG, WebP, AVIF, GIF, SVG, PDF, MP4, atau WebM.')
+      throw reject(
+        'Tipe file tidak dikenali. Gunakan JPG, PNG, WebP, AVIF, GIF, SVG, PDF, MP4, atau WebM.',
+      )
     }
     if (file.size > MAX_FILE_BYTES) {
       throw reject(`Ukuran file maksimal ${MAX_FILE_BYTES / 1024 / 1024} MB.`)

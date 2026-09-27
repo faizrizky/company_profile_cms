@@ -2,7 +2,12 @@ import type { Endpoint, PayloadRequest } from 'payload'
 import QRCode from 'qrcode'
 
 import { hasRole } from '@/access'
-import { isTwoFactorVerified, stateOf, type TwoFactorState, type TwoFactorUser } from '@/auth/twoFactorState'
+import {
+  isTwoFactorVerified,
+  stateOf,
+  type TwoFactorState,
+  type TwoFactorUser,
+} from '@/auth/twoFactorState'
 import { writeAudit } from '@/hooks/auditLog'
 import { jsonResponse } from '@/lib/http'
 import { notifySecurity } from '@/lib/securityAlert'
@@ -48,10 +53,18 @@ async function loadUser(req: PayloadRequest): Promise<TwoFactorUser | null> {
     overrideAccess: true,
     showHiddenFields: true,
   })
-  return { ...(user as unknown as TwoFactorUser), _sid: (req.user as { _sid?: string })._sid, collection: 'users' }
+  return {
+    ...(user as unknown as TwoFactorUser),
+    _sid: (req.user as { _sid?: string })._sid,
+    collection: 'users',
+  }
 }
 
-async function save(req: PayloadRequest, id: TwoFactorUser['id'], data: { twoFactor: TwoFactorState; totpEnabled?: boolean }) {
+async function save(
+  req: PayloadRequest,
+  id: TwoFactorUser['id'],
+  data: { twoFactor: TwoFactorState; totpEnabled?: boolean },
+) {
   await req.payload.update({
     collection: 'users',
     id,
@@ -86,10 +99,20 @@ async function recordFailure(req: PayloadRequest, user: TwoFactorUser, state: Tw
     },
   })
   if (locked) {
-    await writeAudit(req, { action: 'security', resource: 'users.2fa-locked', documentId: String(user.id) })
-    await notifySecurity(req, `🔒 2FA dikunci 15 menit setelah ${MAX_FAILURES}x kode salah: ${user.email}`)
+    await writeAudit(req, {
+      action: 'security',
+      resource: 'users.2fa-locked',
+      documentId: String(user.id),
+    })
+    await notifySecurity(
+      req,
+      `🔒 2FA dikunci 15 menit setelah ${MAX_FAILURES}x kode salah: ${user.email}`,
+    )
   }
-  return jsonResponse({ error: locked ? 'locked' : 'invalid', retryAfter: locked ? LOCK_MS / 1000 : undefined }, locked ? 429 : 400)
+  return jsonResponse(
+    { error: locked ? 'locked' : 'invalid', retryAfter: locked ? LOCK_MS / 1000 : undefined },
+    locked ? 429 : 400,
+  )
 }
 
 // ── Endpoints (mounted on the users collection: /api/users/2fa/…) ────────
@@ -160,7 +183,11 @@ const enable: Endpoint = {
         failures: 0,
       },
     })
-    await writeAudit(req, { action: 'security', resource: 'users.2fa-enabled', documentId: String(user.id) })
+    await writeAudit(req, {
+      action: 'security',
+      resource: 'users.2fa-enabled',
+      documentId: String(user.id),
+    })
     await notifySecurity(req, `🔐 2FA diaktifkan: ${user.email}`)
     return jsonResponse({ ok: true, recoveryCodes: recovery.codes })
   },
@@ -185,8 +212,15 @@ const verify: Endpoint = {
     if (typeof recoveryCode === 'string' && recoveryCode.trim()) {
       const index = findRecoveryCode(state.recoveryCodes ?? [], recoveryCode)
       if (index !== -1) {
-        next = { ...state, recoveryCodes: (state.recoveryCodes ?? []).filter((_, i) => i !== index) }
-        await writeAudit(req, { action: 'security', resource: 'users.2fa-recovery-used', documentId: String(user.id) })
+        next = {
+          ...state,
+          recoveryCodes: (state.recoveryCodes ?? []).filter((_, i) => i !== index),
+        }
+        await writeAudit(req, {
+          action: 'security',
+          resource: 'users.2fa-recovery-used',
+          documentId: String(user.id),
+        })
         await notifySecurity(
           req,
           `⚠️ Recovery code 2FA dipakai: ${user.email} (sisa ${next.recoveryCodes!.length})`,
@@ -199,7 +233,12 @@ const verify: Endpoint = {
 
     if (!next) return recordFailure(req, user, state)
     await save(req, user.id, {
-      twoFactor: { ...next, verifiedSessions: withVerifiedSession(user, next), failures: 0, lockedUntil: undefined },
+      twoFactor: {
+        ...next,
+        verifiedSessions: withVerifiedSession(user, next),
+        failures: 0,
+        lockedUntil: undefined,
+      },
     })
     return jsonResponse({ ok: true, recoveryCodesLeft: next.recoveryCodes?.length ?? 0 })
   },
@@ -213,9 +252,18 @@ const reset: Endpoint = {
     if (!hasRole(req.user, 'admin')) return jsonResponse({ error: 'forbidden' }, 403)
     const id = req.routeParams?.id as string | undefined
     if (!id) return jsonResponse({ error: 'missing-id' }, 400)
-    const target = await req.payload.findByID({ collection: 'users', id, depth: 0, overrideAccess: true })
+    const target = await req.payload.findByID({
+      collection: 'users',
+      id,
+      depth: 0,
+      overrideAccess: true,
+    })
     await save(req, target.id, { totpEnabled: false, twoFactor: {} })
-    await writeAudit(req, { action: 'security', resource: 'users.2fa-reset', documentId: String(target.id) })
+    await writeAudit(req, {
+      action: 'security',
+      resource: 'users.2fa-reset',
+      documentId: String(target.id),
+    })
     await notifySecurity(req, `♻️ 2FA di-reset oleh ${req.user?.email}: ${target.email}`)
     return jsonResponse({ ok: true })
   },

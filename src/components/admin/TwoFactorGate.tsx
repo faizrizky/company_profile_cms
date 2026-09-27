@@ -22,7 +22,8 @@ const TEXT = {
     introLead:
       'For your account’s safety, every CMS user signs in with a password and a code from an authenticator app (Google Authenticator, Microsoft Authenticator, 1Password…).',
     start: 'Set up',
-    scanLead: 'Scan this QR code with your authenticator app, then enter the 6-digit code it shows.',
+    scanLead:
+      'Scan this QR code with your authenticator app, then enter the 6-digit code it shows.',
     manual: 'Can’t scan? Enter this key manually:',
     copy: 'Copy',
     copied: 'Copied',
@@ -49,7 +50,8 @@ const TEXT = {
     introLead:
       'Demi keamanan akun, setiap user CMS masuk dengan password dan kode dari aplikasi authenticator (Google Authenticator, Microsoft Authenticator, 1Password…).',
     start: 'Atur sekarang',
-    scanLead: 'Scan QR code ini dengan aplikasi authenticator, lalu masukkan 6 digit kode yang muncul.',
+    scanLead:
+      'Scan QR code ini dengan aplikasi authenticator, lalu masukkan 6 digit kode yang muncul.',
     manual: 'Tidak bisa scan? Masukkan kunci ini secara manual:',
     copy: 'Salin',
     copied: 'Tersalin',
@@ -140,7 +142,9 @@ function TwoFactorDialog({
   const [step, setStep] = useState<Step>(status.enabled && !startInSetup ? 'verify' : 'intro')
   const [useRecovery, setUseRecovery] = useState(false)
   const [code, setCode] = useState('')
-  const [error, setError] = useState<string | null>(status.lockedFor ? t.locked(status.lockedFor) : null)
+  const [error, setError] = useState<string | null>(
+    status.lockedFor ? t.locked(status.lockedFor) : null,
+  )
   const [busy, setBusy] = useState(false)
   const [setup, setSetup] = useState<{ secret: string; qr: string } | null>(null)
   const [recoveryCodes, setRecoveryCodes] = useState<string[]>([])
@@ -162,7 +166,13 @@ function TwoFactorDialog({
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) {
-        setError(data.error === 'locked' ? t.locked(data.retryAfter ?? 900) : data.error === 'invalid' ? t.invalid : t.failed)
+        setError(
+          data.error === 'locked'
+            ? t.locked(data.retryAfter ?? 900)
+            : data.error === 'invalid'
+              ? t.invalid
+              : t.failed,
+        )
         return null
       }
       setError(null)
@@ -213,7 +223,9 @@ function TwoFactorDialog({
   }
 
   const download = () => {
-    const blob = new Blob([`Falah CMS — recovery codes\n\n${recoveryCodes.join('\n')}\n`], { type: 'text/plain' })
+    const blob = new Blob([`Falah CMS — recovery codes\n\n${recoveryCodes.join('\n')}\n`], {
+      type: 'text/plain',
+    })
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
     link.download = 'falah-cms-recovery-codes.txt'
@@ -243,7 +255,11 @@ function TwoFactorDialog({
           {error}
         </p>
       )}
-      <button type="submit" className="falah-2fa__primary" disabled={busy || code.trim().length < 6}>
+      <button
+        type="submit"
+        className="falah-2fa__primary"
+        disabled={busy || code.trim().length < 6}
+      >
         {label}
       </button>
     </form>
@@ -285,7 +301,12 @@ function TwoFactorDialog({
                 {error}
               </p>
             )}
-            <button type="button" className="falah-2fa__primary" onClick={startSetup} disabled={busy}>
+            <button
+              type="button"
+              className="falah-2fa__primary"
+              onClick={startSetup}
+              disabled={busy}
+            >
               {t.start}
             </button>
           </>
@@ -318,7 +339,11 @@ function TwoFactorDialog({
               ))}
             </ol>
             <div className="falah-2fa__row">
-              <button type="button" className="falah-2fa__secondary" onClick={() => copy(recoveryCodes.join('\n'))}>
+              <button
+                type="button"
+                className="falah-2fa__secondary"
+                onClick={() => copy(recoveryCodes.join('\n'))}
+              >
                 {copied === recoveryCodes.join('\n') ? t.copied : t.copy}
               </button>
               <button type="button" className="falah-2fa__secondary" onClick={download}>

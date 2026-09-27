@@ -48,7 +48,9 @@ export const submitContactEndpoint: Endpoint = {
 
     const limit = globalLimiter.check('global')
     if (!limit.ok) {
-      return jsonResponse({ error: 'Too many requests' }, 429, { 'retry-after': String(limit.retryAfterSeconds) })
+      return jsonResponse({ error: 'Too many requests' }, 429, {
+        'retry-after': String(limit.retryAfterSeconds),
+      })
     }
 
     let payloadBody: unknown
@@ -60,7 +62,10 @@ export const submitContactEndpoint: Endpoint = {
 
     const parsed = bodySchema.safeParse(payloadBody)
     if (!parsed.success) {
-      return jsonResponse({ error: 'Invalid submission', issues: z.flattenError(parsed.error).fieldErrors }, 400)
+      return jsonResponse(
+        { error: 'Invalid submission', issues: z.flattenError(parsed.error).fieldErrors },
+        400,
+      )
     }
 
     const { submission, client } = parsed.data

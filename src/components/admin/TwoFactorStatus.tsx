@@ -15,7 +15,8 @@ const TEXT = {
     on: 'Active (authenticator app)',
     off: 'Not set up — asked at next login',
     reset: 'Reset 2FA',
-    confirm: 'Reset this user’s two-step verification? They will set it up again at their next login.',
+    confirm:
+      'Reset this user’s two-step verification? They will set it up again at their next login.',
     done: '2FA has been reset.',
     failed: 'Could not reset 2FA.',
     newDevice: 'Move to a new phone',
@@ -25,7 +26,8 @@ const TEXT = {
     on: 'Aktif (aplikasi authenticator)',
     off: 'Belum diatur — diminta saat login berikutnya',
     reset: 'Reset 2FA',
-    confirm: 'Reset verifikasi dua langkah user ini? User akan mengaturnya ulang saat login berikutnya.',
+    confirm:
+      'Reset verifikasi dua langkah user ini? User akan mengaturnya ulang saat login berikutnya.',
     done: '2FA berhasil di-reset.',
     failed: 'Gagal me-reset 2FA.',
     newDevice: 'Pindah ke HP baru',
@@ -68,7 +70,9 @@ export function TwoFactorStatus() {
   return (
     <div className="falah-2fa-status field-type">
       <span className="falah-2fa-status__label">{t.label}</span>
-      <span className={`falah-2fa-status__pill${enabled ? ' is-on' : ''}`}>{enabled ? t.on : t.off}</span>
+      <span className={`falah-2fa-status__pill${enabled ? ' is-on' : ''}`}>
+        {enabled ? t.on : t.off}
+      </span>
       {isSelf && enabled && (
         <button
           type="button"
@@ -79,7 +83,12 @@ export function TwoFactorStatus() {
         </button>
       )}
       {!isSelf && isAdmin && enabled && (
-        <button type="button" className="falah-2fa-status__button is-danger" onClick={reset} disabled={busy}>
+        <button
+          type="button"
+          className="falah-2fa-status__button is-danger"
+          onClick={reset}
+          disabled={busy}
+        >
           {t.reset}
         </button>
       )}

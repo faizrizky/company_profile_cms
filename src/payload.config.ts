@@ -50,7 +50,10 @@ const withLocalizedText = <
  */
 function databaseCa(url: string): string | undefined {
   if (env.DATABASE_SSL_CA) return env.DATABASE_SSL_CA
-  if (new URL(url).hostname.endsWith('.supabase.com') || new URL(url).hostname.endsWith('.supabase.co')) {
+  if (
+    new URL(url).hostname.endsWith('.supabase.com') ||
+    new URL(url).hostname.endsWith('.supabase.co')
+  ) {
     return SUPABASE_ROOT_CA
   }
   return undefined
@@ -170,7 +173,9 @@ export default buildConfig({
       // Supabase/Vercel connection strings) would override it and drop the CA.
       connectionString: withoutSslParams(env.DATABASE_URL),
       // Certificates are always verified; Supabase needs its own CA for that.
-      ssl: env.DATABASE_SSL ? { rejectUnauthorized: true, ca: databaseCa(env.DATABASE_URL) } : undefined,
+      ssl: env.DATABASE_SSL
+        ? { rejectUnauthorized: true, ca: databaseCa(env.DATABASE_URL) }
+        : undefined,
     },
     migrationDir: path.resolve(dirname, 'migrations'),
     // Dev "push" only ever touches a local database. Pointed at the cloud

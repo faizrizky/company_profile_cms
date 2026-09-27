@@ -16,7 +16,11 @@ import {
 type Text = string | Record<string, string>
 
 /** A plain label becomes { en, id }; already-bilingual labels are kept. */
-const bilingual = (text: unknown, id: Record<string, string>, en: Record<string, string> = {}): unknown => {
+const bilingual = (
+  text: unknown,
+  id: Record<string, string>,
+  en: Record<string, string> = {},
+): unknown => {
   if (typeof text !== 'string') return text
   if (en[text]) return { en: en[text], id: text }
   return { en: text, id: id[text] ?? text }
@@ -29,7 +33,8 @@ const description = (text: unknown): unknown =>
 const label = (text: unknown) => bilingual(text, LABELS_ID, LABELS_EN)
 
 const isMediaField = (f: Field): boolean =>
-  f.type === 'upload' || (f.type === 'row' && f.fields.length > 0 && f.fields.every((x) => x.type === 'upload'))
+  f.type === 'upload' ||
+  (f.type === 'row' && f.fields.length > 0 && f.fields.every((x) => x.type === 'upload'))
 
 type Kind = 'media' | 'content' | 'keep'
 
@@ -100,11 +105,17 @@ function translateFields(fields: Field[]): Field[] {
       f.label = toWords(f.name)
     }
     if (f.label !== false) (f as Record<string, unknown>).label = label(f.label)
-    if (admin) (f as Record<string, unknown>).admin = { ...admin, description: description(admin.description) }
+    if (admin)
+      (f as Record<string, unknown>).admin = {
+        ...admin,
+        description: description(admin.description),
+      }
 
     if ('options' in f && Array.isArray(f.options)) {
       f.options = f.options.map((o) =>
-        typeof o === 'object' ? { ...o, label: bilingual(o.label, OPTIONS_ID, OPTIONS_EN) as Text } : o,
+        typeof o === 'object'
+          ? { ...o, label: bilingual(o.label, OPTIONS_ID, OPTIONS_EN) as Text }
+          : o,
       ) as typeof f.options
     }
     if ('fields' in f && Array.isArray(f.fields)) f.fields = translateFields(f.fields)

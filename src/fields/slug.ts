@@ -24,7 +24,10 @@ const formatSlug =
 
 type SlugOverrides = { reserved?: ReadonlySet<string> }
 
-export const slugField = (fallbackField = 'title', { reserved }: SlugOverrides = {}): TextField => ({
+export const slugField = (
+  fallbackField = 'title',
+  { reserved }: SlugOverrides = {},
+): TextField => ({
   name: 'slug',
   type: 'text',
   required: true,

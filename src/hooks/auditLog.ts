@@ -20,7 +20,8 @@ const IGNORED_FIELDS = new Set(['updatedAt', 'createdAt', '_status', 'hash', 'sa
 function changedFields(doc: Record<string, unknown>, previousDoc?: Record<string, unknown>) {
   if (!previousDoc) return []
   return Object.keys(doc).filter(
-    (key) => !IGNORED_FIELDS.has(key) && JSON.stringify(doc[key]) !== JSON.stringify(previousDoc[key]),
+    (key) =>
+      !IGNORED_FIELDS.has(key) && JSON.stringify(doc[key]) !== JSON.stringify(previousDoc[key]),
   )
 }
 
@@ -64,7 +65,11 @@ export const auditCollection = (resource: string) => {
 
 export const auditGlobal = (resource: string): GlobalAfterChangeHook => {
   return async ({ doc, previousDoc, req }) => {
-    await writeAudit(req, { action: 'update', resource, changedFields: changedFields(doc, previousDoc) })
+    await writeAudit(req, {
+      action: 'update',
+      resource,
+      changedFields: changedFields(doc, previousDoc),
+    })
     return doc
   }
 }

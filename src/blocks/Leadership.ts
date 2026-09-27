@@ -17,7 +17,13 @@ export const LeadershipBlock: Block = {
       fields: [
         imageField('photo', { required: true }),
         { name: 'name', type: 'text', required: true, maxLength: 120 },
-        { name: 'roles', type: 'text', hasMany: true, maxRows: 5, admin: { description: 'Contoh: Founder, CEO' } },
+        {
+          name: 'roles',
+          type: 'text',
+          hasMany: true,
+          maxRows: 5,
+          admin: { description: 'Contoh: Founder, CEO' },
+        },
         { name: 'bio', type: 'textarea', maxLength: 400 },
       ],
     },

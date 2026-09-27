@@ -20,7 +20,9 @@
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.16s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.16s ease;
 }
 
 .falah-account__button:hover,
@@ -88,7 +90,9 @@
 
 .falah-account--compact .falah-account__button:hover .falah-account__avatar,
 .falah-account--compact .falah-account__button[aria-expanded='true'] .falah-account__avatar {
-  box-shadow: 0 0 0 3px rgb(255 255 255 / 0.45), 0 4px 12px rgb(6 41 79 / 0.3);
+  box-shadow:
+    0 0 0 3px rgb(255 255 255 / 0.45),
+    0 4px 12px rgb(6 41 79 / 0.3);
 }
 
 .falah-account__menu {
@@ -98,7 +102,9 @@
   padding: 6px;
   border-radius: 16px;
   background: #fff;
-  box-shadow: 0 0 0 1px var(--falah-line), 0 18px 40px rgb(6 41 79 / 0.22);
+  box-shadow:
+    0 0 0 1px var(--falah-line),
+    0 18px 40px rgb(6 41 79 / 0.22);
   animation: falah-pop 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
 }
 
@@ -158,7 +164,10 @@
   font: inherit;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .falah-account__lang:hover {
@@ -168,7 +177,9 @@
 .falah-account__lang.is-active {
   background: #fff;
   color: var(--falah-ink);
-  box-shadow: 0 1px 2px rgb(6 41 79 / 0.08), 0 4px 10px -4px rgb(6 41 79 / 0.2);
+  box-shadow:
+    0 1px 2px rgb(6 41 79 / 0.08),
+    0 4px 10px -4px rgb(6 41 79 / 0.2);
   cursor: default;
 }
 
@@ -269,7 +280,6 @@
 }
 
 /* Breadcrumbs start at the section name — no logo mark in front. */
-
 
 /* No dividers anywhere on document screens: everything sits on one surface. */
 .doc-header:after,

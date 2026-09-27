@@ -27,7 +27,10 @@ export const VideoShowcaseBlock: Block = {
     hrefField({
       name: 'videoUrl',
       required: false,
-      admin: { description: 'Opsional. Link video luar (mis. YouTube) — dipakai bila Video di atas kosong.' },
+      admin: {
+        description:
+          'Opsional. Link video luar (mis. YouTube) — dipakai bila Video di atas kosong.',
+      },
     }),
   ],
 }

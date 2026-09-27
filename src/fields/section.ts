@@ -38,9 +38,7 @@ export const sectionHeaderField = ({ eyebrow = true } = {}): GroupField => ({
   name: 'header',
   type: 'group',
   fields: [
-    ...(eyebrow
-      ? [{ name: 'eyebrow', type: 'text', maxLength: 120 } satisfies Field]
-      : []),
+    ...(eyebrow ? [{ name: 'eyebrow', type: 'text', maxLength: 120 } satisfies Field] : []),
     {
       name: 'title',
       type: 'textarea',

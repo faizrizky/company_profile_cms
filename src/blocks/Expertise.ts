@@ -7,7 +7,12 @@ export const statFields = [
     type: 'row',
     fields: [
       { name: 'value', type: 'number', required: true, min: 0 },
-      { name: 'suffix', type: 'text', maxLength: 20, admin: { description: 'Contoh: +, %, K+ Hour' } },
+      {
+        name: 'suffix',
+        type: 'text',
+        maxLength: 20,
+        admin: { description: 'Contoh: +, %, K+ Hour' },
+      },
       { name: 'label', type: 'text', required: true, maxLength: 80 },
     ],
   },

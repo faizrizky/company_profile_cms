@@ -224,7 +224,8 @@ export const DESCRIPTIONS_EN: Record<string, string> = {
   'Bagian URL. Huruf kecil, angka, dan tanda "-". Otomatis dari judul bila kosong.':
     'URL part. Lowercase letters, numbers and "-". Generated from the title when empty.',
   'Opsional. Dipakai di layar < 768px.': 'Optional. Used on screens < 768px.',
-  'Contoh: /contact, /solution/command-center, https://…': 'e.g. /contact, /solution/command-center, https://…',
+  'Contoh: /contact, /solution/command-center, https://…':
+    'e.g. /contact, /solution/command-center, https://…',
   'Enter untuk pindah baris.': 'Press Enter for a new line.',
   'Item dengan deskripsi akan tampil lebih menonjol.': 'Items with a description stand out more.',
   'Opsional. Video MP4/WebM yang diputar langsung di halaman saat tombol play diklik (poster tampil sebelumnya).':
@@ -234,8 +235,10 @@ export const DESCRIPTIONS_EN: Record<string, string> = {
   'Contoh: +, %, K+ Hour': 'e.g. +, %, K+ Hour',
   'Layer gambar kedua di atas background.': 'Second image layer on top of the background.',
   'Contoh: Founder, CEO': 'e.g. Founder, CEO',
-  'Kosongkan untuk menampilkan semua sertifikasi sesuai urutan.': 'Leave empty to show all certifications in order.',
-  'Nomor (01, 02, …) dibuat otomatis sesuai urutan.': 'Numbers (01, 02, …) follow the order automatically.',
+  'Kosongkan untuk menampilkan semua sertifikasi sesuai urutan.':
+    'Leave empty to show all certifications in order.',
+  'Nomor (01, 02, …) dibuat otomatis sesuai urutan.':
+    'Numbers (01, 02, …) follow the order automatically.',
   'Pilihan dropdown "Consultation Interest".': 'Options of the "Consultation Interest" dropdown.',
   'Opsional. Kartu jadi bisa diklik.': 'Optional. Makes the card clickable.',
   'Kosongkan untuk memakai judul halaman & deskripsi default situs.':
@@ -247,17 +250,23 @@ export const DESCRIPTIONS_EN: Record<string, string> = {
   'Nonaktifkan bila konten detail belum siap (halaman akan 404).':
     'Turn off while the detail content is not ready (the page returns 404).',
   'Kosongkan = judul kategori.': 'Empty = the category title.',
-  'Latar tab; juga poster video latar di bawah.': 'Tab background; also the poster of the background video below.',
+  'Latar tab; juga poster video latar di bawah.':
+    'Tab background; also the poster of the background video below.',
   'Opsional. Video latar (tanpa suara, diputar berulang). MP4 720p, ±10 detik, < 4 MB.':
     'Optional. Background video (muted, looping). MP4 720p, ~10 s, < 4 MB.',
-  'PDF brosur. Kosongkan = tombol mengarah ke halaman contact.': 'Brochure PDF. Empty = the button links to the contact page.',
+  'PDF brosur. Kosongkan = tombol mengarah ke halaman contact.':
+    'Brochure PDF. Empty = the button links to the contact page.',
   'Kartu produk di Solution Overview dan mega menu (produk pertama tiap kategori jadi kartu besar). Geser untuk mengatur urutan.':
     "Product cards in Solution Overview and the mega menu (each category's first product is the big card). Drag to reorder.",
-  'Admin: kelola user & pengaturan. Editor: kelola konten saja.': 'Admin: manage users & settings. Editor: content only.',
-  'Riwayat perubahan & login. Tidak bisa diubah atau dihapus.': 'History of changes & logins. Cannot be edited or deleted.',
-  'Versi singkat untuk footer. Enter = baris baru.': 'Short version for the footer. Enter = new line.',
+  'Admin: kelola user & pengaturan. Editor: kelola konten saja.':
+    'Admin: manage users & settings. Editor: content only.',
+  'Riwayat perubahan & login. Tidak bisa diubah atau dihapus.':
+    'History of changes & logins. Cannot be edited or deleted.',
+  'Versi singkat untuk footer. Enter = baris baru.':
+    'Short version for the footer. Enter = new line.',
   'Format tampilan, mis. 021 2696 1651': 'Display format, e.g. 021 2696 1651',
-  'Alamat, email, telepon & sosial media diatur di Site Settings.': 'Address, email, phone & social media are set in Site Settings.',
+  'Alamat, email, telepon & sosial media diatur di Site Settings.':
+    'Address, email, phone & social media are set in Site Settings.',
   'Gunakan {year} untuk tahun berjalan.': 'Use {year} for the current year.',
 }
 

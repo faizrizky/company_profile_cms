@@ -53,15 +53,20 @@ async function geocode(query: string): Promise<LatLng | null> {
   const q = encodeURIComponent(query)
   try {
     const res = await fetch(`https://photon.komoot.io/api/?limit=1&bbox=94,-11.5,141.5,6.5&q=${q}`)
-    const [hit] = ((await res.json()) as { features?: { geometry: { coordinates: [number, number] } }[] }).features ?? []
+    const [hit] =
+      ((await res.json()) as { features?: { geometry: { coordinates: [number, number] } }[] })
+        .features ?? []
     if (hit) return { lat: hit.geometry.coordinates[1], lng: hit.geometry.coordinates[0] }
   } catch {
     // try the next service
   }
   try {
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=id&q=${q}`, {
-      headers: { Accept: 'application/json' },
-    })
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=id&q=${q}`,
+      {
+        headers: { Accept: 'application/json' },
+      },
+    )
     const [hit] = (await res.json()) as { lat: string; lon: string }[]
     return hit ? { lat: Number(hit.lat), lng: Number(hit.lon) } : null
   } catch {
@@ -79,8 +84,10 @@ const TEXT = {
     notFound: 'Address not found. Try a shorter one, then click the map to adjust.',
     moved: 'Pin moved. Drag it if it is not quite right.',
     failed: 'Search failed. Click directly on the map.',
-    pin: (lat: number, lng: number) => `Pin: ${lat}, ${lng}. Click the map or drag the pin to change it.`,
-    empty: 'Click the map to drop the office pin. Without a pin, the website map uses the address text.',
+    pin: (lat: number, lng: number) =>
+      `Pin: ${lat}, ${lng}. Click the map or drag the pin to change it.`,
+    empty:
+      'Click the map to drop the office pin. Without a pin, the website map uses the address text.',
   },
   id: {
     label: 'Lokasi di peta',
@@ -91,8 +98,10 @@ const TEXT = {
     notFound: 'Alamat tidak ditemukan. Coba lebih singkat, lalu klik peta untuk menyesuaikan.',
     moved: 'Pin dipindah. Geser pin bila belum pas.',
     failed: 'Gagal mencari alamat. Klik langsung di peta.',
-    pin: (lat: number, lng: number) => `Pin: ${lat}, ${lng}. Klik peta atau geser pin untuk mengubah.`,
-    empty: 'Klik peta untuk menaruh pin lokasi kantor. Tanpa pin, peta di website memakai alamat teks.',
+    pin: (lat: number, lng: number) =>
+      `Pin: ${lat}, ${lng}. Klik peta atau geser pin untuk mengubah.`,
+    empty:
+      'Klik peta untuk menaruh pin lokasi kantor. Tanpa pin, peta di website memakai alamat teks.',
   },
 }
 
@@ -133,7 +142,12 @@ export const MapPicker: UIFieldClientComponent = ({ path }) => {
         maxZoom: 19,
         attribution: '&copy; OpenStreetMap',
       }).addTo(m)
-      const icon = L.divIcon({ className: 'falah-map-pin', html: '<span></span>', iconSize: [30, 42], iconAnchor: [15, 42] })
+      const icon = L.divIcon({
+        className: 'falah-map-pin',
+        html: '<span></span>',
+        iconSize: [30, 42],
+        iconAnchor: [15, 42],
+      })
       const place = (latlng: { lat: number; lng: number }) => {
         setters.current.lat(round(latlng.lat))
         setters.current.lng(round(latlng.lng))
@@ -192,7 +206,11 @@ export const MapPicker: UIFieldClientComponent = ({ path }) => {
             }
           }}
         />
-        <button type="button" className="btn btn--style-secondary btn--size-small" onClick={() => void search(query)}>
+        <button
+          type="button"
+          className="btn btn--style-secondary btn--size-small"
+          onClick={() => void search(query)}
+        >
           {t.search}
         </button>
         {address.value ? (
@@ -210,10 +228,7 @@ export const MapPicker: UIFieldClientComponent = ({ path }) => {
       </div>
       <div ref={box} className="falah-map-picker__map" />
       <p className="field-description">
-        {status ??
-          (hasPin
-            ? t.pin(lat.value!, lng.value!)
-            : t.empty)}
+        {status ?? (hasPin ? t.pin(lat.value!, lng.value!) : t.empty)}
       </p>
     </div>
   )

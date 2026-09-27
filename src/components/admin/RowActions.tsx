@@ -1,6 +1,14 @@
 'use client'
 
-import { ConfirmationModal, Link, toast, useAuth, useConfig, useModal, useTranslation } from '@payloadcms/ui'
+import {
+  ConfirmationModal,
+  Link,
+  toast,
+  useAuth,
+  useConfig,
+  useModal,
+  useTranslation,
+} from '@payloadcms/ui'
 import { useRouter } from 'next/navigation'
 import type { DefaultCellComponentProps } from 'payload'
 
@@ -35,13 +43,18 @@ export function RowActions({ rowData, collectionSlug }: DefaultCellComponentProp
       toast.success(isId ? `"${title}" dihapus.` : `"${title}" deleted.`)
       router.refresh()
     } else {
-      toast.error(isId ? 'Gagal menghapus. Periksa izin Anda.' : 'Could not delete. Check your permissions.')
+      toast.error(
+        isId ? 'Gagal menghapus. Periksa izin Anda.' : 'Could not delete. Check your permissions.',
+      )
     }
   }
 
   return (
     <div className="falah-row-actions">
-      <Link className="falah-row-actions__btn" href={`${admin}/collections/${collectionSlug}/${id}`}>
+      <Link
+        className="falah-row-actions__btn"
+        href={`${admin}/collections/${collectionSlug}/${id}`}
+      >
         {isId ? 'Edit' : 'Edit'}
       </Link>
       {canDelete && (

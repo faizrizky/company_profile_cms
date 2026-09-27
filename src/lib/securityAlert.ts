@@ -9,7 +9,10 @@ import { getClientIp } from '@/lib/request'
  * can't be delivered must not break the login or save that triggered it.
  * Every event is also in the audit log.
  */
-export async function notifySecurity(req: PayloadRequest | undefined, message: string): Promise<void> {
+export async function notifySecurity(
+  req: PayloadRequest | undefined,
+  message: string,
+): Promise<void> {
   if (!env.SECURITY_WEBHOOK_URL) return
   const ip = req ? getClientIp(req.headers) : undefined
   const text = `[Falah CMS] ${message}${ip ? ` · IP ${ip}` : ''}`

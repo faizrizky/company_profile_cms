@@ -55,14 +55,45 @@ async function main() {
 
   /** Re-saves a document's English copy, translated, as its Indonesian version. */
   const addIndonesian = async (collection: CollectionSlug, id: number) => {
-    const doc = await payload.findByID({ collection, id, depth: 0, locale: 'en', overrideAccess: true })
-    const { id: _id, createdAt: _c, updatedAt: _u, _order: _o, ...data } = doc as unknown as Record<string, unknown>
-    await payload.update({ collection, id, locale: 'id', overrideAccess: true, context, data: translateToId(data) })
+    const doc = await payload.findByID({
+      collection,
+      id,
+      depth: 0,
+      locale: 'en',
+      overrideAccess: true,
+    })
+    const {
+      id: _id,
+      createdAt: _c,
+      updatedAt: _u,
+      _order: _o,
+      ...data
+    } = doc as unknown as Record<string, unknown>
+    await payload.update({
+      collection,
+      id,
+      locale: 'id',
+      overrideAccess: true,
+      context,
+      data: translateToId(data),
+    })
   }
   const addIndonesianGlobal = async (slug: GlobalSlug) => {
     const doc = await payload.findGlobal({ slug, depth: 0, locale: 'en', overrideAccess: true })
-    const { id: _id, createdAt: _c, updatedAt: _u, globalType: _g, ...data } = doc as unknown as Record<string, unknown>
-    await payload.updateGlobal({ slug, locale: 'id', overrideAccess: true, context, data: translateToId(data) })
+    const {
+      id: _id,
+      createdAt: _c,
+      updatedAt: _u,
+      globalType: _g,
+      ...data
+    } = doc as unknown as Record<string, unknown>
+    await payload.updateGlobal({
+      slug,
+      locale: 'id',
+      overrideAccess: true,
+      context,
+      data: translateToId(data),
+    })
   }
 
   const existing = await payload.count({ collection: 'pages', overrideAccess: true })
@@ -79,7 +110,8 @@ async function main() {
   if (users.totalDocs === 0) {
     const email = process.env.SEED_ADMIN_EMAIL
     const password = process.env.SEED_ADMIN_PASSWORD
-    if (!email || !password) throw new Error('Set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD to create the first admin.')
+    if (!email || !password)
+      throw new Error('Set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD to create the first admin.')
     const weak = checkPasswordStrength(password, email)
     if (weak) throw new Error(`SEED_ADMIN_PASSWORD rejected: ${weak}`)
 
@@ -109,7 +141,14 @@ async function main() {
       .then(async (doc) => {
         const altId = alt && translationsId[alt]
         if (altId) {
-          await payload.update({ collection: 'media', id: doc.id, locale: 'id', overrideAccess: true, context, data: { alt: altId } })
+          await payload.update({
+            collection: 'media',
+            id: doc.id,
+            locale: 'id',
+            overrideAccess: true,
+            context,
+            data: { alt: altId },
+          })
         }
         return doc.id
       })
@@ -158,7 +197,12 @@ async function main() {
       ...detail,
       _status: 'published',
     }
-    const doc = await payload.create({ collection: 'solution-categories', overrideAccess: true, context, data })
+    const doc = await payload.create({
+      collection: 'solution-categories',
+      overrideAccess: true,
+      context,
+      data,
+    })
     categoryIds.set(category.slug, doc.id)
     await addIndonesian('solution-categories', doc.id)
   }
@@ -175,7 +219,8 @@ async function main() {
         summary: product.summary,
         category: categoryIds.get('virtual-training-suite')!,
         image: await media(product.image, product.title),
-        imageMobile: 'imageMobile' in product ? await media(product.imageMobile, product.title) : undefined,
+        imageMobile:
+          'imageMobile' in product ? await media(product.imageMobile, product.title) : undefined,
         layout: 'layout' in product ? product.layout : undefined,
       },
     })
@@ -210,10 +255,21 @@ async function main() {
   log.info(`Pages: ${pages.map((p) => p.slug).join(', ')}`)
 
   // ── Globals ─────────────────────────────────────────────────────────
-  await payload.updateGlobal({ slug: 'site-settings', overrideAccess: true, context, data: await siteSettings(media) })
-  await payload.updateGlobal({ slug: 'navigation', overrideAccess: true, context, data: await navigation(media) })
+  await payload.updateGlobal({
+    slug: 'site-settings',
+    overrideAccess: true,
+    context,
+    data: await siteSettings(media),
+  })
+  await payload.updateGlobal({
+    slug: 'navigation',
+    overrideAccess: true,
+    context,
+    data: await navigation(media),
+  })
   await payload.updateGlobal({ slug: 'footer', overrideAccess: true, context, data: footer })
-  for (const slug of ['site-settings', 'navigation', 'footer'] as const) await addIndonesianGlobal(slug)
+  for (const slug of ['site-settings', 'navigation', 'footer'] as const)
+    await addIndonesianGlobal(slug)
 
   log.info(`Seed complete. Media uploaded: ${mediaCache.size}`)
 }

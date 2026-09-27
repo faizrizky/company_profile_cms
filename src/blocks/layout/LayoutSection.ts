@@ -32,7 +32,10 @@ export const LayoutSectionBlock: Block = {
           type: 'select',
           required: true,
           defaultValue: '2',
-          options: ['1', '2', '3', '4'].map((v) => ({ label: `${v} column${v === '1' ? '' : 's'}`, value: v })),
+          options: ['1', '2', '3', '4'].map((v) => ({
+            label: `${v} column${v === '1' ? '' : 's'}`,
+            value: v,
+          })),
         },
         {
           name: 'verticalAlign',

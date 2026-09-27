@@ -44,7 +44,10 @@ export const SiteSettings: GlobalConfig = {
                   required: true,
                   maxLength: 300,
                   admin: {
-                    description: { en: 'Full address (shown on the website map).', id: 'Alamat lengkap (ditampilkan di peta website).' },
+                    description: {
+                      en: 'Full address (shown on the website map).',
+                      id: 'Alamat lengkap (ditampilkan di peta website).',
+                    },
                   },
                 },
                 {
@@ -60,14 +63,28 @@ export const SiteSettings: GlobalConfig = {
                       type: 'number',
                       min: -90,
                       max: 90,
-                      admin: { width: '50%', step: 0.000001, description: { en: 'Filled in from the map.', id: 'Terisi otomatis dari peta.' } },
+                      admin: {
+                        width: '50%',
+                        step: 0.000001,
+                        description: {
+                          en: 'Filled in from the map.',
+                          id: 'Terisi otomatis dari peta.',
+                        },
+                      },
                     },
                     {
                       name: 'longitude',
                       type: 'number',
                       min: -180,
                       max: 180,
-                      admin: { width: '50%', step: 0.000001, description: { en: 'Filled in from the map.', id: 'Terisi otomatis dari peta.' } },
+                      admin: {
+                        width: '50%',
+                        step: 0.000001,
+                        description: {
+                          en: 'Filled in from the map.',
+                          id: 'Terisi otomatis dari peta.',
+                        },
+                      },
                     },
                   ],
                 },
@@ -75,7 +92,10 @@ export const SiteSettings: GlobalConfig = {
                   name: 'shortAddress',
                   type: 'textarea',
                   maxLength: 160,
-                  admin: { rows: 2, description: 'Versi singkat untuk footer. Enter = baris baru.' },
+                  admin: {
+                    rows: 2,
+                    description: 'Versi singkat untuk footer. Enter = baris baru.',
+                  },
                 },
                 {
                   type: 'row',
@@ -158,9 +178,18 @@ export const SiteSettings: GlobalConfig = {
                         { label: 'YouTube', value: 'youtube' },
                         { label: 'X (Twitter)', value: 'x' },
                         { label: 'WhatsApp', value: 'whatsapp' },
-                        { label: { en: 'Other (own icon)', id: 'Lainnya (ikon sendiri)' }, value: 'other' },
+                        {
+                          label: { en: 'Other (own icon)', id: 'Lainnya (ikon sendiri)' },
+                          value: 'other',
+                        },
                       ],
-                      admin: { width: '25%', description: { en: 'The icon follows the platform.', id: 'Ikonnya otomatis sesuai platform.' } },
+                      admin: {
+                        width: '25%',
+                        description: {
+                          en: 'The icon follows the platform.',
+                          id: 'Ikonnya otomatis sesuai platform.',
+                        },
+                      },
                     },
                     { name: 'label', type: 'text', required: true, maxLength: 40 },
                     hrefField({ name: 'url' }),

@@ -7,7 +7,8 @@ export const translationsId: Record<string, string> = {
   // ── Shared CTA ─────────────────────────────────────────────────────────
   'Let’s Build Future-Ready Operations': 'Mari Bangun Operasional yang Siap Menghadapi Masa Depan',
   "Let's Build Future-Ready Operations": 'Mari Bangun Operasional yang Siap Menghadapi Masa Depan',
-  'Ready to Build Smarter Training & Operations?': 'Siap Membangun Pelatihan & Operasional yang Lebih Cerdas?',
+  'Ready to Build Smarter Training & Operations?':
+    'Siap Membangun Pelatihan & Operasional yang Lebih Cerdas?',
   'Partner with Falah Inovasi Teknologi to develop immersive training systems, operational technologies, and digital solutions.':
     'Bermitra dengan Falah Inovasi Teknologi untuk mengembangkan sistem pelatihan imersif, teknologi operasional, dan solusi digital.',
   'Request Consultation': 'Ajukan Konsultasi',
@@ -92,11 +93,13 @@ export const translationsId: Record<string, string> = {
 
   // ── Home ───────────────────────────────────────────────────────────────
   Home: 'Beranda',
-  'Train Smarter with Immersive Simulation Technology': 'Berlatih Lebih Cerdas dengan Teknologi Simulasi Imersif',
+  'Train Smarter with Immersive Simulation Technology':
+    'Berlatih Lebih Cerdas dengan Teknologi Simulasi Imersif',
   'Immersive simulation systems designed to improve training effectiveness, workforce readiness, and operational performance.':
     'Sistem simulasi imersif yang dirancang untuk meningkatkan efektivitas pelatihan, kesiapan tenaga kerja, dan kinerja operasional.',
   'Traditional Training Has Limitations': 'Pelatihan Tradisional Memiliki Keterbatasan',
-  'Modern Training Demands More than Traditional Methods': 'Pelatihan Modern Menuntut Lebih dari Metode Tradisional',
+  'Modern Training Demands More than Traditional Methods':
+    'Pelatihan Modern Menuntut Lebih dari Metode Tradisional',
   'Modern organizations require immersive & practical training to improve readiness, safety, and operational performance.':
     'Organisasi modern membutuhkan pelatihan yang imersif & praktis untuk meningkatkan kesiapan, keselamatan, dan kinerja operasional.',
   'Real-World Training Comes with Real Risks': 'Pelatihan di Dunia Nyata Membawa Risiko Nyata',
@@ -111,14 +114,18 @@ export const translationsId: Record<string, string> = {
   'Falah delivers realistic simulation that improve competency, reduce operational risk, and strengthen workforce readiness.':
     'Falah menghadirkan simulasi realistis yang meningkatkan kompetensi, mengurangi risiko operasional, dan memperkuat kesiapan tenaga kerja.',
   'Operational training simulator': 'Simulator pelatihan operasional',
-  'Integrated Technologies for Modern Operations': 'Teknologi Terintegrasi untuk Operasional Modern',
-  'Integrated Solutions for Modern Training & Operations': 'Solusi Terintegrasi untuk Pelatihan & Operasional Modern',
+  'Integrated Technologies for Modern Operations':
+    'Teknologi Terintegrasi untuk Operasional Modern',
+  'Integrated Solutions for Modern Training & Operations':
+    'Solusi Terintegrasi untuk Pelatihan & Operasional Modern',
   'From immersive simulation to command center, Falah delivers integrated technologies that improve operational performance.':
     'Dari simulasi imersif hingga command center, Falah menghadirkan teknologi terintegrasi yang meningkatkan kinerja operasional.',
   'Training Simulator': 'Simulator Pelatihan',
   'Advanced Education Systems': 'Sistem Pendidikan Lanjutan',
-  'Built on Experience & Operational Trust': 'Dibangun di Atas Pengalaman & Kepercayaan Operasional',
-  'Trusted Expertise for Critical Training & Operations': 'Keahlian Tepercaya untuk Pelatihan & Operasional Kritis',
+  'Built on Experience & Operational Trust':
+    'Dibangun di Atas Pengalaman & Kepercayaan Operasional',
+  'Trusted Expertise for Critical Training & Operations':
+    'Keahlian Tepercaya untuk Pelatihan & Operasional Kritis',
   'Falah combines certified standards, industry expertise, & strategic experience to deliver reliable solutions for complex environments.':
     'Falah memadukan standar tersertifikasi, keahlian industri, & pengalaman strategis untuk menghadirkan solusi andal bagi lingkungan yang kompleks.',
   'Strategic Projects': 'Proyek Strategis',
@@ -136,7 +143,8 @@ export const translationsId: Record<string, string> = {
   'Designing interactive learning experiences that improve competency.':
     'Merancang pengalaman belajar interaktif yang meningkatkan kompetensi.',
   'Meeting Recognized Industry Standards': 'Memenuhi Standar Industri yang Diakui',
-  'Certified Standards for Strategic Technology Delivery': 'Standar Tersertifikasi untuk Penyediaan Teknologi Strategis',
+  'Certified Standards for Strategic Technology Delivery':
+    'Standar Tersertifikasi untuk Penyediaan Teknologi Strategis',
   'Falah maintains recognized standards & compliance frameworks for reliable technology delivery across operational environments.':
     'Falah menjaga standar & kerangka kepatuhan yang diakui untuk penyediaan teknologi yang andal di berbagai lingkungan operasional.',
   'Answers Before You Get Started': 'Jawaban Sebelum Anda Memulai',
@@ -146,7 +154,8 @@ export const translationsId: Record<string, string> = {
   'What industries does Falah support?': 'Industri apa saja yang didukung Falah?',
   'Falah supports government, defense, education, and enterprise sectors with simulation training, operational technology, and digital transformation solutions.':
     'Falah mendukung sektor pemerintahan, pertahanan, pendidikan, dan korporasi melalui pelatihan simulasi, teknologi operasional, dan solusi transformasi digital.',
-  'Can Falah develop customized simulation systems?': 'Apakah Falah dapat mengembangkan sistem simulasi khusus?',
+  'Can Falah develop customized simulation systems?':
+    'Apakah Falah dapat mengembangkan sistem simulasi khusus?',
   'Yes. Falah develops customized simulation environments tailored to specific operational, training, and organizational requirements.':
     'Ya. Falah mengembangkan lingkungan simulasi yang disesuaikan dengan kebutuhan operasional, pelatihan, dan organisasi secara spesifik.',
   'Are Falah’s solutions suitable for government and defense environments?':
@@ -157,7 +166,8 @@ export const translationsId: Record<string, string> = {
     'Apakah Falah menyediakan dukungan implementasi dan operasional?',
   'Yes. Falah provides end-to-end implementation, integration, and ongoing operational support for its simulation and technology solutions.':
     'Ya. Falah menyediakan implementasi menyeluruh, integrasi, serta dukungan operasional berkelanjutan untuk solusi simulasi dan teknologinya.',
-  'What types of simulation solutions does Falah provide?': 'Jenis solusi simulasi apa saja yang disediakan Falah?',
+  'What types of simulation solutions does Falah provide?':
+    'Jenis solusi simulasi apa saja yang disediakan Falah?',
   'Falah provides immersive training simulators, command center solutions, advanced education systems, and virtual connectivity suites.':
     'Falah menyediakan simulator pelatihan imersif, solusi command center, sistem pendidikan lanjutan, dan suite konektivitas virtual.',
   'Can Falah integrate solutions with existing infrastructure?':
@@ -169,7 +179,8 @@ export const translationsId: Record<string, string> = {
   // ── About ──────────────────────────────────────────────────────────────
   About: 'Tentang Kami',
   'The Experts Behind The Technology': 'Para Ahli di Balik Teknologi',
-  'Building Technology for Training, Operations, & Readiness': 'Membangun Teknologi untuk Pelatihan, Operasional, & Kesiapan',
+  'Building Technology for Training, Operations, & Readiness':
+    'Membangun Teknologi untuk Pelatihan, Operasional, & Kesiapan',
   'Falah develops simulation systems & immersive technologies that improve operational coordination, & learning effectiveness.':
     'Falah mengembangkan sistem simulasi & teknologi imersif yang meningkatkan koordinasi operasional & efektivitas pembelajaran.',
   'Who Are We': 'Siapa Kami',
@@ -213,7 +224,8 @@ export const translationsId: Record<string, string> = {
   'Auriga focuses on strategic partnerships, business development, and market expansion to strengthen long-term organizational growth.':
     'Auriga berfokus pada kemitraan strategis, pengembangan bisnis, dan ekspansi pasar untuk memperkuat pertumbuhan organisasi jangka panjang.',
   'Our Experts': 'Tim Ahli Kami',
-  'A Multidisciplinary Team Behind\nEvery Operational Solution': 'Tim Multidisiplin di Balik\nSetiap Solusi Operasional',
+  'A Multidisciplinary Team Behind\nEvery Operational Solution':
+    'Tim Multidisiplin di Balik\nSetiap Solusi Operasional',
   'Falah combines immersive technologies & integrated systems to deliver scalable solutions for modern operations.':
     'Falah memadukan teknologi imersif & sistem terintegrasi untuk menghadirkan solusi yang skalabel bagi operasional modern.',
   'Management Team': 'Tim Manajemen',
@@ -229,7 +241,8 @@ export const translationsId: Record<string, string> = {
   // ── Solution ───────────────────────────────────────────────────────────
   Solution: 'Solusi',
   'Our Solutions': 'Solusi Kami',
-  'Integrated Technologies Built for Operational Excellence': 'Teknologi Terintegrasi untuk Keunggulan Operasional',
+  'Integrated Technologies Built for Operational Excellence':
+    'Teknologi Terintegrasi untuk Keunggulan Operasional',
   'Solution Overview': 'Ikhtisar Solusi',
   'Integrated Solutions for Modern Operations': 'Solusi Terintegrasi untuk Operasional Modern',
   'Explore operational ecosystems designed to support simulation, training, collaboration, and infrastructure management.':
@@ -238,7 +251,8 @@ export const translationsId: Record<string, string> = {
   // ── Contact ────────────────────────────────────────────────────────────
   Contact: 'Kontak',
   'Contact Us': 'Hubungi Kami',
-  'Let’s Build Future-Ready Operations Together': 'Mari Bersama Membangun Operasional yang Siap Menghadapi Masa Depan',
+  'Let’s Build Future-Ready Operations Together':
+    'Mari Bersama Membangun Operasional yang Siap Menghadapi Masa Depan',
   'Let’s Discuss Your Training Needs': 'Mari Diskusikan Kebutuhan Pelatihan Anda',
   'Discuss your operational challenges, training initiatives, or technology needs with the Falah team.':
     'Diskusikan tantangan operasional, inisiatif pelatihan, atau kebutuhan teknologi Anda bersama tim Falah.',
@@ -246,13 +260,15 @@ export const translationsId: Record<string, string> = {
     'Sampaikan kebutuhan proyek, tantangan operasional, atau inisiatif teknologi Anda kepada tim Falah.',
   'Response within 1–2 business days.': 'Respons dalam 1–2 hari kerja.',
   'Immersive Simulation': 'Simulasi Imersif',
-  'Need immediate assistance?\nChat with our team via Whatsapp': 'Butuh bantuan segera?\nChat dengan tim kami via WhatsApp',
+  'Need immediate assistance?\nChat with our team via Whatsapp':
+    'Butuh bantuan segera?\nChat dengan tim kami via WhatsApp',
   'Thank you! Our team will contact you within 1–2 business days.':
     'Terima kasih! Tim kami akan menghubungi Anda dalam 1–2 hari kerja.',
   'Our Workflow': 'Alur Kerja Kami',
   'How it works?': 'Bagaimana cara kerjanya?',
   'Office & Operational Presence': 'Kantor & Kehadiran Operasional',
-  'Built From a Collaborative Technology Environment': 'Lahir dari Lingkungan Teknologi yang Kolaboratif',
+  'Built From a Collaborative Technology Environment':
+    'Lahir dari Lingkungan Teknologi yang Kolaboratif',
   'Falah operates from a collaborative operational-tech environment designed to support innovation & strategic technology initiatives.':
     'Falah beroperasi dari lingkungan teknologi operasional yang kolaboratif, dirancang untuk mendukung inovasi & inisiatif teknologi strategis.',
 
@@ -276,7 +292,8 @@ export const translationsId: Record<string, string> = {
     'Solusi simulasi imersif dan teknologi operasional untuk sektor pemerintahan, pertahanan, pendidikan, dan korporasi.',
   Company: 'Perusahaan',
   'About Us': 'Tentang Kami',
-  '© {year} Falah Inovasi Teknologi | All Right Reserved': '© {year} Falah Inovasi Teknologi | Hak Cipta Dilindungi',
+  '© {year} Falah Inovasi Teknologi | All Right Reserved':
+    '© {year} Falah Inovasi Teknologi | Hak Cipta Dilindungi',
 }
 
 /** Deep-copies `value`, replacing every string that has an Indonesian translation. */
