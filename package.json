@@ -28,7 +28,7 @@
     "@payloadcms/storage-s3": "3.90.1",
     "@payloadcms/translations": "3.90.1",
     "@payloadcms/ui": "3.90.1",
-    "cross-env": "^7.0.3",
+    "cross-env": "^10.1.0",
     "dompurify": "^3.4.15",
     "file-type": "^22.1.1",
     "graphql": "^16.8.1",
