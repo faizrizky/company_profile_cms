@@ -292,13 +292,17 @@ export interface ProblemShowcaseBlock {
   };
   background?: (number | null) | Media;
   /**
-   * Items with a description stand out more.
+   * Hover or click an item to open it: its description shows and the image switches.
    */
   items?:
     | {
         icon: number | Media;
         title: string;
         description?: string | null;
+        /**
+         * Shown on the right while this item is active. Empty = the section image.
+         */
+        image?: (number | null) | Media;
         id?: string | null;
       }[]
     | null;
@@ -1363,6 +1367,7 @@ export interface ProblemShowcaseBlockSelect<T extends boolean = true> {
         icon?: T;
         title?: T;
         description?: T;
+        image?: T;
         id?: T;
       };
   image?: T;

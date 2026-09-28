@@ -14,8 +14,23 @@ export const ProblemShowcaseBlock: Block = {
       type: 'array',
       minRows: 1,
       maxRows: 6,
-      fields: iconCardFields,
-      admin: { description: 'Item dengan deskripsi akan tampil lebih menonjol.' },
+      fields: [
+        ...iconCardFields,
+        imageField('image', {
+          admin: {
+            description: {
+              en: 'Shown on the right while this item is active. Empty = the section image.',
+              id: 'Tampil di kanan saat item ini aktif. Kosong = gambar section.',
+            },
+          },
+        }),
+      ],
+      admin: {
+        description: {
+          en: 'Hover or click an item to open it: its description shows and the image switches.',
+          id: 'Hover atau klik item untuk membukanya: deskripsinya tampil dan gambarnya berganti.',
+        },
+      },
     },
     imageField('image', { required: true }),
   ],
