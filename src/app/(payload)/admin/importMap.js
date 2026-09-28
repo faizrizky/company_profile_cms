@@ -1,4 +1,4 @@
-import { ReplaceFromLibrary as ReplaceFromLibrary_1c2fc076eb0ba15e3968d5851c087c88 } from '../../../components/admin/ReplaceFromLibrary'
+import { UploadFieldActions as UploadFieldActions_c632941d5838fdd6bc9f8c5a60667615 } from '../../../components/admin/UploadFieldActions'
 import { LinkField as LinkField_d8d7081459c50b661660640e5b56f664 } from '../../../components/admin/LinkField'
 import { RowActions as RowActions_4ac536b05bcf7dd66a6c577ab1ace490 } from '../../../components/admin/RowActions'
 import { Nothing as Nothing_e2b1b0e7fee819dbb082017850c6ef2a } from '../../../components/admin/Nothing'
@@ -25,7 +25,7 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 
 /** @type import('payload').ImportMap */
 export const importMap = {
-  "/components/admin/ReplaceFromLibrary#ReplaceFromLibrary": ReplaceFromLibrary_1c2fc076eb0ba15e3968d5851c087c88,
+  "/components/admin/UploadFieldActions#UploadFieldActions": UploadFieldActions_c632941d5838fdd6bc9f8c5a60667615,
   "/components/admin/LinkField#LinkField": LinkField_d8d7081459c50b661660640e5b56f664,
   "/components/admin/RowActions#RowActions": RowActions_4ac536b05bcf7dd66a6c577ab1ace490,
   "/components/admin/Nothing#Nothing": Nothing_e2b1b0e7fee819dbb082017850c6ef2a,

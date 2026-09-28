@@ -21,7 +21,7 @@ export const imageField = (
     components: {
       afterInput: [
         {
-          path: '/components/admin/ReplaceFromLibrary#ReplaceFromLibrary',
+          path: '/components/admin/UploadFieldActions#UploadFieldActions',
           clientProps: { kind: 'image' },
         },
       ],
@@ -47,7 +47,7 @@ export const videoField = (
     components: {
       afterInput: [
         {
-          path: '/components/admin/ReplaceFromLibrary#ReplaceFromLibrary',
+          path: '/components/admin/UploadFieldActions#UploadFieldActions',
           clientProps: { kind: 'video' },
         },
       ],

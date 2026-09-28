@@ -232,37 +232,6 @@
   box-shadow: none;
 }
 
-/* Filled upload fields (Background, Poster, Video…): a themed file card. */
-.upload-relationship-details {
-  padding: 10px 12px;
-  border: 1px solid #d3e2f3;
-  border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 6px 16px -14px rgb(15 39 66 / 0.45);
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.upload-relationship-details:hover {
-  border-color: #9cc5ef;
-  box-shadow: 0 10px 22px -16px rgb(31 122 224 / 0.5);
-}
-
-.upload-relationship-details__thumbnail {
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.upload-relationship-details .btn--icon-style-without-border {
-  border-radius: 10px;
-}
-
-.upload-relationship-details .btn--icon-style-without-border:hover {
-  background: #eef5fe;
-  color: var(--falah-accent);
-}
-
 .group-field__header {
   margin-bottom: 14px;
 }
