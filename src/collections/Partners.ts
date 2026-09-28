@@ -14,6 +14,17 @@ export const Partners: CollectionConfig = {
   fields: [
     fieldCard({ en: 'Partner', id: 'Partner' }, [
       { name: 'name', type: 'text', required: true, maxLength: 120 },
+      {
+        name: 'description',
+        type: 'textarea',
+        maxLength: 200,
+        admin: {
+          description: {
+            en: 'Shown in a card when the logo is hovered.',
+            id: 'Tampil dalam kartu saat logo di-hover.',
+          },
+        },
+      },
       hrefField({ name: 'website', required: false }),
       {
         name: 'showInHero',

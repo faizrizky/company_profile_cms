@@ -369,6 +369,14 @@ export interface SolutionHighlightsBlock {
         image: number | Media;
         title: string;
         /**
+         * Shown when the card is hovered.
+         */
+        description?: string | null;
+        /**
+         * Shown on hover under the featured card’s tags label.
+         */
+        tags?: string[] | null;
+        /**
          * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
          */
         href: string;
@@ -535,6 +543,10 @@ export interface Partner {
   id: number;
   _order?: string | null;
   name: string;
+  /**
+   * Shown in a card when the logo is hovered.
+   */
+  description?: string | null;
   /**
    * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
    */
@@ -1411,6 +1423,8 @@ export interface SolutionHighlightsBlockSelect<T extends boolean = true> {
     | {
         image?: T;
         title?: T;
+        description?: T;
+        tags?: T;
         href?: T;
         id?: T;
       };
@@ -1885,6 +1899,7 @@ export interface MediaSelect<T extends boolean = true> {
 export interface PartnersSelect<T extends boolean = true> {
   _order?: T;
   name?: T;
+  description?: T;
   website?: T;
   showInHero?: T;
   logo?: T;

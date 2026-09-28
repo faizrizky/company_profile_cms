@@ -30,6 +30,29 @@ export const SolutionHighlightsBlock: Block = {
       fields: [
         imageField('image', { required: true }),
         { name: 'title', type: 'text', required: true, maxLength: 120 },
+        {
+          name: 'description',
+          type: 'textarea',
+          maxLength: 200,
+          admin: {
+            description: {
+              en: 'Shown when the card is hovered.',
+              id: 'Tampil saat kartu di-hover.',
+            },
+          },
+        },
+        {
+          name: 'tags',
+          type: 'text',
+          hasMany: true,
+          maxRows: 6,
+          admin: {
+            description: {
+              en: 'Shown on hover under the featured card’s tags label.',
+              id: 'Tampil saat hover, di bawah label tag kartu utama.',
+            },
+          },
+        },
         hrefField(),
       ],
     },
