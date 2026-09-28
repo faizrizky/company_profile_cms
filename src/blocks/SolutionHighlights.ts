@@ -33,7 +33,7 @@ export const SolutionHighlightsBlock: Block = {
         {
           name: 'description',
           type: 'textarea',
-          maxLength: 200,
+          maxLength: 300,
           admin: {
             description: {
               en: 'Shown when the card is hovered.',
