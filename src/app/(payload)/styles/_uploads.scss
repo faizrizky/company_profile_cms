@@ -199,3 +199,91 @@
 .falah-link-field__input {
   margin-top: 8px;
 }
+
+/* MediaFileCell as the select button of "Choose existing" drawers. */
+.falah-file-cell__select {
+  all: unset;
+  display: block;
+  cursor: pointer;
+  border-radius: 8px;
+
+  &:hover .file__filename,
+  &:focus-visible .file__filename {
+    color: var(--falah-accent);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--falah-accent);
+    outline-offset: 2px;
+  }
+}
+
+/* "Replace from library" under a filled image/video field (ReplaceFromLibrary). */
+.falah-replace-media {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  width: fit-content;
+  margin-top: 10px;
+  height: 34px;
+  padding: 0 16px;
+  border: 1px solid #d3e2f3;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--falah-accent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.15s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  &:hover {
+    border-color: var(--falah-accent);
+    box-shadow: 0 4px 14px rgb(31 122 224 / 0.15);
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--falah-accent);
+    outline-offset: 2px;
+  }
+}
+
+/* Media edit (page and "Edit" drawer): the file card and the ID chip match the
+   rest of the theme — light-blue card like the field cards, ID as a meta pill. */
+.file-field .file-details {
+  overflow: hidden;
+  border: 1px solid #d3e2f3;
+  border-radius: 18px;
+  background: #f7fbff;
+  box-shadow: 0 8px 20px -18px rgb(15 39 66 / 0.45);
+
+  .thumbnail {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+}
+
+.doc-drawer__header .id-label,
+.doc-header .id-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid #d3e2f3;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--falah-muted);
+  font-size: 12px;
+  font-weight: 600;
+
+  a {
+    color: var(--falah-accent);
+    text-decoration: none;
+  }
+}

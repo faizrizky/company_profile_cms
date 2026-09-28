@@ -16,6 +16,17 @@ export const imageField = (
   relationTo: 'media',
   filterOptions: { mimeType: { contains: 'image/' } },
   ...overrides,
+  admin: {
+    ...overrides.admin,
+    components: {
+      afterInput: [
+        {
+          path: '/components/admin/ReplaceFromLibrary#ReplaceFromLibrary',
+          clientProps: { kind: 'image' },
+        },
+      ],
+    },
+  },
 })
 
 /**
@@ -31,6 +42,17 @@ export const videoField = (
   relationTo: 'media',
   filterOptions: { mimeType: { contains: 'video/' } },
   ...overrides,
+  admin: {
+    ...overrides.admin,
+    components: {
+      afterInput: [
+        {
+          path: '/components/admin/ReplaceFromLibrary#ReplaceFromLibrary',
+          clientProps: { kind: 'video' },
+        },
+      ],
+    },
+  },
 })
 
 /** Eyebrow pill + heading + intro paragraph used by almost every section. */

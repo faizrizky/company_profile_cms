@@ -1,6 +1,6 @@
 'use client'
 
-import { Link } from '@payloadcms/ui'
+import { Link, useListDrawerContext } from '@payloadcms/ui'
 import type { DefaultCellComponentProps } from 'payload'
 
 /**
@@ -9,6 +9,9 @@ import type { DefaultCellComponentProps } from 'payload'
  * Same class names as Payload's cell, so its styles keep applying.
  */
 export function MediaFileCell({ cellData, rowData, link, linkURL }: DefaultCellComponentProps) {
+  // Inside a "Choose from existing" drawer, clicking a row picks the file.
+  // Payload wires that only into its own cells, so a custom cell does it itself.
+  const { drawerSlug, onSelect } = useListDrawerContext()
   const filename = String(cellData ?? '')
   const mimeType = typeof rowData?.mimeType === 'string' ? rowData.mimeType : ''
   const url = typeof rowData?.url === 'string' ? rowData.url : undefined
@@ -32,5 +35,16 @@ export function MediaFileCell({ cellData, rowData, link, linkURL }: DefaultCellC
     </div>
   )
 
+  if (drawerSlug && typeof onSelect === 'function') {
+    return (
+      <button
+        type="button"
+        className="falah-file-cell__select"
+        onClick={() => onSelect({ collectionSlug: 'media', doc: rowData, docID: rowData.id })}
+      >
+        {content}
+      </button>
+    )
+  }
   return link && linkURL ? <Link href={linkURL}>{content}</Link> : content
 }

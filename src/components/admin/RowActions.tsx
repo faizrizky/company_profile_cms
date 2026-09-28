@@ -7,6 +7,7 @@ import {
   useAuth,
   useConfig,
   useModal,
+  useListDrawerContext,
   useTranslation,
 } from '@payloadcms/ui'
 import { useRouter } from 'next/navigation'
@@ -23,9 +24,11 @@ export function RowActions({ rowData, collectionSlug }: DefaultCellComponentProp
   const { openModal } = useModal()
   const { i18n } = useTranslation()
   const router = useRouter()
+  // Pickers ("Choose from existing") are for selecting, not editing or deleting.
+  const { drawerSlug } = useListDrawerContext()
 
   const id = rowData?.id
-  if (id === undefined || id === null) return null
+  if (drawerSlug || id === undefined || id === null) return null
 
   const isId = i18n.language === 'id'
   const { admin, api } = config.routes
