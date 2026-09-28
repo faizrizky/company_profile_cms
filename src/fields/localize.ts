@@ -26,6 +26,7 @@ export function localizeTextFields(fields: Field[]): Field[] {
       case 'text':
       case 'textarea':
         if ('name' in field && NOT_TRANSLATABLE.has(field.name)) return field
+        if (field.localized === false) return field // explicitly shared
         return { ...field, localized: true } as Field
       case 'group':
       case 'array':

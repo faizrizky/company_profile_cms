@@ -971,6 +971,10 @@ export interface Product {
   summary?: string | null;
   category: number | SolutionCategory;
   /**
+   * Clicking the card opens the category page at this Showcase tab.
+   */
+  showcaseTab?: string | null;
+  /**
    * URL part. Lowercase letters, numbers and "-". Generated from the title when empty.
    */
   slug: string;
@@ -1982,6 +1986,7 @@ export interface ProductsSelect<T extends boolean = true> {
   title?: T;
   summary?: T;
   category?: T;
+  showcaseTab?: T;
   slug?: T;
   image?: T;
   imageMobile?: T;

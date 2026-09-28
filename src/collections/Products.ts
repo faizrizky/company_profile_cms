@@ -38,6 +38,20 @@ export const Products: CollectionConfig = {
         required: true,
         index: true,
       },
+      {
+        name: 'showcaseTab',
+        type: 'text',
+        // Tab row ids are the same in every language.
+        localized: false,
+        label: { en: 'Card opens tab', id: 'Kartu membuka tab' },
+        admin: {
+          description: {
+            en: 'Clicking the card opens the category page at this Showcase tab.',
+            id: 'Klik kartu membuka halaman kategori di tab Showcase ini.',
+          },
+          components: { Field: '/components/admin/ShowcaseTabField#ShowcaseTabField' },
+        },
+      },
     ]),
     slugField(),
     fieldCard({ en: 'Images', id: 'Gambar' }, [
