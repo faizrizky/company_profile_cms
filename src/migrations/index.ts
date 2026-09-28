@@ -4,6 +4,7 @@ import * as migration_20260927_111352_two_factor_auth from './20260927_111352_tw
 import * as migration_20260928_072232_product_showcase_tab from './20260928_072232_product_showcase_tab';
 import * as migration_20260928_090051_hover_details from './20260928_090051_hover_details';
 import * as migration_20260928_091750_problem_item_image from './20260928_091750_problem_item_image';
+import * as migration_20260928_095512_cert_icon_hover from './20260928_095512_cert_icon_hover';
 
 export const migrations = [
   {
@@ -34,6 +35,11 @@ export const migrations = [
   {
     up: migration_20260928_091750_problem_item_image.up,
     down: migration_20260928_091750_problem_item_image.down,
-    name: '20260928_091750_problem_item_image'
+    name: '20260928_091750_problem_item_image',
+  },
+  {
+    up: migration_20260928_095512_cert_icon_hover.up,
+    down: migration_20260928_095512_cert_icon_hover.down,
+    name: '20260928_095512_cert_icon_hover'
   },
 ];

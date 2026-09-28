@@ -594,6 +594,10 @@ export interface Certification {
   subtitle?: string | null;
   description?: string | null;
   icon: number | Media;
+  /**
+   * Optional. Full-colour logo shown when the card is hovered.
+   */
+  iconHover?: (number | null) | Media;
   iconShape?: ('square' | 'wide' | 'narrow') | null;
   /**
    * Optional. Without it, the certification is left out of the certificate gallery.
@@ -1921,6 +1925,7 @@ export interface CertificationsSelect<T extends boolean = true> {
   subtitle?: T;
   description?: T;
   icon?: T;
+  iconHover?: T;
   iconShape?: T;
   certificate?: T;
   certificateFocus?: T;

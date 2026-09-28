@@ -25,6 +25,16 @@ export const Certifications: CollectionConfig = {
         type: 'row',
         fields: [
           imageField('icon', { required: true, admin: { width: '50%' } }),
+          imageField('iconHover', {
+            label: { en: 'Icon (hover)', id: 'Ikon (hover)' },
+            admin: {
+              width: '50%',
+              description: {
+                en: 'Optional. Full-colour logo shown when the card is hovered.',
+                id: 'Opsional. Logo berwarna yang tampil saat kartu di-hover.',
+              },
+            },
+          }),
           {
             name: 'iconShape',
             type: 'select',
