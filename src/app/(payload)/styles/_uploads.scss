@@ -207,6 +207,14 @@
   }
 }
 
+/* Every upload field spans the full column, whatever the file name length. */
+.upload__wrap,
+.upload__dropzoneAndUpload,
+.upload__dropzoneAndUpload > * {
+  width: 100%;
+  min-width: 0;
+}
+
 /* ── Filled image/video field: one card, same shape as the empty dropzone ─
    Payload wraps the file card in a second padded frame (upload-field-card);
    that frame goes, so filled and empty fields line up edge to edge. */
