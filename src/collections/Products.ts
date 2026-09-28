@@ -23,11 +23,23 @@ export const Products: CollectionConfig = {
       {
         name: 'summary',
         type: 'textarea',
-        maxLength: 160,
+        maxLength: 300,
         admin: {
           description: {
-            en: 'Short description, shown in the "Our Solutions" mega menu.',
-            id: 'Deskripsi singkat, tampil di mega menu "Our Solutions".',
+            en: 'Short description: "Our Solutions" mega menu and the card on hover.',
+            id: 'Deskripsi singkat: mega menu "Our Solutions" dan kartu saat di-hover.',
+          },
+        },
+      },
+      {
+        name: 'tags',
+        type: 'text',
+        hasMany: true,
+        maxRows: 6,
+        admin: {
+          description: {
+            en: '"Recommended For" chips, shown on the card on hover.',
+            id: 'Chip "Recommended For", tampil di kartu saat di-hover.',
           },
         },
       },

@@ -986,9 +986,13 @@ export interface Product {
   _order?: string | null;
   title: string;
   /**
-   * Short description, shown in the "Our Solutions" mega menu.
+   * Short description: "Our Solutions" mega menu and the card on hover.
    */
   summary?: string | null;
+  /**
+   * "Recommended For" chips, shown on the card on hover.
+   */
+  tags?: string[] | null;
   category: number | SolutionCategory;
   /**
    * Clicking the card opens the category page at this Showcase tab.
@@ -2010,6 +2014,7 @@ export interface ProductsSelect<T extends boolean = true> {
   _order?: T;
   title?: T;
   summary?: T;
+  tags?: T;
   category?: T;
   showcaseTab?: T;
   slug?: T;
