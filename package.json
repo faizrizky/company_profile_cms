@@ -19,7 +19,8 @@
     "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "test": "vitest run",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "push:media": "bash scripts/push-media.sh"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.90.1",
