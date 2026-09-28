@@ -207,7 +207,16 @@
   }
 }
 
-/* Every upload field spans the full column, whatever the file name length. */
+/* Every upload field spans the full column, whatever the file name length,
+   and gets its own line even when the schema puts it in a row with others. */
+.field-type.upload,
+.row__fields > .field-type.upload,
+.row__fields:has(> :nth-child(2)) > .field-type.upload {
+  flex: 1 1 100%;
+  width: 100%;
+  max-width: 100%;
+}
+
 .upload__wrap,
 .upload__dropzoneAndUpload,
 .upload__dropzoneAndUpload > * {

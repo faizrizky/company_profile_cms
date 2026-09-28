@@ -1,0 +1,163 @@
+@use 'mixins' as *;
+
+/* ── Bulk upload drawer: same pills, cards and icon buttons as upload fields ─ */
+
+/* Empty state: "Select a file" + drop hint, centred in the dashed area. */
+.bulk-upload--add-files__dropArea .dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+
+  > .btn {
+    @include pill-button;
+    @include pill-primary;
+  }
+}
+
+.bulk-upload--add-files__dragAndDropText {
+  @include drop-hint;
+  margin: 0;
+  text-transform: none;
+}
+
+/* File list (left column, or the collapsible list on narrow screens). */
+.file-selections__header__actions .pill,
+.edit-many-bulk-uploads__toggle {
+  @include pill-button;
+  @include pill-secondary;
+  height: 32px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+.file-selections__filesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.file-selections__fileRowContainer {
+  position: relative;
+}
+
+.file-selections__fileRow {
+  @include file-card;
+  min-height: 64px;
+  padding: 10px 52px 10px 12px;
+  text-align: start;
+  cursor: pointer;
+
+  .file-selections__thumbnail {
+    @include file-thumb;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+}
+
+.file-selections__fileRowContainer--active .file-selections__fileRow {
+  border-color: var(--falah-accent);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgb(31 122 224 / 0.1);
+}
+
+.file-selections__fileRowContainer--error .file-selections__fileRow {
+  border-color: #f0b3ae;
+}
+
+.file-selections__fileName {
+  color: var(--falah-ink);
+  font-weight: 600;
+}
+
+.file-selections__fileSize {
+  color: var(--falah-muted);
+  font-size: 12px;
+}
+
+.file-selections__remove--underlay {
+  display: none;
+}
+
+.file-selections__remove--overlay {
+  @include icon-button;
+  @include icon-button-danger;
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  opacity: 1;
+  transform: translateY(-50%);
+
+  &:hover {
+    transform: translateY(calc(-50% - 1px));
+  }
+}
+
+/* "1 of 2" navigation. */
+.bulk-upload--actions-bar__navigation .btn {
+  @include icon-button;
+  width: 32px;
+  height: 32px;
+}
+
+/* The file being edited: one card — preview, name + "Edit image", remove. */
+.bulk-upload--file-manager__editView {
+  .file-field__upload {
+    @include file-card;
+    position: relative;
+    padding-right: 64px;
+  }
+
+  .file-field__thumbnail-wrap .thumbnail {
+    @include file-thumb;
+    width: 72px;
+    height: 72px;
+    border-radius: 14px;
+  }
+
+  .file-field__file-adjustments {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .file-field__filename {
+    width: 100%;
+    height: 40px;
+    padding: 0 14px;
+    border: 1px solid #d3e2f3;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: none;
+    color: var(--falah-ink);
+    font-weight: 600;
+  }
+
+  .file-field__edit {
+    @include pill-button;
+    @include pill-secondary;
+    height: 32px;
+    padding: 0 14px;
+    font-size: 13px;
+  }
+
+  .file-field__remove {
+    @include icon-button;
+    @include icon-button-danger;
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+
+    &:hover {
+      transform: translateY(calc(-50% - 1px));
+    }
+  }
+}

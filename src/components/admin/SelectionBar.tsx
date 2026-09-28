@@ -5,8 +5,8 @@ import { ListSelection, useConfig, useTranslation } from '@payloadcms/ui'
 
 /**
  * Bulk-selection bar rendered right above the list table (instead of the
- * page header): "N selected — Select all — Publish / Unpublish". Edit and
- * delete are per row (see RowActions), so their bulk versions are off.
+ * page header): "N selected — Select all — Delete / Publish / Unpublish".
+ * Edit stays per row (see RowActions).
  */
 export function SelectionBar({ collectionSlug }: { collectionSlug: string }) {
   const { getEntityConfig } = useConfig()
@@ -20,7 +20,6 @@ export function SelectionBar({ collectionSlug }: { collectionSlug: string }) {
         collectionConfig={collectionConfig}
         label={getTranslation(collectionConfig.labels.plural, i18n)}
         disableBulkEdit
-        disableBulkDelete
         modalPrefix="falah-"
       />
     </div>
