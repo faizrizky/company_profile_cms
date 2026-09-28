@@ -1,0 +1,45 @@
+@use 'mixins' as *;
+
+/* ── Loading overlay (uploading, saving, opening a drawer): the Falah mark ─ */
+
+@keyframes falah-logo-breathe {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.85;
+  }
+
+  50% {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+}
+
+@keyframes falah-logo-ring {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.55;
+  }
+
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+.loading-overlay {
+  gap: 26px;
+  background: rgb(238 244 250 / 0.82);
+  backdrop-filter: blur(6px);
+}
+
+.loading-overlay__bars {
+  @include brand-loader(64px);
+}
+
+.loading-overlay__text {
+  color: var(--falah-ink);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+}

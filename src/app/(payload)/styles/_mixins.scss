@@ -151,3 +151,43 @@
     color: #d93036;
   }
 }
+
+/* Animated Falah mark: the logo breathes while rings pulse out of it.
+   Put it on an empty element (its children are hidden). */
+@mixin brand-loader($size: 64px) {
+  position: relative;
+  display: block;
+  width: $size;
+  height: $size;
+  background: url('/falah-icon.png') center / contain no-repeat;
+  filter: drop-shadow(0 8px 18px rgb(31 122 224 / 0.35));
+  animation: falah-logo-breathe 1.6s ease-in-out infinite;
+
+  > * {
+    display: none;
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -14px;
+    border: 2px solid var(--falah-accent);
+    border-radius: 50%;
+    opacity: 0;
+    animation: falah-logo-ring 1.6s ease-out infinite;
+  }
+
+  &::after {
+    animation-delay: 0.8s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+}
