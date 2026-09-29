@@ -1,3 +1,5 @@
+@use 'mixins' as *;
+
 /* ── Relationship pickers (hasMany) ───────────────────────────────────── */
 
 /* Selected items: soft blue pills instead of flat grey boxes. */
@@ -82,7 +84,7 @@
   flex-wrap: nowrap;
   align-items: center;
   min-height: 40px;
-  padding: 2px 76px 2px 6px;
+  padding: 2px 100px 2px 6px;
   border: 0 !important;
   border-radius: 12px;
   background: transparent;
@@ -94,83 +96,32 @@
   flex-wrap: wrap;
 }
 
-/* Clear-all and dropdown: two round icon buttons pinned to the right. */
+/* Clear-all and dropdown: the same icon buttons as an upload field's
+   Replace · Edit · Remove, pinned to the right. */
 .relationship__wrap .rs__indicators {
   position: absolute;
   top: 50%;
   right: 4px;
   display: flex;
-  gap: 4px;
+  gap: 6px;
   transform: translateY(-50%);
 }
 
-.relationship__wrap :is(.clear-indicator, .dropdown-indicator) {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  border: 1px solid rgb(31 122 224 / 0.25);
-  border-radius: 999px;
-  background: rgb(255 255 255 / 0.9);
-  color: var(--falah-accent);
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
+.relationship__wrap .dropdown-indicator {
+  @include icon-button;
 }
 
-.relationship__wrap .dropdown-indicator:hover {
-  background: rgb(31 122 224 / 0.1);
-  border-color: var(--falah-accent);
+.relationship__wrap .clear-indicator {
+  @include icon-button;
+  @include icon-button-danger;
 }
 
-.relationship__wrap .clear-indicator:hover {
-  background: #e05252;
-  border-color: #e05252;
-  color: #fff;
-}
-
-/* "+" (create new): the primary gradient pill, as on the media dropzone. */
+/* "+" (create new): a matching icon button at the far right. */
 .relationship__wrap .relationship-add-new {
   flex: none;
   align-self: center;
 }
 
 .relationship__wrap .relationship-add-new__add-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  padding: 0;
-  border: 0 !important;
-  border-radius: 999px !important;
-  background-image: var(--falah-accent-gradient);
-  color: #fff;
-  box-shadow: 0 8px 20px -10px rgb(31 122 224 / 0.8);
-  transition:
-    filter 0.2s ease,
-    transform 0.2s ease;
-
-  &:hover {
-    filter: brightness(1.05);
-    transform: translateY(-1px);
-  }
-
-  svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  svg :is(path, line) {
-    stroke: currentColor;
-  }
+  @include icon-button;
 }
