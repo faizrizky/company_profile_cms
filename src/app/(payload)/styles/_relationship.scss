@@ -53,28 +53,124 @@
   height: 14px;
 }
 
-/* The field itself: one frosted box with the "+" joined on the right. */
-.relationship .rs__control {
-  border-radius: var(--style-radius-m);
-}
+/* The field itself: a dashed box like the media dropzone, with its
+   actions (clear, open list, add new) lined up on the right. */
+.relationship__wrap {
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px 6px 6px;
+  border: 1.5px dashed rgb(31 122 224 / 0.35);
+  border-radius: 18px;
+  background: rgb(255 255 255 / 0.55);
+  transition:
+    border-color 0.2s,
+    background-color 0.2s,
+    box-shadow 0.2s;
 
-.relationship-add-new__add-button {
-  border-left: 1px solid var(--color-base-150) !important;
-  color: var(--falah-accent);
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background: rgb(31 122 224 / 0.08);
+  &:hover,
+  &:focus-within {
+    border-color: var(--falah-accent);
+    background: rgb(232 244 255 / 0.85);
+    box-shadow: 0 0 0 4px rgb(31 122 224 / 0.1);
   }
 }
 
-/* Clear-all and dropdown arrows: muted until hovered. */
-.clear-indicator,
-.dropdown-indicator {
-  color: var(--falah-muted);
-  transition: color 0.2s ease;
+.relationship__wrap .rs__control,
+.relationship__wrap .rs__control--is-focused {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  min-height: 40px;
+  padding: 2px 76px 2px 6px;
+  border: 0 !important;
+  border-radius: 12px;
+  background: transparent;
+  box-shadow: none !important;
+}
+
+.relationship__wrap .rs__value-container {
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+}
+
+/* Clear-all and dropdown: two round icon buttons pinned to the right. */
+.relationship__wrap .rs__indicators {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  display: flex;
+  gap: 4px;
+  transform: translateY(-50%);
+}
+
+.relationship__wrap :is(.clear-indicator, .dropdown-indicator) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid rgb(31 122 224 / 0.25);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.9);
+  color: var(--falah-accent);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.relationship__wrap .dropdown-indicator:hover {
+  background: rgb(31 122 224 / 0.1);
+  border-color: var(--falah-accent);
+}
+
+.relationship__wrap .clear-indicator:hover {
+  background: #e05252;
+  border-color: #e05252;
+  color: #fff;
+}
+
+/* "+" (create new): the primary gradient pill, as on the media dropzone. */
+.relationship__wrap .relationship-add-new {
+  flex: none;
+  align-self: center;
+}
+
+.relationship__wrap .relationship-add-new__add-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background-image: var(--falah-accent-gradient);
+  color: #fff;
+  box-shadow: 0 8px 20px -10px rgb(31 122 224 / 0.8);
+  transition:
+    filter 0.2s ease,
+    transform 0.2s ease;
 
   &:hover {
-    color: var(--falah-accent);
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  svg :is(path, line) {
+    stroke: currentColor;
   }
 }
