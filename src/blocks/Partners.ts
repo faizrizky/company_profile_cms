@@ -23,5 +23,11 @@ export const PartnersBlock: Block = {
       hasMany: true,
       label: 'Baris 2 (bergerak ke kanan)',
     },
+    {
+      name: 'showTooltip',
+      type: 'checkbox',
+      defaultValue: false,
+      label: 'Tampilkan keterangan partner saat logo di-hover',
+    },
   ],
 }

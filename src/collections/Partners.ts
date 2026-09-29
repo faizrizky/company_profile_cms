@@ -33,6 +33,17 @@ export const Partners: CollectionConfig = {
         label: 'Tampilkan di marquee Hero halaman utama',
       },
     ]),
-    fieldCard({ en: 'Logo', id: 'Logo' }, [imageField('logo', { required: true })]),
+    fieldCard({ en: 'Logo', id: 'Logo' }, [
+      imageField('logo', { required: true }),
+      imageField('logoHover', {
+        label: { en: 'Logo (hover)', id: 'Logo (hover)' },
+        admin: {
+          description: {
+            en: 'Optional. The original colour logo shown when the logo is hovered.',
+            id: 'Opsional. Logo asli berwarna yang tampil saat logo di-hover.',
+          },
+        },
+      }),
+    ]),
   ],
 }

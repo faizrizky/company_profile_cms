@@ -39,6 +39,13 @@ export const HeroBlock: Block = {
           admin: { condition: (_, s) => s?.variant === 'home' },
         },
         {
+          name: 'partnerTooltip',
+          type: 'checkbox',
+          defaultValue: true,
+          label: 'Tampilkan keterangan partner saat logo di-hover',
+          admin: { condition: (_, s) => s?.variant === 'home' && s?.showPartners },
+        },
+        {
           name: 'showCertificates',
           type: 'checkbox',
           label: 'Tampilkan tombol "Show Certificate"',

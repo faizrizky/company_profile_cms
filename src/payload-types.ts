@@ -222,6 +222,7 @@ export interface HeroBlock {
       }[]
     | null;
   showPartners?: boolean | null;
+  partnerTooltip?: boolean | null;
   showCertificates?: boolean | null;
   showScrollHint?: boolean | null;
   id?: string | null;
@@ -535,6 +536,7 @@ export interface PartnersBlock {
   };
   rowOne: (number | Partner)[];
   rowTwo?: (number | Partner)[] | null;
+  showTooltip?: boolean | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'partners';
@@ -557,6 +559,10 @@ export interface Partner {
   website?: string | null;
   showInHero?: boolean | null;
   logo: number | Media;
+  /**
+   * Optional. The original colour logo shown when the logo is hovered.
+   */
+  logoHover?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -1351,6 +1357,7 @@ export interface HeroBlockSelect<T extends boolean = true> {
         id?: T;
       };
   showPartners?: T;
+  partnerTooltip?: T;
   showCertificates?: T;
   showScrollHint?: T;
   id?: T;
@@ -1567,6 +1574,7 @@ export interface PartnersBlockSelect<T extends boolean = true> {
       };
   rowOne?: T;
   rowTwo?: T;
+  showTooltip?: T;
   id?: T;
   blockName?: T;
 }
@@ -1916,6 +1924,7 @@ export interface PartnersSelect<T extends boolean = true> {
   website?: T;
   showInHero?: T;
   logo?: T;
+  logoHover?: T;
   updatedAt?: T;
   createdAt?: T;
 }
