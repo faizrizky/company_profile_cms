@@ -1,0 +1,80 @@
+/* ── Relationship pickers (hasMany) ───────────────────────────────────── */
+
+/* Selected items: soft blue pills instead of flat grey boxes. */
+.multi-value.rs__multi-value {
+  align-items: center;
+  gap: 2px;
+  padding: 2px 4px 2px 12px;
+  margin: 3px 6px 3px 0;
+  background: rgb(31 122 224 / 0.08);
+  border: 1px solid rgb(31 122 224 / 0.22);
+  border-radius: 999px;
+  color: var(--falah-ink);
+  font-weight: 500;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+
+  &:hover {
+    background: rgb(31 122 224 / 0.14);
+    border-color: rgb(31 122 224 / 0.4);
+  }
+}
+
+/* Edit and remove icons: small round buttons that light up on hover. */
+.multi-value .multi-value-label button,
+.multi-value .multi-value-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 999px;
+  color: var(--falah-muted);
+  background: transparent;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    color: #fff;
+    background: var(--falah-accent);
+  }
+}
+
+.multi-value .multi-value-remove:hover {
+  background: #e05252;
+}
+
+.multi-value .multi-value-label button svg,
+.multi-value .multi-value-remove svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* The field itself: one frosted box with the "+" joined on the right. */
+.relationship .rs__control {
+  border-radius: var(--style-radius-m);
+}
+
+.relationship-add-new__add-button {
+  border-left: 1px solid var(--color-base-150) !important;
+  color: var(--falah-accent);
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: rgb(31 122 224 / 0.08);
+  }
+}
+
+/* Clear-all and dropdown arrows: muted until hovered. */
+.clear-indicator,
+.dropdown-indicator {
+  color: var(--falah-muted);
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--falah-accent);
+  }
+}
