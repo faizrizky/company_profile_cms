@@ -227,6 +227,15 @@
   }
 }
 
+/* The stage the server is at ("Saving to the database"…). */
+.falah-toast__stage {
+  margin-top: -2px;
+  color: #56708f;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+}
+
 /* No second card: Payload's own save toast stays hidden while ours shows. */
 body.falah-save-quiet [data-sonner-toaster] {
   display: none !important;

@@ -6,6 +6,7 @@ import type {
 } from 'payload'
 
 import { env } from '@/lib/env'
+import { reportProgress } from '@/lib/saveProgress'
 
 /** Cache tags shared with the frontend (see FE `lib/cms/tags.ts`). */
 export type CacheTag =
@@ -21,6 +22,8 @@ export type CacheTag =
 
 async function notifyFrontend(req: PayloadRequest, tags: CacheTag[]) {
   if (req.context?.disableRevalidate) return
+  // A save with live progress: the website refresh is its last stage.
+  reportProgress(req, null, 'revalidating')
 
   try {
     const res = await fetch(new URL('/api/revalidate', env.FRONTEND_URL), {

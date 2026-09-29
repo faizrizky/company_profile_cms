@@ -26,6 +26,8 @@ import { translateCollection, translateGlobal } from './i18n/translateAdmin'
 import { MAX_UPLOAD_BYTES } from './hooks/secureUpload'
 import { env, s3Enabled } from './lib/env'
 import { SUPABASE_ROOT_CA } from './lib/supabaseCa'
+import { saveWithProgress } from './endpoints/saveWithProgress'
+import { withGlobalProgressHooks, withProgressHooks } from './lib/saveProgress'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -151,8 +153,15 @@ export default buildConfig({
     .map((c) => (LOCALIZED_COLLECTIONS.has(c.slug) ? withLocalizedText(c) : c))
     .map((c) => (c.slug === AuditLogs.slug ? c : withListEnhancements(c)))
     // Labels & descriptions follow the admin language (EN / ID).
-    .map(translateCollection),
-  globals: [SiteSettings, Navigation, Footer].map(withLocalizedText).map(translateGlobal),
+    .map(translateCollection)
+    // Real save progress for the editors (see endpoints/saveWithProgress.ts).
+    .map(withProgressHooks),
+  globals: [SiteSettings, Navigation, Footer]
+    .map(withLocalizedText)
+    .map(translateGlobal)
+    .map(withGlobalProgressHooks),
+
+  endpoints: [saveWithProgress],
 
   i18n: {
     supportedLanguages: { en, id },
