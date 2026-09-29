@@ -109,6 +109,8 @@ export default buildConfig({
         '/components/admin/VideoThumbnails#VideoThumbnailsProvider',
         // Two-step verification after the password (see src/auth/twoFactor.ts).
         '/components/admin/TwoFactorGate#TwoFactorGateProvider',
+        // Progress toast (with a percentage) while a form saves or publishes.
+        '/components/admin/SaveProgress#SaveProgressProvider',
       ],
     },
   },
