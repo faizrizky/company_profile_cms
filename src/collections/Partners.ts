@@ -17,6 +17,7 @@ export const Partners: CollectionConfig = {
       {
         name: 'description',
         type: 'textarea',
+        localized: true,
         maxLength: 200,
         admin: {
           description: {

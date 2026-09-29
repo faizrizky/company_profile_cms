@@ -7,6 +7,7 @@ import * as migration_20260928_091750_problem_item_image from './20260928_091750
 import * as migration_20260928_095512_cert_icon_hover from './20260928_095512_cert_icon_hover';
 import * as migration_20260928_100915_product_tags from './20260928_100915_product_tags';
 import * as migration_20260929_041421_partner_hover_tooltip from './20260929_041421_partner_hover_tooltip';
+import * as migration_20260929_042847_partner_description_localized from './20260929_042847_partner_description_localized';
 
 export const migrations = [
   {
@@ -52,6 +53,11 @@ export const migrations = [
   {
     up: migration_20260929_041421_partner_hover_tooltip.up,
     down: migration_20260929_041421_partner_hover_tooltip.down,
-    name: '20260929_041421_partner_hover_tooltip'
+    name: '20260929_041421_partner_hover_tooltip',
+  },
+  {
+    up: migration_20260929_042847_partner_description_localized.up,
+    down: migration_20260929_042847_partner_description_localized.down,
+    name: '20260929_042847_partner_description_localized'
   },
 ];
