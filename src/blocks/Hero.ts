@@ -39,13 +39,6 @@ export const HeroBlock: Block = {
           admin: { condition: (_, s) => s?.variant === 'home' },
         },
         {
-          name: 'partnerTooltip',
-          type: 'checkbox',
-          defaultValue: true,
-          label: 'Tampilkan keterangan partner saat logo di-hover',
-          admin: { condition: (_, s) => s?.variant === 'home' && s?.showPartners },
-        },
-        {
           name: 'showCertificates',
           type: 'checkbox',
           label: 'Tampilkan tombol "Show Certificate"',
@@ -58,6 +51,25 @@ export const HeroBlock: Block = {
           defaultValue: true,
         },
       ],
+    },
+    // Same picker as the Partner Logos block, so both are set up the same way.
+    {
+      name: 'partners',
+      type: 'relationship',
+      relationTo: 'partners',
+      hasMany: true,
+      label: 'Logo partner (bergerak ke kiri)',
+      admin: {
+        condition: (_, s) => s?.variant === 'home' && s?.showPartners,
+        description: 'Kosongkan untuk memakai semua partner yang dicentang "Tampilkan di marquee Hero".',
+      },
+    },
+    {
+      name: 'partnerTooltip',
+      type: 'checkbox',
+      defaultValue: true,
+      label: 'Tampilkan keterangan partner saat logo di-hover',
+      admin: { condition: (_, s) => s?.variant === 'home' && s?.showPartners },
     },
   ],
 }

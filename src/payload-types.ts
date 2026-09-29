@@ -222,9 +222,13 @@ export interface HeroBlock {
       }[]
     | null;
   showPartners?: boolean | null;
-  partnerTooltip?: boolean | null;
   showCertificates?: boolean | null;
   showScrollHint?: boolean | null;
+  /**
+   * Kosongkan untuk memakai semua partner yang dicentang "Tampilkan di marquee Hero".
+   */
+  partners?: (number | Partner)[] | null;
+  partnerTooltip?: boolean | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'hero';
@@ -277,6 +281,31 @@ export interface Media {
       filename?: string | null;
     };
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners".
+ */
+export interface Partner {
+  id: number;
+  _order?: string | null;
+  name: string;
+  /**
+   * Shown in a card when the logo is hovered.
+   */
+  description?: string | null;
+  /**
+   * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
+   */
+  website?: string | null;
+  showInHero?: boolean | null;
+  logo: number | Media;
+  /**
+   * Optional. The original colour logo shown when the logo is hovered.
+   */
+  logoHover?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -540,31 +569,6 @@ export interface PartnersBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'partners';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "partners".
- */
-export interface Partner {
-  id: number;
-  _order?: string | null;
-  name: string;
-  /**
-   * Shown in a card when the logo is hovered.
-   */
-  description?: string | null;
-  /**
-   * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
-   */
-  website?: string | null;
-  showInHero?: boolean | null;
-  logo: number | Media;
-  /**
-   * Optional. The original colour logo shown when the logo is hovered.
-   */
-  logoHover?: (number | null) | Media;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1357,9 +1361,10 @@ export interface HeroBlockSelect<T extends boolean = true> {
         id?: T;
       };
   showPartners?: T;
-  partnerTooltip?: T;
   showCertificates?: T;
   showScrollHint?: T;
+  partners?: T;
+  partnerTooltip?: T;
   id?: T;
   blockName?: T;
 }

@@ -152,6 +152,8 @@ export const LABELS_EN: Record<string, string> = {
   'Tampilkan ikon scroll': 'Show scroll icon',
   'Baris 1 (bergerak ke kiri)': 'Row 1 (moves left)',
   'Baris 2 (bergerak ke kanan)': 'Row 2 (moves right)',
+  'Logo partner (bergerak ke kiri)': 'Partner logos (moves left)',
+  'Tampilkan keterangan partner saat logo di-hover': "Show the partner's description when its logo is hovered",
   'Tampilkan di marquee Hero halaman utama': 'Show in the home page Hero marquee',
   'Aktifkan halaman detail': 'Enable detail page',
   'Lebar 2 kolom (desktop)': '2 columns wide (desktop)',
