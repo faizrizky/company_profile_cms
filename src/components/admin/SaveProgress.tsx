@@ -83,10 +83,14 @@ type Done = { status: number; body: unknown }
  * then each stage as the server reaches it. Resolves with what Payload's REST
  * API would have answered.
  */
-function sendWithProgress(save: Save, onStage: (stage: Stage, pct: number) => void): Promise<Done> {
+function sendWithProgress(
+  search: string,
+  body: string,
+  onStage: (stage: Stage, pct: number) => void,
+): Promise<Done> {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', `/api/falah-save${save.url.search}`)
+    xhr.open('POST', `/api/falah-save${search}`)
     xhr.withCredentials = true
     xhr.setRequestHeader('content-type', 'application/json')
     xhr.upload.onprogress = (e) => {
@@ -127,21 +131,35 @@ function sendWithProgress(save: Save, onStage: (stage: Stage, pct: number) => vo
       else reject(new Error('The save was interrupted.'))
     }
     xhr.onerror = () => reject(new TypeError('Network error'))
-    xhr.send(
-      JSON.stringify({ target: save.target, slug: save.slug, id: save.id, data: save.data }),
-    )
+    xhr.send(body)
   })
 }
 
+/** The visual editor (an iframe of the website) asks the CMS page to save for it. */
+const STUDIO_SAVE = 'falah-studio:save'
+const STUDIO_SAVE_ACCEPTED = 'falah-studio:save-accepted'
+const STUDIO_SAVE_DONE = 'falah-studio:save-done'
+
 /**
- * Saving or publishing from the edit form shows one card, in the visual
- * editor's toast design: the real progress (bytes sent, then each stage the
- * server reaches), then the result.
+ * Saving or publishing shows one card, in the visual editor's toast design:
+ * the real progress (bytes sent, then each stage the server reaches), then
+ * the result. It covers saves from the edit form and from the embedded visual
+ * editor — the editor hands its save to this page, so switching tabs or
+ * leaving the editor doesn't cut it off. While a save runs the page is locked.
  */
 export function SaveProgressProvider({ children }: { children?: ReactNode }) {
   const { i18n } = useTranslation()
   const id = i18n.language === 'id'
   const [toast, setToast] = useState<Toast | null>(null)
+  const saving = toast?.kind === 'saving'
+
+  // Closing or reloading the tab mid-save asks first.
+  useEffect(() => {
+    if (!saving) return
+    const warn = (e: BeforeUnloadEvent) => e.preventDefault()
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [saving])
 
   useEffect(() => {
     // Payload can mount providers more than once (and dev mounts effects
@@ -152,11 +170,9 @@ export function SaveProgressProvider({ children }: { children?: ReactNode }) {
     let run = 0
     let hideTimer: number | undefined
 
-    const wrapped = async (input: RequestInfo | URL, init?: RequestInit) => {
-      const save = parseSave(input, init)
-      if (!save) return original(input, init)
-
-      const label = save.publish ? (id ? 'Memublikasikan…' : 'Publishing…') : id ? 'Menyimpan…' : 'Saving…'
+    /** Runs one save with the progress card and returns what REST would answer. */
+    const runSave = async (search: string, body: string, publish: boolean): Promise<Done> => {
+      const label = publish ? (id ? 'Memublikasikan…' : 'Publishing…') : id ? 'Menyimpan…' : 'Saving…'
       const mine = ++run
       window.clearTimeout(hideTimer)
       document.body.classList.add(QUIET_CLASS)
@@ -181,28 +197,72 @@ export function SaveProgressProvider({ children }: { children?: ReactNode }) {
       }
 
       try {
-        const result = await sendWithProgress(save, show)
-        const body = (result.body ?? {}) as { message?: string; errors?: { message?: string }[] }
+        const result = await sendWithProgress(search, body, show)
+        const answer = (result.body ?? {}) as { message?: string; errors?: { message?: string }[] }
         if (result.status < 400) {
           show('saved', 100)
           // Let the full bar show before the result replaces it.
           await new Promise((r) => window.setTimeout(r, 300))
-          finish({ kind: 'success', message: body.message || (id ? 'Berhasil disimpan.' : 'Updated successfully.') })
+          finish({ kind: 'success', message: answer.message || (id ? 'Berhasil disimpan.' : 'Updated successfully.') })
         } else {
-          finish({ kind: 'error', message: body.errors?.[0]?.message || body.message || `HTTP ${result.status}` })
+          finish({ kind: 'error', message: answer.errors?.[0]?.message || answer.message || `HTTP ${result.status}` })
         }
-        return new Response(JSON.stringify(result.body ?? {}), {
-          status: result.status,
-          headers: { 'content-type': 'application/json' },
-        })
+        return result
       } catch (error) {
         finish({ kind: 'error', message: (error as Error).message || 'Error' })
         throw error
       }
     }
+
+    // Saves from the edit form.
+    const wrapped = async (input: RequestInfo | URL, init?: RequestInit) => {
+      const save = parseSave(input, init)
+      if (!save) return original(input, init)
+      const result = await runSave(
+        save.url.search,
+        JSON.stringify({ target: save.target, slug: save.slug, id: save.id, data: save.data }),
+        save.publish,
+      )
+      return new Response(JSON.stringify(result.body ?? {}), {
+        status: result.status,
+        headers: { 'content-type': 'application/json' },
+      })
+    }
     window.fetch = Object.assign(wrapped, { __falahSaveProgress: true as const })
+
+    // Saves handed over by the visual editor. Only its own frame may ask.
+    const onMessage = async (event: MessageEvent) => {
+      if (event.data?.type !== STUDIO_SAVE) return
+      const frame = document.querySelector<HTMLIFrameElement>('iframe.falah-visual__frame')
+      if (!frame || event.source !== frame.contentWindow || new URL(frame.src).origin !== event.origin) return
+      const { requestId, search, body, publish } = event.data as {
+        requestId: string
+        search: string
+        body: string
+        publish: boolean
+      }
+      if (typeof search !== 'string' || typeof body !== 'string') return
+      const reply = (message: Record<string, unknown>) => {
+        try {
+          // The editor may be gone by now (tab switched): the save still finishes here.
+          ;(event.source as Window | null)?.postMessage({ requestId, ...message }, event.origin)
+        } catch {
+          // Nothing to tell.
+        }
+      }
+      reply({ type: STUDIO_SAVE_ACCEPTED })
+      try {
+        const result = await runSave(search.startsWith('?') ? search : `?${search}`, body, Boolean(publish))
+        reply({ type: STUDIO_SAVE_DONE, status: result.status, body: result.body })
+      } catch (error) {
+        reply({ type: STUDIO_SAVE_DONE, status: 0, body: { errors: [{ message: (error as Error).message }] } })
+      }
+    }
+    window.addEventListener('message', onMessage)
+
     return () => {
       if (window.fetch === wrapped) window.fetch = original
+      window.removeEventListener('message', onMessage)
       window.clearTimeout(hideTimer)
       document.body.classList.remove(QUIET_CLASS)
     }
@@ -211,6 +271,8 @@ export function SaveProgressProvider({ children }: { children?: ReactNode }) {
   return (
     <>
       {children}
+      {/* While saving, nothing on the page can be clicked (sidebar, tabs, editor). */}
+      {saving ? <div className="falah-save-lock" aria-hidden /> : null}
       {toast ? (
         <div
           key={toast.kind}

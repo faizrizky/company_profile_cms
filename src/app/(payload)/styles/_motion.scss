@@ -227,6 +227,15 @@
   }
 }
 
+/* While a save runs, the whole admin (sidebar, tabs, editor) is locked. */
+.falah-save-lock {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgb(238 244 250 / 0.18);
+  cursor: progress;
+}
+
 /* The stage the server is at ("Saving to the database"…). */
 .falah-toast__stage {
   margin-top: -2px;
