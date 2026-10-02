@@ -44,10 +44,14 @@ export async function uniqueDisplayName(
   return name
 }
 
+const extensionOf = (filename: unknown) =>
+  typeof filename === 'string' && filename.includes('.') ? (filename.split('.').pop() as string) : ''
+
 /**
  * Names a new upload after the file the editor picked (the stored file keeps
  * its random name). Duplicates get -1, -2… A name already set (copying media
- * between environments) is kept, only made unique.
+ * between environments) is kept, only made unique. Renaming in the edit form
+ * does the same: the extension stays that of the real file.
  */
 export const setMediaDisplayName: CollectionBeforeChangeHook = async ({
   data,
@@ -56,7 +60,19 @@ export const setMediaDisplayName: CollectionBeforeChangeHook = async ({
 }) => {
   const original = req.context?.uploadOriginalName
   const extension = req.context?.uploadExtension
-  if (typeof original !== 'string' || typeof extension !== 'string') return data
+  if (typeof original !== 'string' || typeof extension !== 'string') {
+    // No new file: an edit of the name (cleared = keep the current one).
+    if (typeof data.displayName !== 'string' || !originalDoc) return data
+    const current = typeof originalDoc.displayName === 'string' ? originalDoc.displayName : ''
+    if (!data.displayName.trim() || data.displayName === current) {
+      return { ...data, displayName: current || undefined }
+    }
+    const ext = extensionOf(originalDoc.filename) || extensionOf(current) || 'bin'
+    return {
+      ...data,
+      displayName: await uniqueDisplayName(req, cleanBase(data.displayName), ext, originalDoc.id),
+    }
+  }
 
   const wanted = typeof data.displayName === 'string' && data.displayName.trim() ? data.displayName : original
   const base = cleanBase(wanted)

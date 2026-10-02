@@ -240,10 +240,13 @@ export interface HeroBlock {
 export interface Media {
   id: number;
   /**
+   * The name shown in the media library. The file extension stays the same; a name already used gets -1, -2…
+   */
+  displayName?: string | null;
+  /**
    * Alternative text for accessibility & SEO. Leave empty for decorative images.
    */
   alt?: string | null;
-  displayName?: string | null;
   _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -1871,8 +1874,8 @@ export interface SpacerElementSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
   displayName?: T;
+  alt?: T;
   _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;

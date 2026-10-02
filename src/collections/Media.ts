@@ -57,6 +57,22 @@ export const Media: CollectionConfig = {
   fields: [
     fieldCard({ en: 'Details', id: 'Detail' }, [
       {
+        // The name the editor uploaded (duplicates get -1, -2…). The stored file
+        // keeps a random name; the lists and this field use this one.
+        name: 'displayName',
+        type: 'text',
+        label: { en: 'File name', id: 'Nama file' },
+        localized: false,
+        index: true,
+        maxLength: 150,
+        admin: {
+          description: {
+            en: 'The name shown in the media library. The file extension stays the same; a name already used gets -1, -2…',
+            id: 'Nama yang tampil di pustaka media. Ekstensi file tetap sama; nama yang sudah dipakai diberi -1, -2…',
+          },
+        },
+      },
+      {
         name: 'alt',
         type: 'text',
         maxLength: 200,
@@ -66,15 +82,6 @@ export const Media: CollectionConfig = {
         },
       },
     ]),
-    {
-      // The name the editor uploaded (duplicates get -1, -2…). The stored file
-      // keeps a random name; the list shows this one.
-      name: 'displayName',
-      type: 'text',
-      localized: false,
-      index: true,
-      admin: { hidden: true },
-    },
     // Merged into Payload's own upload field of the same name: only the list
     // cell changes (video previews).
     {
