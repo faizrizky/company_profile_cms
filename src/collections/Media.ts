@@ -15,7 +15,7 @@ export const Media: CollectionConfig = {
   slug: 'media',
   admin: {
     group: 'Content',
-    defaultColumns: ['filename', 'alt', 'mimeType', 'updatedAt'],
+    defaultColumns: ['filename', 'mimeType', 'updatedAt'],
     listSearchableFields: ['displayName', 'filename', 'alt'],
   },
   access: contentAccess(),
