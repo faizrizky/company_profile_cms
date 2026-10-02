@@ -15,7 +15,7 @@ export const Media: CollectionConfig = {
   slug: 'media',
   admin: {
     group: 'Content',
-    defaultColumns: ['filename', 'mimeType', 'updatedAt'],
+    defaultColumns: ['filename', 'fileSizeMb', 'mimeType', 'updatedAt'],
     listSearchableFields: ['displayName', 'filename', 'alt'],
   },
   access: contentAccess(),
@@ -82,6 +82,24 @@ export const Media: CollectionConfig = {
         },
       },
     ]),
+    {
+      // The exact size in MB, for people who don't read KB / bytes.
+      name: 'fileSizeMb',
+      type: 'text',
+      virtual: true,
+      label: { en: 'File size', id: 'Ukuran file' },
+      admin: { readOnly: true, disableBulkEdit: true },
+      hooks: {
+        afterRead: [
+          ({ siblingData }) => {
+            const bytes = Number(siblingData?.filesize)
+            if (!Number.isFinite(bytes) || bytes <= 0) return undefined
+            const mb = bytes / 1048576
+            return mb < 0.01 ? '< 0.01 MB' : `${Math.round(mb * 100) / 100} MB`
+          },
+        ],
+      },
+    },
     // Merged into Payload's own upload field of the same name: only the list
     // cell changes (video previews).
     {

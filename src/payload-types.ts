@@ -247,6 +247,7 @@ export interface Media {
    * Alternative text for accessibility & SEO. Leave empty for decorative images.
    */
   alt?: string | null;
+  fileSizeMb?: string | null;
   _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -1876,6 +1877,7 @@ export interface SpacerElementSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   displayName?: T;
   alt?: T;
+  fileSizeMb?: T;
   _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;

@@ -111,6 +111,10 @@ export default buildConfig({
         '/components/admin/VideoThumbnails#VideoThumbnailsProvider',
         // Two-step verification after the password (see src/auth/twoFactor.ts).
         '/components/admin/TwoFactorGate#TwoFactorGateProvider',
+        // File sizes in MB (Payload's own text is KB / bytes).
+        '/components/admin/FileSizeMb#FileSizeMbProvider',
+        // Readable file names wherever Payload prints the stored (random) one.
+        '/components/admin/MediaNames#MediaNamesProvider',
         // Progress toast (with a percentage) while a form saves or publishes.
         '/components/admin/SaveProgress#SaveProgressProvider',
       ],
