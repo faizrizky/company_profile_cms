@@ -12,7 +12,10 @@ export function MediaFileCell({ cellData, rowData, link, linkURL }: DefaultCellC
   // Inside a "Choose from existing" drawer, clicking a row picks the file.
   // Payload wires that only into its own cells, so a custom cell does it itself.
   const { drawerSlug, onSelect } = useListDrawerContext()
-  const filename = String(cellData ?? '')
+  // The name the editor uploaded; the stored (random) name is the fallback and the small line.
+  const stored = String(cellData ?? '')
+  const displayName = typeof rowData?.displayName === 'string' ? rowData.displayName : ''
+  const filename = displayName || stored
   const mimeType = typeof rowData?.mimeType === 'string' ? rowData.mimeType : ''
   const url = typeof rowData?.url === 'string' ? rowData.url : undefined
   const thumb = typeof rowData?.thumbnailURL === 'string' ? rowData.thumbnailURL : url
@@ -31,7 +34,10 @@ export function MediaFileCell({ cellData, rowData, link, linkURL }: DefaultCellC
       <div className="thumbnail thumbnail--size-small file__thumbnail falah-file-thumb">
         {preview}
       </div>
-      <span className="file__filename">{filename}</span>
+      <span className="file__filename">
+        {filename}
+        {displayName && stored ? <small className="falah-file-stored">{stored}</small> : null}
+      </span>
     </div>
   )
 

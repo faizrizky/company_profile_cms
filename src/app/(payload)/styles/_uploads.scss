@@ -354,3 +354,14 @@
   @include drop-hint;
   margin: 0;
 }
+
+/* Media list: the stored (random) file name, small and muted under the readable name. */
+.falah-file-stored {
+  display: block;
+  margin-top: 2px;
+  overflow: hidden;
+  color: var(--falah-muted);
+  font-size: 11px;
+  font-weight: 400;
+  text-overflow: ellipsis;
+}

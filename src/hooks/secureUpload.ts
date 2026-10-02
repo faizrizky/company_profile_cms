@@ -97,6 +97,9 @@ export const secureUpload: CollectionBeforeOperationHook = async ({ args, operat
     extension = 'svg'
   }
 
+  // The stored name stays random; the name the editor uploaded is kept for the
+  // admin (see hooks/mediaDisplayName.ts).
+  req.context = { ...req.context, uploadOriginalName: file.name, uploadExtension: extension }
   file.name = `${randomUUID()}.${extension}`
   return args
 }

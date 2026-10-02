@@ -20,6 +20,7 @@ type LocalMedia = {
   id: number
   filename: string
   alt?: string | null
+  displayName?: string | null
   url: string
   filesize: number
 }
@@ -73,7 +74,8 @@ for (const id of ids) {
 
     const created = await payload.create({
       collection: 'media',
-      data: { alt: en.alt ?? '' },
+      // Keep the readable name the file has locally.
+      data: { alt: en.alt ?? '', displayName: en.displayName ?? undefined },
       filePath: path,
     })
     if (idAlt && idAlt !== en.alt) {

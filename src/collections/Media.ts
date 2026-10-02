@@ -6,16 +6,22 @@ import { env } from '@/lib/env'
 import type { CollectionConfig } from 'payload'
 
 import { fieldCard } from '@/fields/card'
+import { setMediaDisplayName } from '@/hooks/mediaDisplayName'
 import { ALLOWED_MIME_TYPES, secureUpload } from '@/hooks/secureUpload'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export const Media: CollectionConfig = {
   slug: 'media',
-  admin: { group: 'Content', defaultColumns: ['filename', 'alt', 'mimeType', 'updatedAt'] },
+  admin: {
+    group: 'Content',
+    defaultColumns: ['filename', 'alt', 'mimeType', 'updatedAt'],
+    listSearchableFields: ['displayName', 'filename', 'alt'],
+  },
   access: contentAccess(),
   hooks: {
     beforeOperation: [secureUpload],
+    beforeChange: [setMediaDisplayName],
     ...contentHooks('media'),
   },
   upload: {
@@ -60,6 +66,15 @@ export const Media: CollectionConfig = {
         },
       },
     ]),
+    {
+      // The name the editor uploaded (duplicates get -1, -2…). The stored file
+      // keeps a random name; the list shows this one.
+      name: 'displayName',
+      type: 'text',
+      localized: false,
+      index: true,
+      admin: { hidden: true },
+    },
     // Merged into Payload's own upload field of the same name: only the list
     // cell changes (video previews).
     {
