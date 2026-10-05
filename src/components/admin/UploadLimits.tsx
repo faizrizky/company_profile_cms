@@ -43,25 +43,29 @@ export function UploadLimitsProvider({ children }: { children?: ReactNode }) {
   useDomScan(() => {
     const limits = text.current.limits(toMb(MAX_FILE_BYTES), toMb(MAX_VIDEO_BYTES))
     for (const zone of document.querySelectorAll<HTMLElement>('.dropzone')) {
-      const host = zone.parentElement
-      if (!host) continue
-      let hint = host.querySelector<HTMLElement>(`[${HINT}]`)
+      // Inside the drop zone, as a row under its buttons.
+      let hint = zone.querySelector<HTMLElement>(`[${HINT}]`)
       if (!hint) {
         hint = document.createElement('p')
         hint.setAttribute(HINT, '')
         hint.className = 'falah-upload-limit'
-        zone.after(hint)
+        zone.append(hint)
       }
       if (hint.textContent !== limits) hint.textContent = limits
-      const shown = host.querySelector<HTMLElement>(`[${ERROR}]`)
-      if (lastError.current && !shown) {
-        const error = document.createElement('p')
-        error.setAttribute(ERROR, '')
-        error.className = 'falah-upload-error'
-        error.setAttribute('role', 'alert')
-        error.textContent = lastError.current
-        hint.after(error)
+      let error = zone.querySelector<HTMLElement>(`[${ERROR}]`)
+      if (lastError.current) {
+        if (!error) {
+          error = document.createElement('p')
+          error.setAttribute(ERROR, '')
+          error.setAttribute('role', 'alert')
+          error.className = 'falah-upload-error'
+          zone.append(error)
+        }
+        if (error.textContent !== lastError.current) error.textContent = lastError.current
+      } else {
+        error?.remove()
       }
+      zone.classList.toggle('falah-dropzone--refused', Boolean(lastError.current))
     }
     if (!document.querySelector('.dropzone')) lastError.current = null
   })
@@ -72,6 +76,7 @@ export function UploadLimitsProvider({ children }: { children?: ReactNode }) {
       if (!big) {
         lastError.current = null
         document.querySelectorAll(`[${ERROR}]`).forEach((el) => el.remove())
+        document.querySelectorAll('.falah-dropzone--refused').forEach((el) => el.classList.remove('falah-dropzone--refused'))
         return false
       }
       const message = text.current.tooBig(big.name, toMb(big.size), toMb(limitFor(big)))
@@ -80,6 +85,7 @@ export function UploadLimitsProvider({ children }: { children?: ReactNode }) {
       document.querySelectorAll(`[${ERROR}]`).forEach((el) => {
         el.textContent = message
       })
+      document.querySelectorAll('.dropzone').forEach((el) => el.classList.add('falah-dropzone--refused'))
       return true
     }
 
