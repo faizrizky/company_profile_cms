@@ -203,6 +203,10 @@ export default buildConfig({
 
   sharp,
 
+  // Uploads go through this server first, and on Vercel a request is capped at
+  // ~4.5 MB (see HOSTED_BODY_LIMIT_BYTES). Larger files need direct-to-storage
+  // uploads (`clientUploads` of the S3 plugin) — which bypass the content checks
+  // in hooks/secureUpload.ts, so they'd need an equivalent check after upload.
   plugins: s3Enabled
     ? [
         s3Storage({

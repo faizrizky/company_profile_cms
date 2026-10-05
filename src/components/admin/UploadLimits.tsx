@@ -3,20 +3,24 @@
 import { toast, useTranslation } from '@payloadcms/ui'
 import { type ReactNode, useEffect, useRef } from 'react'
 
-import { MAX_FILE_BYTES, MAX_VIDEO_BYTES, limitFor, toMb } from '@/lib/uploadLimits'
+import { limitFor, shownLimits, toMb } from '@/lib/uploadLimits'
 
 import { useDomScan } from './useDomScan'
 
 const TEXT = {
   en: {
-    limits: (file: number, video: number) =>
-      `Maximum size: ${file} MB for images, PDF and SVG · ${video} MB for videos (MP4 / WebM).`,
+    limits: (file: number, video: number, hosted: boolean) =>
+      file === video
+        ? `Maximum size: ${file} MB per file${hosted ? ' (server limit — compress larger files)' : ''}.`
+        : `Maximum size: ${file} MB for images, PDF and SVG · ${video} MB for videos (MP4 / WebM).`,
     tooBig: (name: string, size: number, limit: number) =>
       `“${name}” is ${size} MB, over the ${limit} MB limit. Choose a smaller file (or compress it).`,
   },
   id: {
-    limits: (file: number, video: number) =>
-      `Ukuran maksimal: ${file} MB untuk gambar, PDF, dan SVG · ${video} MB untuk video (MP4 / WebM).`,
+    limits: (file: number, video: number, hosted: boolean) =>
+      file === video
+        ? `Ukuran maksimal: ${file} MB per file${hosted ? ' (batas server — kompres file yang lebih besar)' : ''}.`
+        : `Ukuran maksimal: ${file} MB untuk gambar, PDF, dan SVG · ${video} MB untuk video (MP4 / WebM).`,
     tooBig: (name: string, size: number, limit: number) =>
       `“${name}” berukuran ${size} MB, melebihi batas ${limit} MB. Pilih file yang lebih kecil (atau kompres dulu).`,
   },
@@ -41,7 +45,8 @@ export function UploadLimitsProvider({ children }: { children?: ReactNode }) {
 
   // Hint under every drop zone, plus the last refusal while that zone is on screen.
   useDomScan(() => {
-    const limits = text.current.limits(toMb(MAX_FILE_BYTES), toMb(MAX_VIDEO_BYTES))
+    const shown = shownLimits()
+    const limits = text.current.limits(toMb(shown.file), toMb(shown.video), shown.hosted)
     for (const zone of document.querySelectorAll<HTMLElement>('.dropzone')) {
       // Inside the drop zone, as a row under its buttons.
       let hint = zone.querySelector<HTMLElement>(`[${HINT}]`)
