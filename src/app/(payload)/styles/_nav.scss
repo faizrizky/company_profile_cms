@@ -133,24 +133,29 @@
   --falah-tab-radius: 16px;
   position: absolute;
   z-index: 0;
-  border-radius: var(--falah-tab-radius) 0 0 var(--falah-tab-radius);
-  background: var(--falah-page-bg);
-  background-attachment: fixed;
   pointer-events: none;
+  will-change: transform;
 }
 
-.nav__tab::before,
-.nav__tab::after {
-  content: '';
+.nav__tab-part {
   position: absolute;
+  overflow: hidden;
+}
+
+.nav__tab-part--body {
+  inset: 0;
+  border-radius: var(--falah-tab-radius) 0 0 var(--falah-tab-radius);
+}
+
+.nav__tab-part--top,
+.nav__tab-part--bottom {
   right: 0;
   width: var(--falah-tab-radius);
   height: var(--falah-tab-radius);
-  background: var(--falah-page-bg);
-  background-attachment: fixed;
 }
 
-.nav__tab::before {
+/* Concave corners: keep only the area outside a quarter circle. */
+.nav__tab-part--top {
   bottom: 100%;
   -webkit-mask: radial-gradient(
     circle at 0 0,
@@ -164,7 +169,7 @@
   );
 }
 
-.nav__tab::after {
+.nav__tab-part--bottom {
   top: 100%;
   -webkit-mask: radial-gradient(
     circle at 0 100%,
@@ -176,6 +181,13 @@
     transparent var(--falah-tab-radius),
     #000 calc(var(--falah-tab-radius) + 0.5px)
   );
+}
+
+/* The page backdrop, the size of the viewport (what `fixed` would paint). */
+.nav__tab-bg {
+  position: absolute;
+  background: var(--falah-page-bg);
+  will-change: transform;
 }
 
 /* While it slides: the item left behind goes back to the rail look, and the
