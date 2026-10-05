@@ -15,6 +15,7 @@
 @use 'styles/skeletons'; // Loading skeletons
 @use 'styles/pagination'; // Pagination and tablet/mobile adjustments
 @use 'styles/document'; // Document tabs, tooltips, tab fields and edit sidebar
+@use 'styles/versions'; // Compare Versions: header, diff cards, files, restore
 @use 'styles/uploads'; // Upload dropzone, map picker, media previews and link picker
 @use 'styles/two-factor'; // Two-step verification dialog and status
 @use 'styles/bulk-upload'; // Bulk upload drawer

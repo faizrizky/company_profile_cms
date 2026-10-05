@@ -10,6 +10,8 @@ const NAMES = [
   '.upload-relationship-details__filename',
   '.upload-relationship-details__filename *',
   '.file-meta__url a',
+  // Compare Versions: a file in the old / new column.
+  '.upload-diff__info strong',
 ].join(', ')
 /** Stored files are named <uuid>.<ext> (see hooks/secureUpload.ts). */
 const STORED = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.[a-z0-9]+$/i
@@ -50,6 +52,12 @@ export function MediaNamesProvider({ children }: { children?: ReactNode }) {
   }
 
   const scan = () => {
+    // Compare Versions: videos have no still image, so their thumbnail is a broken image.
+    for (const img of document.querySelectorAll<HTMLImageElement>('.upload-diff__thumbnail img')) {
+      const thumb = img.parentElement
+      if (thumb && img.complete && img.naturalWidth === 0) thumb.classList.add('is-broken')
+      else img.addEventListener('error', () => thumb?.classList.add('is-broken'), { once: true })
+    }
     let unknown = false
     for (const el of document.querySelectorAll<HTMLElement>(NAMES)) {
       if (el.children.length > 0) continue
