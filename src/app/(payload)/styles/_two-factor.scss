@@ -130,6 +130,100 @@
   color: #fff;
 }
 
+.falah-2fa__primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  /* Working: stays solid (not greyed out), with a spinner and the input locked. */
+  &:disabled[aria-disabled],
+  .falah-2fa__form[aria-busy='true'] &:disabled {
+    cursor: progress;
+    opacity: 1;
+  }
+}
+
+.falah-2fa__spinner {
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 2px solid rgb(255 255 255 / 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: falah-2fa-spin 0.7s linear infinite;
+}
+
+@keyframes falah-2fa-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.falah-2fa__input[readonly] {
+  opacity: 0.75;
+}
+
+/* Code accepted: a check, a line of text and a sliding bar until the page loads. */
+.falah-2fa__success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding-block: 8px 4px;
+  animation: falah-2fa-pop 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+.falah-2fa__check-circle {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--falah-accent-gradient);
+  color: #fff;
+  font-size: 26px;
+  font-weight: 700;
+  box-shadow: 0 10px 24px -10px rgb(31 122 224 / 0.8);
+}
+
+.falah-2fa__bar {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e3ecf6;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 40%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #38bdf8, var(--falah-accent));
+    animation: falah-2fa-slide 1.1s ease-in-out infinite;
+  }
+}
+
+@keyframes falah-2fa-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(250%);
+  }
+}
+
+@keyframes falah-2fa-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}
+
 .falah-2fa__secondary {
   flex: 1;
   border: 1px solid #d3e2f3;
