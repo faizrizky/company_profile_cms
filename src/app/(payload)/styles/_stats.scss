@@ -230,7 +230,9 @@
 }
 
 .falah-stat-grid--wide {
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  /* The narrow column holds 4 tabs (Acquisition) — give it a floor so their
+     labels ("Campaign") always have room. */
+  grid-template-columns: minmax(240px, 1fr) minmax(0, 2fr);
 }
 
 @media (max-width: 1200px) {
@@ -249,8 +251,52 @@
   margin-bottom: 16px;
 
   h2 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     margin: 0;
   }
+}
+
+/* The "i" badge next to a label or title: hover/focus explains the metric. */
+.falah-info {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.45;
+  color: var(--falah-muted);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 10px;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1;
+  cursor: help;
+  transition:
+    opacity 0.15s,
+    color 0.15s;
+
+  &:hover,
+  &:focus-visible {
+    opacity: 1;
+    color: var(--falah-accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgb(31 122 224 / 0.45);
+    outline-offset: 2px;
+  }
+}
+
+.falah-stat-card__label,
+.falah-insight__label,
+.falah-users__big > div > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .falah-stat-panel__empty {
@@ -302,14 +348,15 @@
   min-width: 0;
   height: 32px;
   margin: 0;
-  padding: 0 8px;
+  padding: 0 6px;
   border: 0;
   border-radius: 9px;
   background: transparent;
   color: var(--falah-muted);
   font: inherit;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
+  letter-spacing: -0.01em;
   line-height: 1;
   cursor: pointer;
   transition: color 0.2s;

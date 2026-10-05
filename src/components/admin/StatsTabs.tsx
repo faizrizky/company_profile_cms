@@ -4,6 +4,8 @@ import { useState } from 'react'
 
 import type { Ranked } from '@/lib/clarity'
 
+import { Info } from './StatsInfo'
+
 type Tab = { key: string; label: string; rows: Ranked[] }
 
 const COLORS = ['#1f7ae0', '#38bdf8', '#6366f1', '#14b8a6', '#f59e0b', '#94a3b8']
@@ -51,12 +53,14 @@ function Donut({ rows }: { rows: Ranked[] }) {
  */
 export function StatsTabs({
   title,
+  info,
   tabs,
   variant,
   locale,
   labels,
 }: {
   title: string
+  info?: string
   tabs: Tab[]
   variant: 'donut' | 'bars'
   locale: string
@@ -72,7 +76,10 @@ export function StatsTabs({
   return (
     <section className="falah-stat-panel">
       <div className="falah-stat-panel__head">
-        <h2>{title}</h2>
+        <h2>
+          {title}
+          {info ? <Info text={info} /> : null}
+        </h2>
         <div
           className="falah-stat-tabs"
           role="tablist"

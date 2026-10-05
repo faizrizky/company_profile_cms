@@ -9,6 +9,7 @@ import {
   type Insight,
 } from '@/lib/clarity'
 
+import { Info } from './StatsInfo'
 import { StatsRecheck } from './StatsRecheck'
 import { StatsTabs } from './StatsTabs'
 
@@ -21,34 +22,54 @@ const TEXT = {
     open: 'Open Clarity',
     demo: 'Sample data (local preview)',
     sessions: 'Sessions',
+    sessionsInfo:
+      'A visit to the site. Page views from the same visitor within about 30 minutes count as one session.',
     botsExcluded: (n: string) => `${n} bot sessions excluded`,
     pagesPerSession: 'Pages per session',
+    pagesPerSessionInfo: 'Average number of pages viewed per session.',
     average: 'average',
     scrollDepth: 'Scroll depth',
+    scrollDepthInfo: 'How far down the page visitors scroll on average.',
     activeTime: 'Active time spent',
+    activeTimeInfo:
+      'Time visitors spend actually interacting with the page — scrolling, clicking, typing — not just having the tab open.',
     outOf: (t: string) => `out of ${t} total time`,
     users: 'Users overview',
     uniqueUsers: 'Unique users',
+    uniqueUsersInfo:
+      'People who visited, counted once even if they came back. An estimate: Clarity counts this per breakdown, so the lowest of the three is used.',
     perUser: 'Sessions per user',
+    perUserInfo: 'Sessions ÷ unique users — on average, how many times each visitor came back.',
     byDevice: 'Sessions by device',
     insights: 'Insights',
+    insightsInfo: 'Automatically detected signs of a frustrating experience, as a share of sessions.',
     rageClicks: 'Rage clicks',
+    rageClicksInfo: 'Several fast clicks on the same spot — usually a sign something looked clickable but wasn’t.',
     deadClicks: 'Dead clicks',
+    deadClicksInfo: 'A click that caused no visible reaction on the page.',
     excessiveScroll: 'Excessive scrolling',
+    excessiveScrollInfo: 'Fast, repeated scrolling — a sign the visitor is struggling to find something.',
     quickBacks: 'Quick backs',
+    quickBacksInfo: 'The visitor opened a page and left again within seconds.',
     scriptErrors: 'JavaScript errors',
+    scriptErrorsInfo: 'A JavaScript error occurred on the page during the session.',
     errorClicks: 'Error clicks',
+    errorClicksInfo: 'A click Clarity detected right where a script error happened.',
     technology: 'Technology & location',
+    technologyInfo: 'How visitors’ browser, device, operating system and country break down, by sessions.',
     browsers: 'Browsers',
     devices: 'Devices',
     os: 'OS',
     countries: 'Countries',
     acquisition: 'Acquisition',
+    acquisitionInfo:
+      'How visitors arrived. Channel: the broad type (search, direct, social, referral). Source: the specific site or search engine. Medium: organic, paid, or referral. Campaign: a tagged campaign name.',
     channel: 'Channel',
     source: 'Source',
     medium: 'Medium',
     campaign: 'Campaign',
     topPages: 'Top pages',
+    topPagesInfo: 'The most-visited pages, with their average scroll depth and active time.',
     page: 'Page',
     share: 'Share',
     scroll: 'Scroll',
@@ -80,34 +101,54 @@ const TEXT = {
     open: 'Buka Clarity',
     demo: 'Data contoh (pratinjau lokal)',
     sessions: 'Kunjungan',
+    sessionsInfo:
+      'Satu kunjungan ke website. Beberapa halaman yang dibuka pengunjung yang sama dalam sekitar 30 menit dihitung sebagai satu kunjungan.',
     botsExcluded: (n: string) => `${n} kunjungan bot tidak dihitung`,
     pagesPerSession: 'Halaman per kunjungan',
+    pagesPerSessionInfo: 'Rata-rata jumlah halaman yang dibuka dalam satu kunjungan.',
     average: 'rata-rata',
     scrollDepth: 'Kedalaman scroll',
+    scrollDepthInfo: 'Rata-rata seberapa jauh pengunjung men-scroll halaman ke bawah.',
     activeTime: 'Waktu aktif',
+    activeTimeInfo:
+      'Waktu pengunjung benar-benar berinteraksi dengan halaman — scroll, klik, mengetik — bukan sekadar membuka tab.',
     outOf: (t: string) => `dari ${t} total waktu`,
     users: 'Ringkasan pengunjung',
     uniqueUsers: 'Pengunjung unik',
+    uniqueUsersInfo:
+      'Orang yang berkunjung, dihitung sekali walau datang berkali-kali. Perkiraan: Clarity menghitungnya per rincian data, jadi dipakai yang paling kecil dari ketiganya.',
     perUser: 'Kunjungan per pengunjung',
+    perUserInfo: 'Kunjungan dibagi pengunjung unik — rata-rata berapa kali tiap pengunjung datang kembali.',
     byDevice: 'Kunjungan per perangkat',
     insights: 'Insight',
+    insightsInfo: 'Tanda-tanda pengalaman yang membuat pengunjung frustrasi, terdeteksi otomatis dari persentase kunjungan.',
     rageClicks: 'Rage click',
+    rageClicksInfo: 'Beberapa klik cepat berturut-turut di tempat yang sama — biasanya tanda sesuatu terlihat bisa diklik, padahal tidak.',
     deadClicks: 'Dead click',
+    deadClicksInfo: 'Klik yang tidak menimbulkan reaksi apa pun di halaman.',
     excessiveScroll: 'Scroll berlebihan',
+    excessiveScrollInfo: 'Scroll cepat dan berulang — tanda pengunjung kesulitan mencari sesuatu.',
     quickBacks: 'Quick back',
+    quickBacksInfo: 'Pengunjung membuka halaman lalu langsung pergi lagi dalam hitungan detik.',
     scriptErrors: 'Error JavaScript',
+    scriptErrorsInfo: 'Terjadi error JavaScript di halaman selama kunjungan berlangsung.',
     errorClicks: 'Klik error',
+    errorClicksInfo: 'Klik yang terdeteksi Clarity tepat saat terjadi error JavaScript.',
     technology: 'Teknologi & lokasi',
+    technologyInfo: 'Rincian browser, perangkat, sistem operasi, dan negara pengunjung, dihitung dari kunjungan.',
     browsers: 'Browser',
     devices: 'Perangkat',
     os: 'OS',
     countries: 'Negara',
     acquisition: 'Sumber kunjungan',
+    acquisitionInfo:
+      'Bagaimana pengunjung datang. Channel: jenis besarnya (pencarian, langsung, sosial, referral). Source: situs atau mesin pencari spesifiknya. Medium: organik, berbayar, atau referral. Campaign: nama kampanye yang ditandai.',
     channel: 'Channel',
     source: 'Sumber',
     medium: 'Medium',
     campaign: 'Kampanye',
     topPages: 'Halaman teratas',
+    topPagesInfo: 'Halaman yang paling banyak dikunjungi, beserta rata-rata kedalaman scroll dan waktu aktifnya.',
     page: 'Halaman',
     share: 'Porsi',
     scroll: 'Scroll',
@@ -147,20 +188,38 @@ function duration(seconds: number | null, t: T) {
     : `${Math.round(seconds)} ${t.s}`
 }
 
-function Kpi({ label, value, hint }: { label: string; value: string; hint?: string }) {
+function Kpi({ label, value, hint, info }: { label: string; value: string; hint?: string; info?: string }) {
   return (
     <div className="falah-stat-card">
-      <span className="falah-stat-card__label">{label}</span>
+      <span className="falah-stat-card__label">
+        {label}
+        {info ? <Info text={info} /> : null}
+      </span>
       <strong className="falah-stat-card__value">{value}</strong>
       {hint ? <span className="falah-stat-card__hint">{hint}</span> : null}
     </div>
   )
 }
 
-function InsightRow({ label, value, unit, locale }: { label: string; value: Insight | null; unit: string; locale: string }) {
+function InsightRow({
+  label,
+  info,
+  value,
+  unit,
+  locale,
+}: {
+  label: string
+  info: string
+  value: Insight | null
+  unit: string
+  locale: string
+}) {
   return (
     <li className="falah-insight">
-      <span className="falah-insight__label">{label}</span>
+      <span className="falah-insight__label">
+        {label}
+        <Info text={info} />
+      </span>
       <strong className="falah-insight__value">{value ? pct(value.percent) : '—'}</strong>
       <span className="falah-insight__hint">{value ? `${fmt(value.sessions, locale)} ${unit}` : ''}</span>
     </li>
@@ -181,17 +240,25 @@ function Overview({ stats, t, locale }: { stats: ClarityStats; t: T; locale: str
           label={t.sessions}
           value={fmt(stats.sessions, locale)}
           hint={stats.botSessions ? t.botsExcluded(fmt(stats.botSessions, locale)) : undefined}
+          info={t.sessionsInfo}
         />
         <Kpi
           label={t.pagesPerSession}
           value={stats.pagesPerSession != null ? (Math.round(stats.pagesPerSession * 100) / 100).toString() : '—'}
           hint={t.average}
+          info={t.pagesPerSessionInfo}
         />
-        <Kpi label={t.scrollDepth} value={stats.scrollDepth != null ? pct(stats.scrollDepth) : '—'} hint={t.average} />
+        <Kpi
+          label={t.scrollDepth}
+          value={stats.scrollDepth != null ? pct(stats.scrollDepth) : '—'}
+          hint={t.average}
+          info={t.scrollDepthInfo}
+        />
         <Kpi
           label={t.activeTime}
           value={duration(stats.activeSeconds, t)}
           hint={stats.totalSeconds != null ? t.outOf(duration(stats.totalSeconds, t)) : undefined}
+          info={t.activeTimeInfo}
         />
       </div>
 
@@ -205,14 +272,20 @@ function Overview({ stats, t, locale }: { stats: ClarityStats; t: T; locale: str
               <span className="falah-users__icon" aria-hidden />
               <div>
                 <strong>{fmt(stats.users, locale)}</strong>
-                <span>{t.uniqueUsers}</span>
+                <span>
+                  {t.uniqueUsers}
+                  <Info text={t.uniqueUsersInfo} />
+                </span>
               </div>
             </div>
             <div className="falah-users__big">
               <span className="falah-users__icon falah-users__icon--repeat" aria-hidden />
               <div>
                 <strong>{stats.users ? (Math.round((stats.sessions / stats.users) * 100) / 100).toString() : '—'}</strong>
-                <span>{t.perUser}</span>
+                <span>
+                  {t.perUser}
+                  <Info text={t.perUserInfo} />
+                </span>
               </div>
             </div>
           </div>
@@ -244,20 +317,60 @@ function Overview({ stats, t, locale }: { stats: ClarityStats; t: T; locale: str
 
         <section className="falah-stat-panel">
           <div className="falah-stat-panel__head">
-            <h2>{t.insights}</h2>
+            <h2>
+              {t.insights}
+              <Info text={t.insightsInfo} />
+            </h2>
           </div>
           <ul className="falah-insights">
-            <InsightRow label={t.rageClicks} value={insights.rageClicks} unit={t.sessionsUnit} locale={locale} />
-            <InsightRow label={t.deadClicks} value={insights.deadClicks} unit={t.sessionsUnit} locale={locale} />
-            <InsightRow label={t.excessiveScroll} value={insights.excessiveScroll} unit={t.sessionsUnit} locale={locale} />
-            <InsightRow label={t.quickBacks} value={insights.quickBacks} unit={t.sessionsUnit} locale={locale} />
-            <InsightRow label={t.scriptErrors} value={insights.scriptErrors} unit={t.sessionsUnit} locale={locale} />
-            <InsightRow label={t.errorClicks} value={insights.errorClicks} unit={t.sessionsUnit} locale={locale} />
+            <InsightRow
+              label={t.rageClicks}
+              info={t.rageClicksInfo}
+              value={insights.rageClicks}
+              unit={t.sessionsUnit}
+              locale={locale}
+            />
+            <InsightRow
+              label={t.deadClicks}
+              info={t.deadClicksInfo}
+              value={insights.deadClicks}
+              unit={t.sessionsUnit}
+              locale={locale}
+            />
+            <InsightRow
+              label={t.excessiveScroll}
+              info={t.excessiveScrollInfo}
+              value={insights.excessiveScroll}
+              unit={t.sessionsUnit}
+              locale={locale}
+            />
+            <InsightRow
+              label={t.quickBacks}
+              info={t.quickBacksInfo}
+              value={insights.quickBacks}
+              unit={t.sessionsUnit}
+              locale={locale}
+            />
+            <InsightRow
+              label={t.scriptErrors}
+              info={t.scriptErrorsInfo}
+              value={insights.scriptErrors}
+              unit={t.sessionsUnit}
+              locale={locale}
+            />
+            <InsightRow
+              label={t.errorClicks}
+              info={t.errorClicksInfo}
+              value={insights.errorClicks}
+              unit={t.sessionsUnit}
+              locale={locale}
+            />
           </ul>
         </section>
 
         <StatsTabs
           title={t.technology}
+          info={t.technologyInfo}
           variant="donut"
           locale={locale}
           labels={tabLabels}
@@ -273,6 +386,7 @@ function Overview({ stats, t, locale }: { stats: ClarityStats; t: T; locale: str
       <div className="falah-stat-grid falah-stat-grid--wide">
         <StatsTabs
           title={t.acquisition}
+          info={t.acquisitionInfo}
           variant="bars"
           locale={locale}
           labels={tabLabels}
@@ -286,7 +400,10 @@ function Overview({ stats, t, locale }: { stats: ClarityStats; t: T; locale: str
 
         <section className="falah-stat-panel falah-stat-panel--table">
           <div className="falah-stat-panel__head">
-            <h2>{t.topPages}</h2>
+            <h2>
+              {t.topPages}
+              <Info text={t.topPagesInfo} />
+            </h2>
           </div>
           <table className="falah-pages">
             <thead>
