@@ -5,12 +5,9 @@ import { fileTypeFromBuffer } from 'file-type'
 import { JSDOM } from 'jsdom'
 import { APIError, type CollectionBeforeOperationHook } from 'payload'
 
-/** Images, PDFs and SVGs. */
-export const MAX_FILE_BYTES = 10 * 1024 * 1024 // 10 MB
-/** Short web videos (showcase clips, looping backgrounds). */
-export const MAX_VIDEO_BYTES = 50 * 1024 * 1024 // 50 MB (matches Supabase Storage per-object cap)
-/** Hard cap for the upload parser — the per-type limits above are enforced below. */
-export const MAX_UPLOAD_BYTES = Math.max(MAX_FILE_BYTES, MAX_VIDEO_BYTES)
+import { MAX_FILE_BYTES, MAX_UPLOAD_BYTES, MAX_VIDEO_BYTES } from '@/lib/uploadLimits'
+
+export { MAX_FILE_BYTES, MAX_UPLOAD_BYTES, MAX_VIDEO_BYTES } from '@/lib/uploadLimits'
 
 /** Binary formats, verified by magic bytes — the extension and the browser-sent MIME are ignored. */
 const BINARY_TYPES: Record<string, string> = {

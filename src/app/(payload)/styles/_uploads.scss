@@ -354,3 +354,24 @@
   @include drop-hint;
   margin: 0;
 }
+
+/* Upload size limit hint and refusal, under the drop zone. */
+.falah-upload-limit,
+.falah-upload-error {
+  margin: 8px 4px 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.falah-upload-limit {
+  color: var(--falah-muted);
+}
+
+.falah-upload-error {
+  padding: 10px 14px;
+  border: 1px solid #f5c2bf;
+  border-radius: var(--style-radius-m);
+  background: #fff5f5;
+  color: #9f1b1b;
+  font-weight: 500;
+}

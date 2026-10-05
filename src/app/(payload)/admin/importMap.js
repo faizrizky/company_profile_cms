@@ -22,6 +22,7 @@ import { TabTransitionsProvider as TabTransitionsProvider_e5d80046e735f8964b2c7d
 import { VideoThumbnailsProvider as VideoThumbnailsProvider_f7d05f63326cd647cf57b0f4eaf0c97a } from '../../../components/admin/VideoThumbnails'
 import { TwoFactorGateProvider as TwoFactorGateProvider_bd1354467d11b81d7d9b3ed628382398 } from '../../../components/admin/TwoFactorGate'
 import { FileSizeMbProvider as FileSizeMbProvider_7e7f97f4afdb28a48d5c8a0ccfc7b619 } from '../../../components/admin/FileSizeMb'
+import { UploadLimitsProvider as UploadLimitsProvider_318864aac0e4a9b8ec7a5896f86e4277 } from '../../../components/admin/UploadLimits'
 import { MediaNamesProvider as MediaNamesProvider_7334bec1d083369e67567d95aef9b8f1 } from '../../../components/admin/MediaNames'
 import { SaveProgressProvider as SaveProgressProvider_7afde912eebf3da11b20fbdc876d592c } from '../../../components/admin/SaveProgress'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
@@ -53,6 +54,7 @@ export const importMap = {
   "/components/admin/VideoThumbnails#VideoThumbnailsProvider": VideoThumbnailsProvider_f7d05f63326cd647cf57b0f4eaf0c97a,
   "/components/admin/TwoFactorGate#TwoFactorGateProvider": TwoFactorGateProvider_bd1354467d11b81d7d9b3ed628382398,
   "/components/admin/FileSizeMb#FileSizeMbProvider": FileSizeMbProvider_7e7f97f4afdb28a48d5c8a0ccfc7b619,
+  "/components/admin/UploadLimits#UploadLimitsProvider": UploadLimitsProvider_318864aac0e4a9b8ec7a5896f86e4277,
   "/components/admin/MediaNames#MediaNamesProvider": MediaNamesProvider_7334bec1d083369e67567d95aef9b8f1,
   "/components/admin/SaveProgress#SaveProgressProvider": SaveProgressProvider_7afde912eebf3da11b20fbdc876d592c,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,

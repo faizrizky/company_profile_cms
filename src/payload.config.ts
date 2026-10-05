@@ -113,6 +113,8 @@ export default buildConfig({
         '/components/admin/TwoFactorGate#TwoFactorGateProvider',
         // File sizes in MB (Payload's own text is KB / bytes).
         '/components/admin/FileSizeMb#FileSizeMbProvider',
+        // Upload size limits shown on drop zones; oversized files refused before saving.
+        '/components/admin/UploadLimits#UploadLimitsProvider',
         // Readable file names wherever Payload prints the stored (random) one.
         '/components/admin/MediaNames#MediaNamesProvider',
         // Progress toast (with a percentage) while a form saves or publishes.
