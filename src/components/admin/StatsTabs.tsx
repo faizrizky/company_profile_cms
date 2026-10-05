@@ -73,7 +73,16 @@ export function StatsTabs({
     <section className="falah-stat-panel">
       <div className="falah-stat-panel__head">
         <h2>{title}</h2>
-        <div className="falah-stat-tabs" role="tablist">
+        <div
+          className="falah-stat-tabs"
+          role="tablist"
+          style={
+            {
+              '--tabs': tabs.length,
+              '--active': Math.max(0, tabs.findIndex((t) => t.key === active)),
+            } as React.CSSProperties
+          }
+        >
           {tabs.map((t) => (
             <button
               key={t.key}
@@ -82,8 +91,9 @@ export function StatsTabs({
               aria-selected={t.key === active}
               className="falah-stat-tabs__tab"
               onClick={() => setActive(t.key)}
+              title={t.label}
             >
-              {t.label}
+              <span>{t.label}</span>
             </button>
           ))}
         </div>

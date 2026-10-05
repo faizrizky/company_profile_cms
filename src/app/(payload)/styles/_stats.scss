@@ -232,38 +232,78 @@
   text-align: center;
 }
 
-/* Tabs: small pills, the active one blue. */
+/* Tabs: a segmented control as wide as the card — one row, equal parts,
+   with a white thumb that glides to the active tab. */
+.falah-stat-panel__head:has(.falah-stat-tabs) {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+}
+
 .falah-stat-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 3px;
-  border-radius: 999px;
-  background: rgb(31 122 224 / 0.08);
+  position: relative;
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  padding: 4px;
+  border: 1px solid rgb(31 122 224 / 0.1);
+  border-radius: 12px;
+  background: rgb(31 122 224 / 0.07);
+
+  /* The thumb. */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    width: calc((100% - 8px) / var(--tabs));
+    border-radius: 9px;
+    background: #fff;
+    box-shadow:
+      0 1px 2px rgb(6 41 79 / 0.08),
+      0 6px 14px -8px rgb(30 90 160 / 0.55);
+    transform: translateX(calc(var(--active) * 100%));
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
 }
 
 .falah-stat-tabs__tab {
-  padding: 4px 12px;
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  height: 32px;
+  margin: 0;
+  padding: 0 8px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 9px;
   background: transparent;
   color: var(--falah-muted);
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
+  line-height: 1;
   cursor: pointer;
-  transition:
-    background 0.2s,
-    color 0.2s;
+  transition: color 0.2s;
+
+  span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   &:hover {
     color: var(--falah-ink);
   }
 
   &[aria-selected='true'] {
-    background: #fff;
     color: var(--falah-accent);
-    box-shadow: 0 2px 8px -4px rgb(30 90 160 / 0.5);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgb(31 122 224 / 0.45);
+    outline-offset: 1px;
   }
 }
 
