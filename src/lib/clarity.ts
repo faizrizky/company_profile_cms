@@ -7,14 +7,18 @@ import { unstable_cache } from 'next/cache'
  * Limits: 10 requests per project per day, up to 3 dimensions per request, at
  * most the last 3 days of data.
  *
- * A refresh makes three requests — URL × Country × Device, Browser × OS ×
- * Channel, Source × Medium × Campaign — and every breakdown is summed from
- * those. Cached 8 hours: 3 refreshes × 3 requests = 9 a day, under the limit.
- * While there are no visits yet a refresh is a single request, and editors
- * may re-check by hand (see actions/refreshClarity.ts), at most hourly.
+ * Three requests — URL × Country × Device, Browser × OS × Channel, Source ×
+ * Medium × Campaign — and every breakdown is summed from those. The budget is
+ * spread over the day:
+ *   - overview (URL × Country × Device): every 4 hours → 6 requests
+ *   - details (the other two): every 12 hours → 4 requests
+ * Refreshes are lazy: the first visit after the interval fetches anew. While
+ * there are no visits yet only the overview is asked for, and editors may
+ * re-check by hand (see actions/refreshClarity.ts), at most hourly.
  */
 const ENDPOINT = 'https://www.clarity.ms/export-data/api/v1/project-live-insights'
-const REVALIDATE_SECONDS = 8 * 60 * 60
+export const OVERVIEW_EVERY_MS = 4 * 60 * 60 * 1000
+export const DETAILS_EVERY_MS = 12 * 60 * 60 * 1000
 export const CLARITY_TAG = 'clarity'
 export const RECHECK_COOLDOWN_MS = 60 * 60 * 1000
 
@@ -53,7 +57,14 @@ export type ClarityStats = {
 }
 
 export type ClarityResult =
-  | { status: 'ok'; stats: ClarityStats; demo?: boolean; fetchedAt?: number }
+  | {
+      status: 'ok'
+      stats: ClarityStats
+      demo?: boolean
+      /** When the overview / the details were fetched from Clarity. */
+      fetchedAt?: number
+      detailsAt?: number
+    }
   | { status: 'empty'; fetchedAt?: number }
   | { status: 'unconfigured' }
   | { status: 'error'; code: number | 'network'; message: string }
@@ -258,32 +269,35 @@ class ClarityError extends Error {
   }
 }
 
-/**
- * The three responses, cached by Next (shared across requests / instances) so
- * the daily limit isn't burned. A failure throws, so it is never cached.
- */
-const load = unstable_cache(
+// Cached by Next (shared across requests / instances) so the daily limit
+// isn't burned. A failure throws, so it is never cached. The token is read
+// inside, not passed in: arguments become part of the cache key.
+const loadOverview = unstable_cache(
   async () => {
-    // Read here, not passed in: arguments become part of the cache key.
-    const token = process.env.CLARITY_API_TOKEN!
-    const main = await request(token, ['URL', 'Country', 'Device'])
+    const main = await request(process.env.CLARITY_API_TOKEN!, ['URL', 'Country', 'Device'])
     if ('error' in main) throw new ClarityError(main.error)
-    const fetchedAt = Date.now()
-    // No visits yet: the other two would be empty as well.
-    if (!parse(main).sessions) return { main, fetchedAt }
+    return { main, fetchedAt: Date.now() }
+  },
+  ['clarity-overview-v1'],
+  { revalidate: OVERVIEW_EVERY_MS / 1000, tags: [CLARITY_TAG] },
+)
+
+const loadDetails = unstable_cache(
+  async () => {
+    const token = process.env.CLARITY_API_TOKEN!
     const [tech, acq] = await Promise.all([
       request(token, ['Browser', 'OS', 'Channel']),
       request(token, ['Source', 'Medium', 'Campaign']),
     ])
+    if ('error' in tech && 'error' in acq) throw new ClarityError(tech.error)
     return {
-      main,
       tech: 'error' in tech ? undefined : tech,
       acq: 'error' in acq ? undefined : acq,
-      fetchedAt,
+      fetchedAt: Date.now(),
     }
   },
-  ['clarity-stats-v2'],
-  { revalidate: REVALIDATE_SECONDS, tags: [CLARITY_TAG] },
+  ['clarity-details-v1'],
+  { revalidate: DETAILS_EVERY_MS / 1000, tags: [CLARITY_TAG] },
 )
 
 export async function getClarityStats(): Promise<ClarityResult> {
@@ -291,13 +305,20 @@ export async function getClarityStats(): Promise<ClarityResult> {
   if (process.env.CLARITY_DEMO === 'true' && process.env.NODE_ENV !== 'production') {
     const { demoBlocks } = await import('./clarityDemo')
     const result = buildStats(...demoBlocks())
-    return result.status === 'ok' ? { ...result, demo: true } : result
+    const now = Date.now()
+    return result.status === 'ok'
+      ? { ...result, demo: true, fetchedAt: now - 75 * 60_000, detailsAt: now - 5 * 60 * 60_000 }
+      : result
   }
   if (!process.env.CLARITY_API_TOKEN) return { status: 'unconfigured' }
   try {
-    const { main, tech, acq, fetchedAt } = await load()
-    const result = buildStats(main, tech, acq)
-    return result.status === 'ok' || result.status === 'empty' ? { ...result, fetchedAt } : result
+    const { main, fetchedAt } = await loadOverview()
+    // No visits yet: the details would be empty as well.
+    if (!parse(main).sessions) return { status: 'empty', fetchedAt }
+    // Without the details the overview still shows (browsers etc. stay empty).
+    const details = await loadDetails().catch(() => undefined)
+    const result = buildStats(main, details?.tech, details?.acq)
+    return result.status === 'ok' ? { ...result, fetchedAt, detailsAt: details?.fetchedAt } : result
   } catch (error) {
     if (error instanceof ClarityError) return { status: 'error', code: error.code, message: error.message }
     return { status: 'error', code: 'network', message: (error as Error).message }

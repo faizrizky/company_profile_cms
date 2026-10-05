@@ -1,7 +1,13 @@
 import { SetStepNav } from '@payloadcms/ui'
 import type { AdminViewServerProps } from 'payload'
 
-import { getClarityStats, RECHECK_COOLDOWN_MS, type ClarityStats, type Insight } from '@/lib/clarity'
+import {
+  getClarityStats,
+  OVERVIEW_EVERY_MS,
+  RECHECK_COOLDOWN_MS,
+  type ClarityStats,
+  type Insight,
+} from '@/lib/clarity'
 
 import { StatsRecheck } from './StatsRecheck'
 import { StatsTabs } from './StatsTabs'
@@ -50,7 +56,10 @@ const TEXT = {
     sessionsUnit: 'sessions',
     other: 'Other',
     noData: 'No data in this period.',
-    note: 'Numbers refresh every 8 hours (Clarity allows 10 requests a day). Live users, recordings, heatmaps and funnels are in Clarity.',
+    note: 'Clarity allows 10 requests a day: the overview refreshes every 4 hours, browsers, OS and acquisition every 12 hours — on the first visit after that. Live users, recordings, heatmaps and funnels are in Clarity.',
+    updated: (at: string) => `Updated ${at}`,
+    next: (at: string) => `next from ${at}`,
+    details: (at: string) => `Browsers, OS & acquisition updated ${at}.`,
     empty: 'No visits recorded yet.',
     emptyHelp:
       'Clarity starts counting once the website with its tracking code is live. Data usually appears a few hours after the first visits.',
@@ -106,7 +115,10 @@ const TEXT = {
     sessionsUnit: 'kunjungan',
     other: 'Lainnya',
     noData: 'Tidak ada data di periode ini.',
-    note: 'Angka diperbarui setiap 8 jam (Clarity membatasi 10 permintaan per hari). Live users, rekaman, heatmap, dan funnel ada di Clarity.',
+    note: 'Clarity membatasi 10 permintaan per hari: ringkasan diperbarui tiap 4 jam, browser, OS, dan sumber kunjungan tiap 12 jam — saat halaman ini dibuka setelahnya. Live users, rekaman, heatmap, dan funnel ada di Clarity.',
+    updated: (at: string) => `Diperbarui ${at}`,
+    next: (at: string) => `berikutnya mulai ${at}`,
+    details: (at: string) => `Browser, OS & sumber kunjungan diperbarui ${at}.`,
     empty: 'Belum ada kunjungan tercatat.',
     emptyHelp:
       'Clarity mulai menghitung setelah website dengan kode pelacaknya tayang. Data biasanya muncul beberapa jam setelah kunjungan pertama.',
@@ -327,6 +339,21 @@ function Recheck({ fetchedAt, t }: { fetchedAt: number; t: T }) {
   )
 }
 
+/** "14:05 WIB", or "3 Okt 14:05 WIB" when not today (Jakarta time). */
+function clock(at: number, locale: string) {
+  const zone = { timeZone: 'Asia/Jakarta' } as const
+  const day = (d: number) => new Date(d).toLocaleDateString('en-CA', zone)
+  const today = day(Date.now()) === day(at)
+  const text = new Intl.DateTimeFormat(locale, {
+    ...zone,
+    ...(today ? {} : { day: 'numeric', month: 'short' }),
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(at)
+  return `${text} WIB`
+}
+
 /** The admin home: website statistics from Microsoft Clarity (replaces Payload's default dashboard). */
 export async function StatsDashboard({ i18n }: AdminViewServerProps) {
   const lang = i18n.language === 'id' ? 'id' : 'en'
@@ -345,6 +372,15 @@ export async function StatsDashboard({ i18n }: AdminViewServerProps) {
             {result.status === 'ok' && result.demo ? <span className="falah-stats__demo">{t.demo}</span> : null}
           </h1>
           <p>{t.lead}</p>
+          {result.status === 'ok' && result.fetchedAt ? (
+            <p className="falah-stats__updated">
+              <span className="falah-stats__updated-dot" />
+              {t.updated(clock(result.fetchedAt, locale))}
+              <span className="falah-stats__updated-next">
+                · {t.next(clock(result.fetchedAt + OVERVIEW_EVERY_MS, locale))}
+              </span>
+            </p>
+          ) : null}
         </div>
         <a className="falah-stats__open" href={CLARITY_URL} target="_blank" rel="noopener noreferrer">
           {t.open} ↗
@@ -368,7 +404,10 @@ export async function StatsDashboard({ i18n }: AdminViewServerProps) {
           {result.status === 'empty' && result.fetchedAt ? <Recheck fetchedAt={result.fetchedAt} t={t} /> : null}
         </div>
       )}
-      <p className="falah-stats__note">{t.note}</p>
+      <p className="falah-stats__note">
+        {result.status === 'ok' && result.detailsAt ? `${t.details(clock(result.detailsAt, locale))} ` : null}
+        {t.note}
+      </p>
     </div>
   )
 }
