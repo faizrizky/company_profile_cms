@@ -49,7 +49,7 @@ export function FalahNavClient({ groups }: { groups: NavGroupData[] }) {
     done: boolean
   } | null>(null)
   const sliding = slide && (slide.path === pathname || !slide.done) ? slide : null
-  const tabRef = useSlidingTab(sliding)
+  const tabRef = useSlidingTab(sliding, () => setSlide((s) => (s ? { ...s, done: true } : s)))
 
   const className = [
     'nav',
@@ -67,12 +67,7 @@ export function FalahNavClient({ groups }: { groups: NavGroupData[] }) {
       <div className="nav__scroll" ref={navRef}>
         <nav className="nav__wrap">
           {sliding ? (
-            <span
-              ref={tabRef}
-              className="nav__tab"
-              aria-hidden
-              onTransitionEnd={() => setSlide((s) => (s ? { ...s, done: true } : s))}
-            />
+            <span ref={tabRef} className="nav__tab" aria-hidden />
           ) : null}
           {groups.map((group) => (
             <NavGroup key={group.label} isOpen={group.open} label={group.label}>
@@ -123,13 +118,15 @@ export function FalahNavClient({ groups }: { groups: NavGroupData[] }) {
 }
 
 /**
- * Puts the sliding tab on the item it leaves, then lets CSS glide it to the
- * clicked one. `top` (not transform) moves it, so its fixed page-coloured
- * background stays aligned with the page.
+ * Glides the tab from the item it leaves to the clicked one, along the
+ * reference's motion (measured frame by frame): it backs up a little, shoots
+ * past the item to 109% of the way, slows to a stop there, then eases back
+ * and settles — 0.5s in all, no abrupt stop. `top` (not transform) moves it,
+ * so its fixed page-coloured background stays aligned with the page.
  */
-function useSlidingTab(slide: { fromId?: string; toId: string } | null) {
-  const key = slide ? `${slide.fromId}>${slide.toId}` : null
+function useSlidingTab(slide: { fromId?: string; toId: string } | null, onDone: () => void) {
   const ref = useRef<HTMLSpanElement>(null)
+  const key = slide ? `${slide.fromId}>${slide.toId}` : null
 
   useLayoutEffect(() => {
     const tab = ref.current
@@ -146,18 +143,28 @@ function useSlidingTab(slide: { fromId?: string; toId: string } | null) {
     const to = rectOf(slide.toId)
     if (!to) return
     const from = rectOf(slide.fromId) ?? to
-    const set = (r: typeof to) => {
-      tab.style.top = `${r.top}px`
-      tab.style.left = `${r.left}px`
-      tab.style.width = `${r.width}px`
-      tab.style.height = `${r.height}px`
+    tab.style.left = `${to.left}px`
+    tab.style.width = `${to.width}px`
+    tab.style.height = `${to.height}px`
+    tab.style.top = `${to.top}px`
+
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (still || from.top === to.top) {
+      onDone()
+      return
     }
-    tab.classList.add('nav__tab--still')
-    set(from)
-    void tab.offsetHeight // commit the start position before gliding
-    tab.classList.remove('nav__tab--still')
-    set(to)
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- once per slide, not per re-render
+    const overshoot = from.top + (to.top - from.top) * 1.09
+    const animation = tab.animate(
+      [
+        { top: `${from.top}px`, easing: 'cubic-bezier(0.8, -0.4, 0.4, 1)' },
+        { top: `${overshoot}px`, offset: 0.7, easing: 'cubic-bezier(0.45, 0, 0.55, 1)' },
+        { top: `${to.top}px` },
+      ],
+      { duration: 500 },
+    )
+    animation.onfinish = () => onDone()
+    return () => animation.cancel()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once per slide, not per re-render
   }, [key])
 
   return ref

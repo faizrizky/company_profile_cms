@@ -118,8 +118,8 @@
 }
 
 /* Sliding between items (FalahNavClient): a copy of the tab glides from the
-   item it leaves to the clicked one — it backs up a little, shoots over and
-   settles back, like the reference. The static tab is hidden meanwhile. */
+   item it leaves to the clicked one (motion in FalahNavClient: it backs up a
+   little, shoots over and settles back, like the reference). The static tab is hidden meanwhile. */
 .nav__wrap {
   position: relative;
 }
@@ -137,11 +137,6 @@
   background: var(--falah-page-bg);
   background-attachment: fixed;
   pointer-events: none;
-  transition: top 0.5s cubic-bezier(0.8, -0.5, 0.15, 1.5);
-}
-
-.nav__tab--still {
-  transition: none;
 }
 
 .nav__tab::before,
@@ -207,11 +202,7 @@
   background: transparent;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .nav__tab {
-    transition: none;
-  }
-}
+
 
 /* Let the tab corners reach outside an open group — but only once it is
    fully open: while it animates (rah-animating) or is closed, the content
