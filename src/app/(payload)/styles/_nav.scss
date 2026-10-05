@@ -306,18 +306,44 @@
   --falah-nav-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'%3E%3C/rect%3E%3Cpath d='M3 15h18'%3E%3C/path%3E%3C/svg%3E");
 }
 
-/* Items scrolling up fade out before they reach the menu button. */
-.nav .nav__scroll {
+/* The sidebar is the scrolling menu over the account block (nav__foot), which
+   stays put. Items fade out as they scroll under the menu button (top) and
+   towards the account block (bottom) — no box behind either. */
+aside.nav {
+  display: flex;
+  flex-direction: column;
+}
+
+aside.nav .nav__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  padding-bottom: 18px;
   -webkit-mask-image: linear-gradient(
     to bottom,
     transparent calc(var(--app-header-height) - 18px),
-    #000 var(--app-header-height)
+    #000 var(--app-header-height),
+    #000 calc(100% - 28px),
+    transparent 100%
   );
   mask-image: linear-gradient(
     to bottom,
     transparent calc(var(--app-header-height) - 18px),
-    #000 var(--app-header-height)
+    #000 var(--app-header-height),
+    #000 calc(100% - 28px),
+    transparent 100%
   );
+}
+
+.nav__foot {
+  flex: none;
+  padding: 6px var(--nav-padding-inline-end, var(--gutter-h)) 16px var(--nav-padding-inline-start, var(--gutter-h));
+}
+
+.nav--rail .nav__foot {
+  display: flex;
+  justify-content: center;
+  padding-inline: 0;
 }
 
 /* ── Collapsed sidebar = icon rail (tablet & desktop) ─────────────────── */
@@ -332,7 +358,7 @@
   }
 
   .template-default .nav.nav--rail {
-    display: block;
+    display: flex;
     width: var(--falah-rail-width);
     opacity: 1;
   }

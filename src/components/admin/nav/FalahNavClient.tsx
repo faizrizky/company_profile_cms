@@ -114,6 +114,9 @@ export function FalahNavClient({ groups }: { groups: NavGroupData[] }) {
             </NavGroup>
           ))}
         </nav>
+      </div>
+      {/* Outside the scrolling menu: it stays at the foot, and the menu fades out above it. */}
+      <div className="nav__foot">
         <NavAccount compact={rail} />
       </div>
       <div className="nav__header">
