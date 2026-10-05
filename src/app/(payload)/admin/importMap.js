@@ -26,6 +26,7 @@ import { UploadLimitsProvider as UploadLimitsProvider_318864aac0e4a9b8ec7a5896f8
 import { MediaNamesProvider as MediaNamesProvider_7334bec1d083369e67567d95aef9b8f1 } from '../../../components/admin/MediaNames'
 import { SaveProgressProvider as SaveProgressProvider_7afde912eebf3da11b20fbdc876d592c } from '../../../components/admin/SaveProgress'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
+import { StatsDashboard as StatsDashboard_02957e108870d4d62b84242af16991cf } from '../../../components/admin/StatsDashboard'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -58,5 +59,6 @@ export const importMap = {
   "/components/admin/MediaNames#MediaNamesProvider": MediaNamesProvider_7334bec1d083369e67567d95aef9b8f1,
   "/components/admin/SaveProgress#SaveProgressProvider": SaveProgressProvider_7afde912eebf3da11b20fbdc876d592c,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
+  "/components/admin/StatsDashboard#StatsDashboard": StatsDashboard_02957e108870d4d62b84242af16991cf,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

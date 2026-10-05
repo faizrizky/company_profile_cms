@@ -89,6 +89,8 @@ export default buildConfig({
       ],
     },
     components: {
+      // The admin home is the website statistics (Microsoft Clarity).
+      views: { dashboard: { Component: '/components/admin/StatsDashboard#StatsDashboard' } },
       graphics: {
         Logo: '/components/admin/Logo#Logo',
         Icon: '/components/admin/Icon#Icon',

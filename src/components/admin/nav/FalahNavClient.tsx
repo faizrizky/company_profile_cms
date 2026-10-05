@@ -79,9 +79,11 @@ export function FalahNavClient({ groups }: { groups: NavGroupData[] }) {
           {groups.map((group) => (
             <NavGroup key={group.label} isOpen={group.open} label={group.label}>
               {group.items.map((item) => {
+                // The home is only active on the home itself (every admin path starts with it).
                 const isActive =
-                  pathname.startsWith(item.href) &&
-                  ['/', undefined].includes(pathname[item.href.length])
+                  item.id === 'nav-statistics'
+                    ? pathname === item.href || pathname === `${item.href}/`
+                    : pathname.startsWith(item.href) && ['/', undefined].includes(pathname[item.href.length])
                 return (
                   <Link
                     key={item.id}

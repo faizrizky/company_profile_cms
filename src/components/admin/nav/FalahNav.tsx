@@ -67,5 +67,18 @@ export async function FalahNav({ i18n, payload, permissions, req, visibleEntitie
     }),
   }))
 
-  return <FalahNavClient groups={groups} />
+  // The home (website statistics) heads the menu.
+  const home: NavGroupData = {
+    label: i18n.language === 'id' ? 'Ringkasan' : 'Overview',
+    open: true,
+    items: [
+      {
+        id: 'nav-statistics',
+        href: formatAdminURL({ adminRoute: routes.admin, path: '' }) || routes.admin,
+        label: i18n.language === 'id' ? 'Statistik' : 'Statistics',
+      },
+    ],
+  }
+
+  return <FalahNavClient groups={[home, ...groups]} />
 }
