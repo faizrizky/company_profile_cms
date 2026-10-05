@@ -401,7 +401,26 @@ aside.nav .nav__scroll {
 /* Room under the menu button so the active tab's upper corner sits below the
    scroll fade (otherwise it's half transparent and shows a ghost edge). */
 .nav--rail .nav__wrap {
-  padding-top: 22px;
+  padding-top: 8px;
+}
+
+/* In the rail the first tab sits just under the menu button: the fade ends
+   right below the button so the tab's upper corner shows in full. */
+aside.nav.nav--rail .nav__scroll {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 50px,
+    #000 58px,
+    #000 calc(100% - 28px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 50px,
+    #000 58px,
+    #000 calc(100% - 28px),
+    transparent 100%
+  );
 }
 
 /* Every group stays expanded in the rail; group titles give way to a thin rule. */
