@@ -1,9 +1,15 @@
 /* ── Account block at the foot of the sidebar ─────────────────────────── */
 
 .falah-account {
+  /* Stays at the foot of the sidebar while the menu scrolls under it, like the
+     menu button at the top; the sidebar's own bottom colour fades the items out. */
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
   margin-top: auto;
-  padding-top: 20px;
+  padding-block: 28px 14px;
   width: 100%;
+  background: linear-gradient(to bottom, transparent, #0b2e7a 22px);
 }
 
 .falah-account__button {

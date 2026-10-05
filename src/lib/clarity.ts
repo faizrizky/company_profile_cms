@@ -88,6 +88,38 @@ const pathOf = (url: string) => {
   }
 }
 
+const DEMO_STATS: ClarityStats = {
+  sessions: 1284,
+  botSessions: 96,
+  visitors: 972,
+  pagesPerSession: 3.4,
+  activeSeconds: 138,
+  scrollDepth: 64,
+  rageClickPercent: 1.8,
+  deadClickPercent: 6.4,
+  topPages: [
+    { label: '/en', sessions: 612 },
+    { label: '/en/solution', sessions: 301 },
+    { label: '/en/solution/virtual-training-suite', sessions: 188 },
+    { label: '/en/about', sessions: 96 },
+    { label: '/en/contact', sessions: 54 },
+    { label: '/id', sessions: 33 },
+  ],
+  topCountries: [
+    { label: 'Indonesia', sessions: 904 },
+    { label: 'Singapore', sessions: 142 },
+    { label: 'Malaysia', sessions: 87 },
+    { label: 'United States', sessions: 64 },
+    { label: 'Turkey', sessions: 41 },
+    { label: 'Czechia', sessions: 22 },
+  ],
+  topDevices: [
+    { label: 'PC', sessions: 702 },
+    { label: 'Mobile', sessions: 531 },
+    { label: 'Tablet', sessions: 51 },
+  ],
+}
+
 export function parseInsights(blocks: MetricBlock[]): ClarityResult {
   const by = (name: string) => blocks.find((b) => b.metricName === name)?.information ?? []
   const traffic = by('Traffic')
@@ -126,6 +158,10 @@ export function parseInsights(blocks: MetricBlock[]): ClarityResult {
 }
 
 export async function getClarityStats(): Promise<ClarityResult> {
+  // Local preview with sample numbers (CLARITY_DEMO=true in .env); never in production.
+  if (process.env.CLARITY_DEMO === 'true' && process.env.NODE_ENV !== 'production') {
+    return { status: 'ok', stats: DEMO_STATS }
+  }
   const token = process.env.CLARITY_API_TOKEN
   if (!token) return { status: 'unconfigured' }
   try {
