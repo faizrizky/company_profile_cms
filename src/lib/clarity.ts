@@ -2,39 +2,52 @@ import 'server-only'
 
 /**
  * Microsoft Clarity Data Export API (project-live-insights).
- * Limits: 10 requests per project per day, at most the last 3 days of data.
- * One request carries every metric split by URL × Country × Device; the rest
- * (per page, per country, per device) is summed here, so a refresh costs a
- * single request and the page can be cached for hours.
+ * Limits: 10 requests per project per day, up to 3 dimensions per request, at
+ * most the last 3 days of data.
+ *
+ * A refresh makes three requests — URL × Country × Device, Browser × OS ×
+ * Channel, Source × Medium × Campaign — and every breakdown is summed from
+ * those. Cached 8 hours: 3 refreshes × 3 requests = 9 a day, under the limit.
  */
 const ENDPOINT = 'https://www.clarity.ms/export-data/api/v1/project-live-insights'
-/** 8 refreshes a day at most, safely under the 10-request limit. */
-const REVALIDATE_SECONDS = 3 * 60 * 60
+const REVALIDATE_SECONDS = 8 * 60 * 60
 
 type Row = Record<string, string | number | null | undefined>
 type MetricBlock = { metricName: string; information?: Row[] }
 
 export type Ranked = { label: string; sessions: number }
+export type Insight = { percent: number; sessions: number }
+export type PageStat = {
+  path: string
+  sessions: number
+  scrollDepth: number | null
+  activeSeconds: number | null
+}
 
 export type ClarityStats = {
   sessions: number
   botSessions: number
-  visitors: number
+  /** Unique users; Clarity counts them per split, so this is the least-split request's sum. */
+  users: number
   pagesPerSession: number | null
-  /** Average active time per session, in seconds. */
-  activeSeconds: number | null
-  /** Average scroll depth, 0–100. */
   scrollDepth: number | null
-  /** Sessions with at least one rage / dead click (percent of all sessions). */
-  rageClickPercent: number | null
-  deadClickPercent: number | null
-  topPages: Ranked[]
-  topCountries: Ranked[]
-  topDevices: Ranked[]
+  activeSeconds: number | null
+  totalSeconds: number | null
+  insights: {
+    rageClicks: Insight | null
+    deadClicks: Insight | null
+    excessiveScroll: Insight | null
+    quickBacks: Insight | null
+    scriptErrors: Insight | null
+    errorClicks: Insight | null
+  }
+  technology: { browsers: Ranked[]; devices: Ranked[]; os: Ranked[]; countries: Ranked[] }
+  acquisition: { channels: Ranked[]; sources: Ranked[]; mediums: Ranked[]; campaigns: Ranked[] }
+  pages: PageStat[]
 }
 
 export type ClarityResult =
-  | { status: 'ok'; stats: ClarityStats }
+  | { status: 'ok'; stats: ClarityStats; demo?: boolean }
   | { status: 'empty' }
   | { status: 'unconfigured' }
   | { status: 'error'; code: number | 'network'; message: string }
@@ -44,143 +57,218 @@ const num = (v: unknown) => {
   return Number.isFinite(n) ? n : 0
 }
 
-const METRIC_KEYS = new Set([
-  'totalsessioncount',
-  'totalbotsessioncount',
-  'distinctusercount',
-  'pagespersessionpercentage',
-  'totaltime',
-  'activetime',
-  'averagescrolldepth',
-  'sessionscount',
-  'sessionswithmetricpercentage',
-  'sessionswithoutmetricpercentage',
-  'pagesviews',
-  'subtotal',
-])
+/** Keys that are measurements; every other key of a row is a dimension. */
+const METRIC_KEYS = new Set(
+  [
+    'totalSessionCount',
+    'totalBotSessionCount',
+    'distinctUserCount',
+    'pagesPerSessionPercentage',
+    'totalTime',
+    'activeTime',
+    'averageScrollDepth',
+    'sessionsCount',
+    'sessionsWithMetricPercentage',
+    'sessionsWithoutMetricPercentage',
+    'pagesViews',
+    'subTotal',
+  ].map((k) => k.toLowerCase()),
+)
 
-/** The value of the dimension whose name matches `pattern` (Clarity names the keys itself). */
-function dimension(row: Row, pattern: RegExp): string {
+const DIMENSIONS = {
+  url: /^url$/i,
+  country: /country/i,
+  device: /device/i,
+  browser: /browser/i,
+  os: /^os$|operating/i,
+  channel: /channel/i,
+  source: /source/i,
+  medium: /medium/i,
+  campaign: /campaign/i,
+}
+type Dimension = keyof typeof DIMENSIONS
+
+function dim(row: Row, name: Dimension): string {
   for (const [key, value] of Object.entries(row)) {
-    if (!METRIC_KEYS.has(key.toLowerCase()) && pattern.test(key) && value) return String(value)
+    if (!METRIC_KEYS.has(key.toLowerCase()) && DIMENSIONS[name].test(key) && value) return String(value)
   }
   return ''
 }
 
-function rank(rows: Row[], pattern: RegExp, clean: (value: string) => string = (v) => v): Ranked[] {
-  const totals = new Map<string, number>()
-  for (const row of rows) {
-    const label = clean(dimension(row, pattern)) || '—'
-    totals.set(label, (totals.get(label) ?? 0) + num(row.totalSessionCount))
-  }
-  return [...totals.entries()]
-    .map(([label, sessions]) => ({ label, sessions }))
-    .sort((a, b) => b.sessions - a.sessions)
-}
+/** Identifies a split (the combination of its dimension values) to join metrics with traffic. */
+const splitKey = (row: Row) =>
+  Object.entries(row)
+    .filter(([key]) => !METRIC_KEYS.has(key.toLowerCase()))
+    .map(([key, value]) => `${key.toLowerCase()}=${value}`)
+    .sort()
+    .join('|')
 
 /** "https://site.com/en/about?x=1" → "/en/about". */
-const pathOf = (url: string) => {
+function pathOf(url: string) {
   try {
     const { pathname } = new URL(url)
     return pathname.length > 1 ? pathname.replace(/\/$/, '') : '/'
   } catch {
-    return url
+    return url || '—'
   }
 }
 
-const DEMO_STATS: ClarityStats = {
-  sessions: 1284,
-  botSessions: 96,
-  visitors: 972,
-  pagesPerSession: 3.4,
-  activeSeconds: 138,
-  scrollDepth: 64,
-  rageClickPercent: 1.8,
-  deadClickPercent: 6.4,
-  topPages: [
-    { label: '/en', sessions: 612 },
-    { label: '/en/solution', sessions: 301 },
-    { label: '/en/solution/virtual-training-suite', sessions: 188 },
-    { label: '/en/about', sessions: 96 },
-    { label: '/en/contact', sessions: 54 },
-    { label: '/id', sessions: 33 },
-  ],
-  topCountries: [
-    { label: 'Indonesia', sessions: 904 },
-    { label: 'Singapore', sessions: 142 },
-    { label: 'Malaysia', sessions: 87 },
-    { label: 'United States', sessions: 64 },
-    { label: 'Turkey', sessions: 41 },
-    { label: 'Czechia', sessions: 22 },
-  ],
-  topDevices: [
-    { label: 'PC', sessions: 702 },
-    { label: 'Mobile', sessions: 531 },
-    { label: 'Tablet', sessions: 51 },
-  ],
+type Parsed = {
+  blocks: (name: string) => Row[]
+  traffic: Row[]
+  sessions: number
+  sessionsOf: (row: Row) => number
 }
 
-export function parseInsights(blocks: MetricBlock[]): ClarityResult {
+function parse(blocks: MetricBlock[]): Parsed {
   const by = (name: string) => blocks.find((b) => b.metricName === name)?.information ?? []
   const traffic = by('Traffic')
-  const sessions = traffic.reduce((sum, r) => sum + num(r.totalSessionCount), 0)
-  if (sessions === 0) return { status: 'empty' }
-
-  const weighted = (rows: Row[], key: string) =>
-    rows.reduce((sum, r) => sum + num(r[key]) * num(r.totalSessionCount), 0) / sessions
-
-  const engagement = by('EngagementTime')
-  const activeTime = engagement.reduce((sum, r) => sum + num(r.activeTime), 0)
-  const scroll = by('ScrollDepth')
-  const share = (name: string) => {
-    const rows = by(name)
-    if (!rows.length) return null
-    return rows.reduce((sum, r) => sum + num(r.sessionsWithMetricPercentage), 0) / rows.length
+  const bySplit = new Map(traffic.map((r) => [splitKey(r), num(r.totalSessionCount)]))
+  return {
+    blocks: by,
+    traffic,
+    sessions: traffic.reduce((s, r) => s + num(r.totalSessionCount), 0),
+    sessionsOf: (row) => bySplit.get(splitKey(row)) ?? 0,
   }
+}
+
+function rank(rows: Row[], name: Dimension, clean: (v: string) => string = (v) => v, limit = 8): Ranked[] {
+  const totals = new Map<string, number>()
+  for (const row of rows) {
+    const label = clean(dim(row, name)) || '—'
+    totals.set(label, (totals.get(label) ?? 0) + num(row.totalSessionCount))
+  }
+  return [...totals.entries()]
+    .map(([label, sessions]) => ({ label, sessions }))
+    .filter((r) => r.sessions > 0)
+    .sort((a, b) => b.sessions - a.sessions)
+    .slice(0, limit)
+}
+
+/** Sessions-weighted mean of `key` over metric rows (joined to traffic by split). */
+function weightedMean(p: Parsed, rows: Row[], key: string, filter?: (row: Row) => boolean): number | null {
+  let total = 0
+  let weight = 0
+  for (const row of rows) {
+    if (filter && !filter(row)) continue
+    const w = p.sessionsOf(row) || 1
+    total += num(row[key]) * w
+    weight += w
+  }
+  return weight ? total / weight : null
+}
+
+function insight(p: Parsed, name: string): Insight | null {
+  const rows = p.blocks(name)
+  if (!rows.length) return null
+  let sessions = 0
+  let withMetric = 0
+  for (const row of rows) {
+    const count = num(row.sessionsCount) || p.sessionsOf(row)
+    sessions += count
+    withMetric += (count * num(row.sessionsWithMetricPercentage)) / 100
+  }
+  return sessions ? { percent: (withMetric / sessions) * 100, sessions: Math.round(withMetric) } : null
+}
+
+const users = (p: Parsed) => p.traffic.reduce((s, r) => s + num(r.distinctUserCount), 0)
+
+/** Builds the dashboard from the three requests (the 2nd and 3rd may be missing). */
+export function buildStats(main: MetricBlock[], tech?: MetricBlock[], acq?: MetricBlock[]): ClarityResult {
+  const p = parse(main)
+  if (p.sessions === 0) return { status: 'empty' }
+  const t = tech ? parse(tech) : null
+  const a = acq ? parse(acq) : null
+
+  const engagement = p.blocks('EngagementTime')
+  const scroll = p.blocks('ScrollDepth')
+  const pageRows = new Map<string, Row[]>()
+  for (const row of p.traffic) {
+    const path = pathOf(dim(row, 'url'))
+    pageRows.set(path, [...(pageRows.get(path) ?? []), row])
+  }
+  const onPage = (path: string) => (row: Row) => pathOf(dim(row, 'url')) === path
+
+  const pages: PageStat[] = [...pageRows.entries()]
+    .map(([path, rows]) => ({
+      path,
+      sessions: rows.reduce((s, r) => s + num(r.totalSessionCount), 0),
+      scrollDepth: weightedMean(p, scroll, 'averageScrollDepth', onPage(path)),
+      activeSeconds: weightedMean(p, engagement, 'activeTime', onPage(path)),
+    }))
+    .sort((x, y) => y.sessions - x.sessions)
+    .slice(0, 10)
 
   return {
     status: 'ok',
     stats: {
-      sessions,
-      botSessions: traffic.reduce((sum, r) => sum + num(r.totalBotSessionCount), 0),
-      // Summed over the splits: a visitor seen on two pages / countries counts twice, so this is an upper bound.
-      visitors: traffic.reduce((sum, r) => sum + num(r.distinctUserCount), 0),
-      pagesPerSession: weighted(traffic, 'pagesPerSessionPercentage') || null,
-      activeSeconds: engagement.length ? activeTime / sessions : null,
-      scrollDepth: scroll.length ? scroll.reduce((s, r) => s + num(r.averageScrollDepth), 0) / scroll.length : null,
-      rageClickPercent: share('RageClickCount'),
-      deadClickPercent: share('DeadClickCount'),
-      topPages: rank(traffic, /^url$/i, pathOf).slice(0, 8),
-      topCountries: rank(traffic, /country/i).slice(0, 8),
-      topDevices: rank(traffic, /device/i).slice(0, 5),
+      sessions: p.sessions,
+      botSessions: p.traffic.reduce((s, r) => s + num(r.totalBotSessionCount), 0),
+      users: Math.min(...[p, t, a].filter((x): x is Parsed => Boolean(x?.sessions)).map(users)),
+      pagesPerSession: weightedMean(p, p.traffic, 'pagesPerSessionPercentage'),
+      scrollDepth: weightedMean(p, scroll, 'averageScrollDepth'),
+      activeSeconds: weightedMean(p, engagement, 'activeTime'),
+      totalSeconds: weightedMean(p, engagement, 'totalTime'),
+      insights: {
+        rageClicks: insight(p, 'RageClickCount'),
+        deadClicks: insight(p, 'DeadClickCount'),
+        excessiveScroll: insight(p, 'ExcessiveScroll'),
+        quickBacks: insight(p, 'QuickbackClick'),
+        scriptErrors: insight(p, 'ScriptErrorCount'),
+        errorClicks: insight(p, 'ErrorClickCount'),
+      },
+      technology: {
+        browsers: t ? rank(t.traffic, 'browser') : [],
+        devices: rank(p.traffic, 'device'),
+        os: t ? rank(t.traffic, 'os') : [],
+        countries: rank(p.traffic, 'country'),
+      },
+      acquisition: {
+        channels: t ? rank(t.traffic, 'channel') : [],
+        sources: a ? rank(a.traffic, 'source') : [],
+        mediums: a ? rank(a.traffic, 'medium') : [],
+        campaigns: a ? rank(a.traffic, 'campaign') : [],
+      },
+      pages,
     },
   }
+}
+
+async function request(token: string, dims: string[]): Promise<MetricBlock[] | { error: number }> {
+  const query = new URLSearchParams({ numOfDays: '3' })
+  dims.forEach((d, i) => query.set(`dimension${i + 1}`, d))
+  const res = await fetch(`${ENDPOINT}?${query}`, {
+    headers: { Authorization: `Bearer ${token}` },
+    // Cached by Next (shared across requests / instances), so the daily limit isn't burned.
+    next: { revalidate: REVALIDATE_SECONDS },
+  })
+  if (!res.ok) return { error: res.status }
+  return (await res.json()) as MetricBlock[]
 }
 
 export async function getClarityStats(): Promise<ClarityResult> {
   // Local preview with sample numbers (CLARITY_DEMO=true in .env); never in production.
   if (process.env.CLARITY_DEMO === 'true' && process.env.NODE_ENV !== 'production') {
-    return { status: 'ok', stats: DEMO_STATS }
+    const { demoBlocks } = await import('./clarityDemo')
+    const result = buildStats(...demoBlocks())
+    return result.status === 'ok' ? { ...result, demo: true } : result
   }
   const token = process.env.CLARITY_API_TOKEN
   if (!token) return { status: 'unconfigured' }
   try {
-    const res = await fetch(
-      `${ENDPOINT}?numOfDays=3&dimension1=URL&dimension2=Country&dimension3=Device`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-        // Cached by Next (shared across requests / instances), so the daily request limit isn't burned.
-        next: { revalidate: REVALIDATE_SECONDS },
-      },
-    )
-    if (!res.ok) {
+    const [main, tech, acq] = await Promise.all([
+      request(token, ['URL', 'Country', 'Device']),
+      request(token, ['Browser', 'OS', 'Channel']),
+      request(token, ['Source', 'Medium', 'Campaign']),
+    ])
+    if ('error' in main) {
       return {
         status: 'error',
-        code: res.status,
-        message: res.status === 429 ? 'Daily request limit reached' : `Clarity answered ${res.status}`,
+        code: main.error,
+        message: main.error === 429 ? 'Daily request limit reached' : `Clarity answered ${main.error}`,
       }
     }
-    return parseInsights((await res.json()) as MetricBlock[])
+    return buildStats(main, 'error' in tech ? undefined : tech, 'error' in acq ? undefined : acq)
   } catch (error) {
     return { status: 'error', code: 'network', message: (error as Error).message }
   }

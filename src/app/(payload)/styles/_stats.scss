@@ -95,32 +95,6 @@
   font-size: 12px;
 }
 
-.falah-stat-panels {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 14px;
-}
-
-.falah-stat-panel {
-  padding: 20px 22px 22px;
-
-  h2 {
-    margin: 0 0 14px;
-    color: var(--falah-ink);
-    font-size: 16px;
-    font-weight: 600;
-  }
-
-  ol {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-}
-
 .falah-stat-bar__head {
   display: flex;
   justify-content: space-between;
@@ -179,4 +153,389 @@
   margin: 0;
   color: var(--falah-muted);
   font-size: 12px;
+}
+
+/* ── Detailed layout (Clarity-like) ───────────────────────────────────── */
+
+.falah-stats__demo {
+  margin-left: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgb(245 158 11 / 0.15);
+  color: #b45309;
+  font-size: 12px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.falah-stat-cards--kpi {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.falah-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.falah-stat-grid--wide {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+}
+
+@media (max-width: 1200px) {
+  .falah-stat-grid,
+  .falah-stat-grid--wide {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.falah-stat-panel__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.falah-stat-panel__empty {
+  margin: 24px 0;
+  color: var(--falah-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* Tabs: small pills, the active one blue. */
+.falah-stat-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgb(31 122 224 / 0.08);
+}
+
+.falah-stat-tabs__tab {
+  padding: 4px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--falah-muted);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+
+  &:hover {
+    color: var(--falah-ink);
+  }
+
+  &[aria-selected='true'] {
+    background: #fff;
+    color: var(--falah-accent);
+    box-shadow: 0 2px 8px -4px rgb(30 90 160 / 0.5);
+  }
+}
+
+/* Donut + legend. */
+.falah-stat-donut {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.falah-donut {
+  width: 150px;
+  height: 150px;
+  transform: rotate(-90deg);
+}
+
+.falah-donut__track {
+  fill: none;
+  stroke: rgb(31 122 224 / 0.08);
+  stroke-width: 18;
+}
+
+.falah-donut__slice {
+  fill: none;
+  stroke-width: 18;
+  stroke-linecap: butt;
+  transition: stroke-dasharray 0.5s ease;
+}
+
+.falah-stat-legend,
+.falah-stat-bars,
+.falah-insights {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.falah-stat-legend {
+  gap: 10px;
+
+  li {
+    display: grid;
+    grid-template-columns: 10px minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+  }
+}
+
+.falah-stat-legend__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.falah-stat-legend__label {
+  overflow: hidden;
+  color: var(--falah-ink);
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.falah-stat-legend__pct {
+  color: var(--falah-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.falah-stat-legend__value {
+  min-width: 96px;
+  color: var(--falah-muted);
+  font-size: 12px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.falah-stat-bars {
+  gap: 14px;
+}
+
+/* Users overview. */
+.falah-users {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.falah-users__big {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-base-150);
+  border-radius: var(--style-radius-m);
+  background: rgb(255 255 255 / 0.7);
+
+  strong {
+    display: block;
+    color: var(--falah-ink);
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  span {
+    color: var(--falah-muted);
+    font-size: 13px;
+  }
+}
+
+.falah-users__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgb(31 122 224 / 0.12);
+
+  &::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background: var(--falah-accent);
+    -webkit-mask: var(--icon) center / contain no-repeat;
+    mask: var(--icon) center / contain no-repeat;
+  }
+
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='5'/%3E%3Cpath d='M20 21a8 8 0 0 0-16 0'/%3E%3C/svg%3E");
+}
+
+.falah-users__icon--repeat {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m17 2 4 4-4 4'/%3E%3Cpath d='M3 11v-1a4 4 0 0 1 4-4h14'/%3E%3Cpath d='m7 22-4-4 4-4'/%3E%3Cpath d='M21 13v1a4 4 0 0 1-4 4H3'/%3E%3C/svg%3E");
+}
+
+.falah-users__split {
+  margin-top: 18px;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: grid;
+    grid-template-columns: 10px minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 10px;
+    color: var(--falah-ink);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.falah-users__split-title {
+  color: var(--falah-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.falah-users__bar {
+  display: flex;
+  height: 12px;
+  margin-top: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  gap: 2px;
+}
+
+.falah-users__split-value {
+  min-width: 48px;
+  color: var(--falah-muted);
+  text-align: right;
+}
+
+/* Insights: label, big percentage, sessions. */
+.falah-insights {
+  gap: 8px;
+}
+
+.falah-insight {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'label value'
+    'label hint';
+  align-items: center;
+  column-gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-base-150);
+  border-radius: var(--style-radius-m);
+  background: rgb(255 255 255 / 0.7);
+}
+
+.falah-insight__label {
+  grid-area: label;
+  color: var(--falah-ink);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.falah-insight__value {
+  grid-area: value;
+  color: var(--falah-accent-hover);
+  font-size: 20px;
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.falah-insight__hint {
+  grid-area: hint;
+  color: var(--falah-muted);
+  font-size: 11px;
+  text-align: right;
+}
+
+/* Top pages table. */
+.falah-pages {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+
+  th {
+    padding: 0 10px 10px;
+    border-bottom: 1px solid var(--color-base-150);
+    color: var(--falah-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 11px 10px;
+    border-bottom: 1px solid rgb(31 122 224 / 0.08);
+    color: var(--falah-ink);
+    white-space: nowrap;
+  }
+
+  tr:last-child td {
+    border-bottom: 0;
+  }
+
+  tbody tr:hover td {
+    background: rgb(31 122 224 / 0.05);
+  }
+}
+
+.falah-pages__path {
+  max-width: 320px;
+  overflow: hidden;
+  font-weight: 500;
+  text-overflow: ellipsis;
+}
+
+.falah-pages__share {
+  display: inline-block;
+  width: 60px;
+  height: 6px;
+  margin-right: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(31 122 224 / 0.12);
+  vertical-align: middle;
+
+  > span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, #38bdf8, var(--falah-accent));
+  }
+}
+
+.falah-stat-panel {
+  min-width: 0;
+  padding: 20px 22px 22px;
+
+  h2 {
+    color: var(--falah-ink);
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.falah-stat-panel--table {
+  overflow-x: auto;
 }
