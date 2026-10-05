@@ -1,8 +1,9 @@
 import { SetStepNav } from '@payloadcms/ui'
 import type { AdminViewServerProps } from 'payload'
 
-import { getClarityStats, type ClarityStats, type Insight } from '@/lib/clarity'
+import { getClarityStats, RECHECK_COOLDOWN_MS, type ClarityStats, type Insight } from '@/lib/clarity'
 
+import { StatsRecheck } from './StatsRecheck'
 import { StatsTabs } from './StatsTabs'
 
 const CLARITY_URL = `https://clarity.microsoft.com/projects/view/${process.env.CLARITY_PROJECT_ID || 'v03jaczk0n'}/dashboard`
@@ -56,6 +57,11 @@ const TEXT = {
     unconfigured: 'Clarity is not connected.',
     unconfiguredHelp: 'Set CLARITY_API_TOKEN (Clarity → Settings → Data Export) in the CMS environment.',
     error: 'Could not load the statistics.',
+    recheck: 'Check again',
+    rechecking: 'Checking…',
+    checked: (m: number) => (m < 1 ? 'Checked just now' : `Checked ${m} min ago`),
+    checkedHours: (h: number) => `Checked ${h} h ago`,
+    wait: (m: number) => `available again in ${m} min`,
     s: 's',
     min: 'min',
   },
@@ -107,6 +113,11 @@ const TEXT = {
     unconfigured: 'Clarity belum terhubung.',
     unconfiguredHelp: 'Isi CLARITY_API_TOKEN (Clarity → Settings → Data Export) di environment CMS.',
     error: 'Statistik tidak bisa dimuat.',
+    recheck: 'Cek lagi',
+    rechecking: 'Mengecek…',
+    checked: (m: number) => (m < 1 ? 'Dicek barusan' : `Dicek ${m} mnt lalu`),
+    checkedHours: (h: number) => `Dicek ${h} jam lalu`,
+    wait: (m: number) => `bisa dicek lagi dalam ${m} mnt`,
     s: 'dtk',
     min: 'mnt',
   },
@@ -300,6 +311,22 @@ function Overview({ stats, t, locale }: { stats: ClarityStats; t: T; locale: str
   )
 }
 
+function Recheck({ fetchedAt, t }: { fetchedAt: number; t: T }) {
+  // Server-rendered per request, so reading the clock here is fine.
+  // eslint-disable-next-line react-hooks/purity
+  const age = Date.now() - fetchedAt
+  const minutes = Math.floor(age / 60_000)
+  const left = Math.ceil((RECHECK_COOLDOWN_MS - age) / 60_000)
+  return (
+    <StatsRecheck
+      checked={minutes >= 120 ? t.checkedHours(Math.floor(minutes / 60)) : t.checked(minutes)}
+      label={t.recheck}
+      busy={t.rechecking}
+      wait={left > 0 ? t.wait(left) : null}
+    />
+  )
+}
+
 /** The admin home: website statistics from Microsoft Clarity (replaces Payload's default dashboard). */
 export async function StatsDashboard({ i18n }: AdminViewServerProps) {
   const lang = i18n.language === 'id' ? 'id' : 'en'
@@ -338,6 +365,7 @@ export async function StatsDashboard({ i18n }: AdminViewServerProps) {
                 ? t.unconfiguredHelp
                 : result.message}
           </p>
+          {result.status === 'empty' && result.fetchedAt ? <Recheck fetchedAt={result.fetchedAt} t={t} /> : null}
         </div>
       )}
       <p className="falah-stats__note">{t.note}</p>

@@ -1,5 +1,7 @@
 import 'server-only'
 
+import { unstable_cache } from 'next/cache'
+
 /**
  * Microsoft Clarity Data Export API (project-live-insights).
  * Limits: 10 requests per project per day, up to 3 dimensions per request, at
@@ -8,9 +10,13 @@ import 'server-only'
  * A refresh makes three requests — URL × Country × Device, Browser × OS ×
  * Channel, Source × Medium × Campaign — and every breakdown is summed from
  * those. Cached 8 hours: 3 refreshes × 3 requests = 9 a day, under the limit.
+ * While there are no visits yet a refresh is a single request, and editors
+ * may re-check by hand (see actions/refreshClarity.ts), at most hourly.
  */
 const ENDPOINT = 'https://www.clarity.ms/export-data/api/v1/project-live-insights'
 const REVALIDATE_SECONDS = 8 * 60 * 60
+export const CLARITY_TAG = 'clarity'
+export const RECHECK_COOLDOWN_MS = 60 * 60 * 1000
 
 type Row = Record<string, string | number | null | undefined>
 type MetricBlock = { metricName: string; information?: Row[] }
@@ -47,8 +53,8 @@ export type ClarityStats = {
 }
 
 export type ClarityResult =
-  | { status: 'ok'; stats: ClarityStats; demo?: boolean }
-  | { status: 'empty' }
+  | { status: 'ok'; stats: ClarityStats; demo?: boolean; fetchedAt?: number }
+  | { status: 'empty'; fetchedAt?: number }
   | { status: 'unconfigured' }
   | { status: 'error'; code: number | 'network'; message: string }
 
@@ -239,12 +245,46 @@ async function request(token: string, dims: string[]): Promise<MetricBlock[] | {
   dims.forEach((d, i) => query.set(`dimension${i + 1}`, d))
   const res = await fetch(`${ENDPOINT}?${query}`, {
     headers: { Authorization: `Bearer ${token}` },
-    // Cached by Next (shared across requests / instances), so the daily limit isn't burned.
-    next: { revalidate: REVALIDATE_SECONDS },
+    // Cached as a whole below, together with the time it was fetched.
+    cache: 'no-store',
   })
   if (!res.ok) return { error: res.status }
   return (await res.json()) as MetricBlock[]
 }
+
+class ClarityError extends Error {
+  constructor(readonly code: number) {
+    super(code === 429 ? 'Daily request limit reached' : `Clarity answered ${code}`)
+  }
+}
+
+/**
+ * The three responses, cached by Next (shared across requests / instances) so
+ * the daily limit isn't burned. A failure throws, so it is never cached.
+ */
+const load = unstable_cache(
+  async () => {
+    // Read here, not passed in: arguments become part of the cache key.
+    const token = process.env.CLARITY_API_TOKEN!
+    const main = await request(token, ['URL', 'Country', 'Device'])
+    if ('error' in main) throw new ClarityError(main.error)
+    const fetchedAt = Date.now()
+    // No visits yet: the other two would be empty as well.
+    if (!parse(main).sessions) return { main, fetchedAt }
+    const [tech, acq] = await Promise.all([
+      request(token, ['Browser', 'OS', 'Channel']),
+      request(token, ['Source', 'Medium', 'Campaign']),
+    ])
+    return {
+      main,
+      tech: 'error' in tech ? undefined : tech,
+      acq: 'error' in acq ? undefined : acq,
+      fetchedAt,
+    }
+  },
+  ['clarity-stats-v2'],
+  { revalidate: REVALIDATE_SECONDS, tags: [CLARITY_TAG] },
+)
 
 export async function getClarityStats(): Promise<ClarityResult> {
   // Local preview with sample numbers (CLARITY_DEMO=true in .env); never in production.
@@ -253,23 +293,13 @@ export async function getClarityStats(): Promise<ClarityResult> {
     const result = buildStats(...demoBlocks())
     return result.status === 'ok' ? { ...result, demo: true } : result
   }
-  const token = process.env.CLARITY_API_TOKEN
-  if (!token) return { status: 'unconfigured' }
+  if (!process.env.CLARITY_API_TOKEN) return { status: 'unconfigured' }
   try {
-    const [main, tech, acq] = await Promise.all([
-      request(token, ['URL', 'Country', 'Device']),
-      request(token, ['Browser', 'OS', 'Channel']),
-      request(token, ['Source', 'Medium', 'Campaign']),
-    ])
-    if ('error' in main) {
-      return {
-        status: 'error',
-        code: main.error,
-        message: main.error === 429 ? 'Daily request limit reached' : `Clarity answered ${main.error}`,
-      }
-    }
-    return buildStats(main, 'error' in tech ? undefined : tech, 'error' in acq ? undefined : acq)
+    const { main, tech, acq, fetchedAt } = await load()
+    const result = buildStats(main, tech, acq)
+    return result.status === 'ok' || result.status === 'empty' ? { ...result, fetchedAt } : result
   } catch (error) {
+    if (error instanceof ClarityError) return { status: 'error', code: error.code, message: error.message }
     return { status: 'error', code: 'network', message: (error as Error).message }
   }
 }

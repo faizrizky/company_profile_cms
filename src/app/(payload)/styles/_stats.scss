@@ -149,6 +149,29 @@
   }
 }
 
+.falah-stats__recheck-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+
+  span {
+    color: var(--falah-muted);
+    font-size: 13px;
+  }
+}
+
+.falah-stats__recheck {
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: default;
+    transform: none;
+  }
+}
+
 .falah-stats__note {
   margin: 0;
   color: var(--falah-muted);
