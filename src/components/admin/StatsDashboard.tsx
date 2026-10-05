@@ -1,3 +1,4 @@
+import { SetStepNav } from '@payloadcms/ui'
 import type { AdminViewServerProps } from 'payload'
 
 import { getClarityStats, type ClarityStats, type Insight } from '@/lib/clarity'
@@ -308,6 +309,8 @@ export async function StatsDashboard({ i18n }: AdminViewServerProps) {
 
   return (
     <div className="falah-stats">
+      {/* Without a crumb Payload renders a bare logo; this gives the themed pills. */}
+      <SetStepNav nav={[{ label: t.title }]} />
       <header className="falah-stats__head">
         <div>
           <h1>
