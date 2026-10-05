@@ -258,36 +258,38 @@
   }
 }
 
-/* The "i" badge next to a label or title: hover/focus explains the metric. */
+/* The info badge next to a label or title: hover/focus explains the metric. */
 .falah-info {
   display: inline-grid;
   flex: none;
   place-items: center;
-  width: 14px;
-  height: 14px;
-  border: 1px solid currentColor;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  opacity: 0.45;
-  color: var(--falah-muted);
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 10px;
-  font-style: italic;
-  font-weight: 700;
-  line-height: 1;
+  color: #8aa3bf;
   cursor: help;
   transition:
-    opacity 0.15s,
-    color 0.15s;
+    color 0.15s,
+    background 0.15s;
+
+  &::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    background-color: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4'/%3E%3Cpath d='M12 8h.01'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4'/%3E%3Cpath d='M12 8h.01'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
 
   &:hover,
   &:focus-visible {
-    opacity: 1;
+    background: rgb(31 122 224 / 0.1);
     color: var(--falah-accent);
   }
 
   &:focus-visible {
     outline: 2px solid rgb(31 122 224 / 0.45);
-    outline-offset: 2px;
+    outline-offset: 1px;
   }
 }
 
@@ -364,6 +366,10 @@
   span {
     display: block;
     overflow: hidden;
+    /* Room for descenders (the g of "Campaign"): line-height 1 + overflow
+       hidden would clip them. */
+    padding-block: 3px;
+    line-height: 1.2;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
