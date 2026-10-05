@@ -2,7 +2,7 @@
 
 import { Hamburger, Link, NavGroup, useNav } from '@payloadcms/ui'
 import { usePathname } from 'next/navigation'
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 
 import { NavAccount } from './NavAccount'
 
@@ -38,17 +38,18 @@ export function FalahNavClient({ groups }: { groups: NavGroupData[] }) {
   const isMobile = useIsMobile()
   const rail = !navOpen && !isMobile
 
-  const activeId = groups
-    .flatMap((g) => g.items)
-    .find(
-      (item) =>
-        pathname.startsWith(item.href) && ['/', undefined].includes(pathname[item.href.length]),
-    )?.id
-  // The tab moves the moment an item is clicked, before the page has loaded.
-  // Remembered with the page it was clicked on: once the new page is in, the path decides.
-  const [clicked, setClicked] = useState<{ id: string; from: string } | null>(null)
-  const selected = clicked && clicked.from === pathname ? clicked.id : activeId
-  const tab = useSlidingTab(navRef, selected, rail)
+  // Clicking another item slides a copy of the active tab over to it (the page
+  // loads meanwhile). Remembered with the page it started on: once the new page
+  // is in, its own active tab takes over and the sliding copy is gone.
+  // It also finishes its glide if the page arrives first.
+  const [slide, setSlide] = useState<{
+    fromId?: string
+    toId: string
+    path: string
+    done: boolean
+  } | null>(null)
+  const sliding = slide && (slide.path === pathname || !slide.done) ? slide : null
+  const tabRef = useSlidingTab(sliding)
 
   const className = [
     'nav',
@@ -56,6 +57,7 @@ export function FalahNavClient({ groups }: { groups: NavGroupData[] }) {
     rail && 'nav--rail',
     shouldAnimate && 'nav--nav-animate',
     hydrated && 'nav--nav-hydrated',
+    sliding && 'nav--sliding',
   ]
     .filter(Boolean)
     .join(' ')
@@ -64,12 +66,20 @@ export function FalahNavClient({ groups }: { groups: NavGroupData[] }) {
     <aside className={className} inert={!navOpen && isMobile ? true : undefined}>
       <div className="nav__scroll" ref={navRef}>
         <nav className="nav__wrap">
-          {/* One tab for the whole menu: it slides to the selected item. */}
-          <span ref={tab} className="nav__tab" aria-hidden />
+          {sliding ? (
+            <span
+              ref={tabRef}
+              className="nav__tab"
+              aria-hidden
+              onTransitionEnd={() => setSlide((s) => (s ? { ...s, done: true } : s))}
+            />
+          ) : null}
           {groups.map((group) => (
             <NavGroup key={group.label} isOpen={group.open} label={group.label}>
               {group.items.map((item) => {
-                const isActive = item.id === activeId
+                const isActive =
+                  pathname.startsWith(item.href) &&
+                  ['/', undefined].includes(pathname[item.href.length])
                 return (
                   <Link
                     key={item.id}
@@ -79,11 +89,14 @@ export function FalahNavClient({ groups }: { groups: NavGroupData[] }) {
                     prefetch={false}
                     data-falah-tooltip={rail ? item.label : undefined}
                     aria-current={isActive ? 'page' : undefined}
-                    data-selected={item.id === selected ? '' : undefined}
+                    data-slide-target={sliding?.toId === item.id ? '' : undefined}
                     onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                      if (!e.metaKey && !e.ctrlKey && !e.shiftKey && e.button === 0) setClicked({ id: item.id, from: pathname })
+                      if (isActive || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
+                      const from = document.querySelector<HTMLElement>('.nav__link[aria-current="page"]')
+                      setSlide({ fromId: from?.id, toId: item.id, path: pathname, done: false })
                     }}
                   >
+                    {isActive ? <div className="nav__link-indicator" /> : null}
                     <span className="nav__link-label">{item.label}</span>
                   </Link>
                 )
@@ -110,74 +123,42 @@ export function FalahNavClient({ groups }: { groups: NavGroupData[] }) {
 }
 
 /**
- * Places the menu's single tab over the selected item and keeps it there
- * (groups opening and closing, the rail, resizing). It glides between items;
- * the first placement and placements while the menu itself moves are instant.
+ * Puts the sliding tab on the item it leaves, then lets CSS glide it to the
+ * clicked one. `top` (not transform) moves it, so its fixed page-coloured
+ * background stays aligned with the page.
  */
-function useSlidingTab(
-  scrollRef: React.RefObject<HTMLDivElement | null> | undefined,
-  selected: string | undefined,
-  rail: boolean,
-) {
-  const tab = useRef<HTMLSpanElement>(null)
-  const placed = useRef(false)
-  const lastSelected = useRef<string | undefined>(undefined)
+function useSlidingTab(slide: { fromId?: string; toId: string } | null) {
+  const key = slide ? `${slide.fromId}>${slide.toId}` : null
+  const ref = useRef<HTMLSpanElement>(null)
 
-  const place = useCallback(
-    (animate: boolean) => {
-      const el = tab.current
-      const wrap = el?.parentElement
-      const link = selected ? document.getElementById(selected) : null
-      if (!el || !wrap) return
-      const box = link?.getBoundingClientRect()
-      // Inside a closed group (no height) or not found: hide the tab.
-      if (!link || !box || box.height < 4) {
-        el.style.opacity = '0'
-        return
-      }
+  useLayoutEffect(() => {
+    const tab = ref.current
+    const wrap = tab?.parentElement
+    if (!tab || !wrap || !slide) return
+    const rectOf = (id?: string) => {
+      const el = id ? document.getElementById(id) : null
+      const box = el?.getBoundingClientRect()
       const origin = wrap.getBoundingClientRect()
-      el.classList.toggle('nav__tab--instant', !animate || !placed.current)
-      el.style.opacity = '1'
-      el.style.transform = `translateY(${box.top - origin.top}px)`
-      el.style.left = `${box.left - origin.left}px`
-      el.style.width = `${box.width}px`
-      el.style.height = `${box.height}px`
-      placed.current = true
-    },
-    [selected],
-  )
-
-  // A new item selected: glide there.
-  useLayoutEffect(() => {
-    const moved = lastSelected.current !== undefined && lastSelected.current !== selected
-    lastSelected.current = selected
-    place(moved)
-  }, [place, selected])
-
-  // Rail / open menu: the items change size, follow without gliding.
-  useLayoutEffect(() => {
-    place(false)
-  }, [place, rail])
-
-  // Groups expanding / collapsing and window resizes move the items.
-  useEffect(() => {
-    const wrap = tab.current?.parentElement
-    if (!wrap) return
-    let frame = 0
-    const follow = () => {
-      cancelAnimationFrame(frame)
-      frame = requestAnimationFrame(() => place(false))
+      return box && box.height > 4
+        ? { top: box.top - origin.top, left: box.left - origin.left, width: box.width, height: box.height }
+        : null
     }
-    const observer = new ResizeObserver(follow)
-    observer.observe(wrap)
-    if (scrollRef?.current) observer.observe(scrollRef.current)
-    window.addEventListener('resize', follow)
-    return () => {
-      cancelAnimationFrame(frame)
-      observer.disconnect()
-      window.removeEventListener('resize', follow)
+    const to = rectOf(slide.toId)
+    if (!to) return
+    const from = rectOf(slide.fromId) ?? to
+    const set = (r: typeof to) => {
+      tab.style.top = `${r.top}px`
+      tab.style.left = `${r.left}px`
+      tab.style.width = `${r.width}px`
+      tab.style.height = `${r.height}px`
     }
-  }, [place, scrollRef])
+    tab.classList.add('nav__tab--still')
+    set(from)
+    void tab.offsetHeight // commit the start position before gliding
+    tab.classList.remove('nav__tab--still')
+    set(to)
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- once per slide, not per re-render
+  }, [key])
 
-  return tab
+  return ref
 }

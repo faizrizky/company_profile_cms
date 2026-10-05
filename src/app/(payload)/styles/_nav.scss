@@ -50,59 +50,98 @@
   border-radius: var(--falah-tab-radius) 0 0 var(--falah-tab-radius);
 }
 
-/* Hover tint for unselected items only; the selected one sits on the tab. */
-.nav a.nav__link:not([data-selected]):hover {
+/* Hover tint for inactive items only; the active tab keeps the page colour. */
+.nav a.nav__link:not(:has(.nav__link-indicator)):hover {
   background: rgb(255 255 255 / 0.12);
   color: #fff;
   text-decoration: none;
 }
 
-.nav a.nav__link[data-selected],
-.nav a.nav__link[data-selected]:hover {
+/* Payload marks the current item with a child indicator, not a class. */
+.nav .nav__link:has(.nav__link-indicator),
+.nav a.nav__link:has(.nav__link-indicator):hover {
   text-decoration: none;
 }
 
-/* Items sit above the tab; their text turns navy as the tab arrives. */
-.nav .nav__link {
+.nav .nav__link:has(.nav__link-indicator) {
   position: relative;
-  z-index: 1;
-  transition:
-    color 0.3s ease,
-    background-color 0.2s ease;
-}
-
-.nav .nav__link[data-selected] {
+  padding-left: 14px;
+  background: var(--falah-page-bg);
+  background-attachment: fixed;
   color: #0b2e7a;
   font-weight: 600;
 }
 
-/* The tab: one piece for the whole menu that slides to the selected item
-   (FalahNavClient positions it). It paints the page backdrop fixed to the
-   viewport, so it opens into the page with no seam, and has concave corners
-   above and below its right end. */
+.nav .nav__link:has(.nav__link-indicator)::before,
+.nav .nav__link:has(.nav__link-indicator)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  width: var(--falah-tab-radius);
+  height: var(--falah-tab-radius);
+  background: var(--falah-page-bg);
+  background-attachment: fixed;
+  pointer-events: none;
+}
+
+/* Concave corners: keep only the area outside a quarter circle. */
+.nav .nav__link:has(.nav__link-indicator)::before {
+  bottom: 100%;
+  -webkit-mask: radial-gradient(
+    circle at 0 0,
+    transparent var(--falah-tab-radius),
+    #000 calc(var(--falah-tab-radius) + 0.5px)
+  );
+  mask: radial-gradient(
+    circle at 0 0,
+    transparent var(--falah-tab-radius),
+    #000 calc(var(--falah-tab-radius) + 0.5px)
+  );
+}
+
+.nav .nav__link:has(.nav__link-indicator)::after {
+  top: 100%;
+  -webkit-mask: radial-gradient(
+    circle at 0 100%,
+    transparent var(--falah-tab-radius),
+    #000 calc(var(--falah-tab-radius) + 0.5px)
+  );
+  mask: radial-gradient(
+    circle at 0 100%,
+    transparent var(--falah-tab-radius),
+    #000 calc(var(--falah-tab-radius) + 0.5px)
+  );
+}
+
+.nav .nav__link-indicator {
+  display: none;
+}
+
+/* Sliding between items (FalahNavClient): a copy of the tab glides from the
+   item it leaves to the clicked one — it backs up a little, shoots over and
+   settles back, like the reference. The static tab is hidden meanwhile. */
 .nav__wrap {
   position: relative;
+}
+
+.nav .nav__link {
+  position: relative;
+  z-index: 1;
 }
 
 .nav__tab {
   --falah-tab-radius: 16px;
   position: absolute;
-  top: 0;
   z-index: 0;
-  opacity: 0;
   border-radius: var(--falah-tab-radius) 0 0 var(--falah-tab-radius);
   background: var(--falah-page-bg);
   background-attachment: fixed;
   pointer-events: none;
-  transition:
-    transform 0.32s cubic-bezier(0.45, 0, 0.2, 1),
-    height 0.32s cubic-bezier(0.45, 0, 0.2, 1),
-    opacity 0.2s ease;
-  will-change: transform;
+  transition: top 0.5s cubic-bezier(0.8, -0.5, 0.15, 1.5);
 }
 
-.nav__tab--instant {
-  transition: opacity 0.2s ease;
+.nav__tab--still {
+  transition: none;
 }
 
 .nav__tab::before,
@@ -116,7 +155,6 @@
   background-attachment: fixed;
 }
 
-/* Concave corners: keep only the area outside a quarter circle. */
 .nav__tab::before {
   bottom: 100%;
   -webkit-mask: radial-gradient(
@@ -145,9 +183,32 @@
   );
 }
 
+/* While it slides: the item left behind goes back to the rail look, and the
+   clicked one turns navy as the tab arrives. */
+.nav--sliding .nav__link:has(.nav__link-indicator) {
+  background: transparent;
+  color: rgb(255 255 255 / 0.82);
+  font-weight: inherit;
+  transition: color 0.2s ease;
+}
+
+.nav--sliding .nav__link:has(.nav__link-indicator)::before,
+.nav--sliding .nav__link:has(.nav__link-indicator)::after {
+  display: none;
+}
+
+.nav .nav__link[data-slide-target] {
+  color: #0b2e7a;
+  font-weight: 600;
+  transition: color 0.2s ease 0.3s;
+}
+
+.nav a.nav__link[data-slide-target]:hover {
+  background: transparent;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .nav__tab,
-  .nav .nav__link {
+  .nav__tab {
     transition: none;
   }
 }
@@ -186,7 +247,7 @@
   opacity: 0.9;
 }
 
-.nav .nav__link[data-selected] .nav__link-label::before {
+.nav .nav__link:has(.nav__link-indicator) .nav__link-label::before {
   opacity: 1;
 }
 
@@ -348,7 +409,7 @@
   padding: 12px var(--nav-padding-inline-end) 12px 0;
 }
 
-.nav.nav--rail .nav__link[data-selected] {
+.nav.nav--rail .nav__link:has(.nav__link-indicator) {
   padding-left: 0;
 }
 
