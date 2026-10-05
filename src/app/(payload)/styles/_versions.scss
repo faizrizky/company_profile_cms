@@ -1,17 +1,43 @@
-/* ── Versions: compare two versions (Compare Versions page) ───────────── */
+/* ── Versions: Compare Versions page ──────────────────────────────────────
+   One glass card (like the list tables) holding: the header, the two version
+   pickers, and the field-by-field diff. Each changed field shows its old and
+   new value as two separate tiles side by side; an empty side shows "—". */
 
 .view-version {
-  --falah-diff-line: rgb(31 122 224 / 0.16);
+  --falah-diff-line: rgb(31 122 224 / 0.14);
+  --diff-create-pill-bg: rgb(22 163 74 / 0.14);
+  --diff-create-pill-color: #166534;
+  --diff-create-pill-border: rgb(22 163 74 / 0.45);
+  --diff-create-parent-bg: transparent;
+  --diff-create-parent-color: inherit;
+  --diff-create-link-color: #166534;
+  --diff-delete-pill-bg: rgb(217 48 54 / 0.12);
+  --diff-delete-pill-color: #b42318;
+  --diff-delete-pill-border: rgb(217 48 54 / 0.4);
+  --diff-delete-parent-bg: transparent;
+  --diff-delete-parent-color: inherit;
+  --diff-delete-link-color: #b42318;
+
+  width: auto;
+  margin: 4px var(--gutter-h) var(--falah-visual-gap);
+  padding-bottom: 8px;
+  overflow: hidden;
+  border: 1px solid var(--falah-line);
+  border-radius: var(--style-radius-l);
+  background: rgb(255 255 255 / 0.6);
+  box-shadow: 0 14px 40px -20px rgb(30 90 160 / 0.4);
+  backdrop-filter: blur(10px);
 }
 
-/* Header: title, "Modified only" and locales on one soft line. */
+/* Header row: title left, "Modified only" + locales right. */
 .view-version-controls-top {
+  padding: 18px 24px;
   border-bottom: 1px solid var(--falah-diff-line);
-  padding-block: 20px;
 
   h2 {
+    margin: 0;
     color: var(--falah-ink);
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 600;
   }
 }
@@ -20,29 +46,39 @@
   color: var(--falah-muted);
 }
 
-/* "Comparing against" | "Currently viewing": two glass cards side by side. */
+/* The two version pickers, on a faint band. */
 .view-version-controls-bottom {
+  padding: 16px 24px 18px;
   border-bottom: 1px solid var(--falah-diff-line);
-  padding-block: 18px;
+  background: rgb(232 244 255 / 0.55);
 
   &::after {
-    background-color: var(--falah-diff-line);
+    display: none;
   }
 }
 
-.view-version__time-elapsed,
-.view-version-controls-bottom label {
-  color: var(--falah-muted);
+.view-version-controls-bottom__wrapper {
+  gap: 20px;
+}
+
+.view-version__version-from-labels,
+.view-version__version-to-labels {
+  color: var(--falah-ink);
   font-size: 13px;
+  font-weight: 600;
+}
+
+.view-version__time-elapsed {
+  color: var(--falah-muted);
+  font-weight: 400;
 }
 
 .view-version__version-to-version {
   min-height: 48px;
-  padding: 8px 12px;
-  border: 1px solid var(--falah-line);
+  padding: 6px 6px 6px 14px;
+  border: 1px solid var(--color-base-150);
   border-radius: var(--style-radius-m);
-  background: rgb(255 255 255 / 0.7);
-  box-shadow: 0 8px 22px -16px rgb(30 90 160 / 0.5);
+  background: #fff;
 }
 
 .view-version__version-to-version h2 {
@@ -55,13 +91,15 @@
   color: var(--falah-muted);
 }
 
-/* The diff: one frosted card, a soft centre line between old and new. */
-.view-version__diff-wrap {
-  gap: 20px;
-  padding-block: 22px 32px;
+/* ── The diff ─────────────────────────────────────────────────────────── */
 
+.view-version__diff-wrap {
+  gap: 22px;
+  padding: 22px 24px 16px;
+
+  /* Columns are separate tiles now: no centre line. */
   &::after {
-    background-color: var(--falah-diff-line);
+    display: none;
   }
 }
 
@@ -69,8 +107,10 @@
   gap: 18px;
 }
 
+/* Group headings ("General", "Sections", "Layout"…). */
 .diff-collapser__toggle-button {
   color: var(--falah-ink);
+  font-size: 14px;
   font-weight: 600;
 
   .icon {
@@ -83,21 +123,25 @@
 }
 
 .diff-collapser__field-change-count {
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
   background: rgb(31 122 224 / 0.12);
   color: var(--falah-accent-hover);
-  border-radius: 999px;
-  padding: 1px 8px;
   font-size: 12px;
   font-weight: 600;
 }
 
-/* Nested groups (Showcase › Tabs › Item 01): a blue rail instead of grey. */
 .diff-collapser__content:not(.diff-collapser__content--hide-gutter) {
-  border-left-color: rgb(31 122 224 / 0.22) !important;
+  margin-top: 10px;
+  border-left: 2px solid rgb(31 122 224 / 0.18) !important;
+  padding-left: 14px !important;
 }
 
+/* Rows of a list ("Block 01", "Item 02"). */
 .iterable-diff__label {
   color: var(--falah-muted);
+  font-weight: 500;
 }
 
 .iterable-diff-label-prefix {
@@ -105,83 +149,107 @@
 
   &::before {
     background-color: var(--falah-accent);
-    opacity: 0.45;
+    opacity: 0.5;
   }
 }
 
+/* Field label ("en Title"). */
 .field-diff-label {
+  margin-bottom: 8px;
   color: var(--falah-ink);
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.01em;
 }
 
 .field-diff__locale-label,
-.iterable-diff__locale-label {
+.iterable-diff__locale-label,
+.group-diff__locale-label {
+  margin-right: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
   background: rgb(31 122 224 / 0.1);
   color: var(--falah-accent-hover);
-  border-radius: 999px;
-  padding: 1px 8px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
+  text-transform: uppercase;
 }
 
-/* Old | new values: white glass tiles. */
+/* Old | new: two tiles side by side. */
 .field-diff-content {
-  gap: 20px;
-  padding: 12px;
-  border: 1px solid var(--falah-line);
-  border-radius: var(--style-radius-m);
-  background: rgb(255 255 255 / 0.55);
+  gap: 16px;
+  padding: 0;
+  background: none;
 }
 
-.upload-diff-container .field-diff-content,
-.relationship-diff-container .field-diff-content {
-  border: 0;
-  background: none;
-  padding: 0;
+.field-diff-content > * {
+  min-width: 0;
+  min-height: 44px;
+  padding: 11px 14px;
+  border: 1px solid var(--color-base-150);
+  border-radius: var(--style-radius-m);
+  background: rgb(255 255 255 / 0.85);
+}
+
+/* The side that gained / lost text gets a coloured edge, not a coloured block. */
+.field-diff-content > :has([data-match-type='create']) {
+  border-color: rgb(22 163 74 / 0.35);
+  box-shadow: inset 3px 0 0 rgb(22 163 74 / 0.75);
+}
+
+.field-diff-content > :has([data-match-type='delete']) {
+  border-color: rgb(217 48 54 / 0.3);
+  box-shadow: inset 3px 0 0 rgb(217 48 54 / 0.7);
+}
+
+/* Nothing on this side (e.g. the field didn't exist yet). */
+.field-diff-content > :not(:has(img, svg, [data-match-type], .upload-diff, .relationship-diff)):not(
+    :has(:is(p, span, div, li, pre):not(:empty))
+  )::before {
+  content: '—';
+  color: var(--color-base-350);
 }
 
 .html-diff {
   color: var(--falah-ink);
   font-size: 14px;
-  line-height: 1.55;
+  line-height: 1.6;
+}
+
+/* Payload paints a full coloured block behind changed paragraphs: the tile edge does that now. */
+.view-version .html-diff :is(p, h1, h2, h3, h4, h5, h6, blockquote, pre, li, div)::before {
+  background: transparent !important;
+}
+
+.html-diff [data-match-type='create']:not(img),
+.html-diff [data-match-type='delete'] {
+  padding: 1px 3px;
+  border-radius: 5px;
 }
 
 .html-diff-no-value {
-  color: var(--falah-muted);
+  color: var(--color-base-350);
 }
 
-/* Added / removed text: soft green and red pills that sit well on the blue theme. */
-.view-version {
-  --diff-create-pill-bg: rgb(22 163 74 / 0.16);
-  --diff-create-pill-color: #166534;
-  --diff-create-pill-border: rgb(22 163 74 / 0.45);
-  --diff-create-parent-bg: rgb(22 163 74 / 0.1);
-  --diff-create-parent-color: #14532d;
-  --diff-delete-pill-bg: rgb(217 48 54 / 0.14);
-  --diff-delete-pill-color: #b42318;
-  --diff-delete-pill-border: rgb(217 48 54 / 0.4);
-  --diff-delete-parent-bg: rgb(217 48 54 / 0.08);
-  --diff-delete-parent-color: #912018;
+/* Files and linked items: same cards as upload fields, inside the tile. */
+.upload-diff-container .field-diff-content > *,
+.relationship-diff-container .field-diff-content > * {
+  padding: 6px;
 }
 
-.html-diff [data-match-type='create'],
-.html-diff [data-match-type='delete'] {
-  border-radius: 6px;
-  padding-inline: 2px;
-}
-
-/* Files and linked items: the same cards as upload fields. */
 .upload-diff,
 .relationship-diff {
   min-width: 0;
   max-height: none;
-  padding: 6px;
-  border: 1px solid var(--color-base-150);
-  border-radius: var(--style-radius-m);
-  background: #fff;
-  box-shadow: 0 6px 18px -14px rgb(30 90 160 / 0.55);
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.upload-diff[data-match-type],
+.relationship-diff[data-match-type] {
+  border: 0;
+  background: none;
 }
 
 .upload-diff__card {
@@ -196,19 +264,19 @@
   background: #1f2937;
 }
 
-/* A video has no still image: hide the browser's broken-image icon (see MediaNames). */
-.upload-diff__thumbnail.is-broken img {
-  display: none;
-}
-
 .upload-diff__thumbnail img {
   border-radius: 10px !important;
 }
 
+/* A video has no still image: no broken-image icon (see MediaNames). */
+.upload-diff__thumbnail.is-broken img {
+  display: none;
+}
+
 .upload-diff__info {
   min-width: 0;
-  padding: 2px 10px;
   gap: 2px;
+  padding: 2px 10px;
 
   strong {
     overflow: hidden;
@@ -220,28 +288,19 @@
   }
 }
 
+.upload-diff[data-match-type] *,
+.relationship-diff[data-match-type] * {
+  color: var(--falah-ink);
+  text-decoration-line: none;
+}
+
 .upload-diff__pill,
 .relationship-diff__pill {
-  border-radius: 999px;
-  background: rgb(31 122 224 / 0.1);
-  color: var(--falah-accent-hover);
   padding: 0 8px;
+  border-radius: 999px;
+  background: rgb(31 122 224 / 0.1) !important;
+  color: var(--falah-accent-hover) !important;
   font-size: 12px;
-}
-
-.upload-diff[data-match-type='create'] {
-  border-color: var(--diff-create-pill-border);
-  background: var(--diff-create-parent-bg);
-}
-
-.upload-diff[data-match-type='delete'] {
-  border-color: var(--diff-delete-pill-border);
-  background: var(--diff-delete-parent-bg);
-}
-
-.upload-diff[data-match-type='create'] .upload-diff__thumbnail,
-.upload-diff[data-match-type='delete'] .upload-diff__thumbnail {
-  background: #1f2937;
 }
 
 /* Restore: the split primary button, as everywhere else. */
@@ -249,13 +308,21 @@
   border-radius: 999px;
 }
 
-.restore-version__chevron {
-  background-color: var(--falah-accent-hover);
-}
-
 .restore-version__wrapper {
   border: 1px solid var(--falah-line);
   border-radius: var(--style-radius-l);
   background: rgb(255 255 255 / 0.92);
   box-shadow: 0 24px 60px -24px rgb(30 90 160 / 0.5);
+}
+
+@media (max-width: 1024px) {
+  .view-version {
+    margin-inline: 12px;
+  }
+
+  .view-version-controls-top,
+  .view-version-controls-bottom,
+  .view-version__diff-wrap {
+    padding-inline: 16px;
+  }
 }
