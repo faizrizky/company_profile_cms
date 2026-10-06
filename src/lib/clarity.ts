@@ -74,23 +74,35 @@ const num = (v: unknown) => {
   return Number.isFinite(n) ? n : 0
 }
 
-/** Keys that are measurements; every other key of a row is a dimension. */
-const METRIC_KEYS = new Set(
-  [
-    'totalSessionCount',
-    'totalBotSessionCount',
-    'distinctUserCount',
-    'pagesPerSessionPercentage',
-    'totalTime',
-    'activeTime',
-    'averageScrollDepth',
-    'sessionsCount',
-    'sessionsWithMetricPercentage',
-    'sessionsWithoutMetricPercentage',
-    'pagesViews',
-    'subTotal',
-  ].map((k) => k.toLowerCase()),
-)
+/** Measurement keys, as this file reads them; every other key of a row is a dimension. */
+const MEASURES = [
+  'totalSessionCount',
+  'totalBotSessionCount',
+  'distinctUserCount',
+  'pagesPerSessionPercentage',
+  'totalTime',
+  'activeTime',
+  'averageScrollDepth',
+  'sessionsCount',
+  'sessionsWithMetricPercentage',
+  'sessionsWithoutMetricPercentage',
+  'pagesViews',
+  'subTotal',
+]
+const METRIC_KEYS = new Set(MEASURES.map((k) => k.toLowerCase()))
+
+/**
+ * Lower-cased API key → the name used here. Clarity's own sample response
+ * spells some keys differently ("distantUserCount", "PagesPerSessionPercentage").
+ */
+const CANONICAL = new Map([
+  ...MEASURES.map((k) => [k.toLowerCase(), k] as const),
+  ['distantusercount', 'distinctUserCount'] as const,
+])
+
+/** The row with measurement keys renamed to their canonical spelling. */
+const normalize = (row: Row): Row =>
+  Object.fromEntries(Object.entries(row).map(([key, value]) => [CANONICAL.get(key.toLowerCase()) ?? key, value]))
 
 const DIMENSIONS = {
   url: /^url$/i,
@@ -138,7 +150,8 @@ type Parsed = {
 }
 
 function parse(blocks: MetricBlock[]): Parsed {
-  const by = (name: string) => blocks.find((b) => b.metricName === name)?.information ?? []
+  const by = (name: string) =>
+    (blocks.find((b) => b.metricName?.toLowerCase() === name.toLowerCase())?.information ?? []).map(normalize)
   const traffic = by('Traffic')
   const bySplit = new Map(traffic.map((r) => [splitKey(r), num(r.totalSessionCount)]))
   return {
