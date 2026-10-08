@@ -26,15 +26,18 @@ async function notifyFrontend(req: PayloadRequest, tags: CacheTag[]) {
   reportProgress(req, null, 'revalidating')
 
   try {
-    const res = await fetch(new URL('/api/revalidate', env.FRONTEND_URL), {
-      method: 'POST',
-      headers: {
-        authorization: `Bearer ${env.REVALIDATE_SECRET}`,
-        'content-type': 'application/json',
+    const res = await fetch(
+      new URL('/api/revalidate', env.FRONTEND_INTERNAL_URL ?? env.FRONTEND_URL),
+      {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${env.REVALIDATE_SECRET}`,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ tags }),
+        signal: AbortSignal.timeout(5_000),
       },
-      body: JSON.stringify({ tags }),
-      signal: AbortSignal.timeout(5_000),
-    })
+    )
     if (!res.ok) {
       req.payload.logger.warn(
         `Frontend revalidation failed (${res.status}) for tags: ${tags.join(', ')}`,

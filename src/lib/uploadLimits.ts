@@ -14,11 +14,16 @@ export const isVideoFile = (file: { name: string; type: string }) =>
  * the CMS server (see the note in payload.config.ts), so on the live site
  * nothing bigger gets through. Bigger files are added from a local CMS with
  * `npm run push:media`.
+ *
+ * A host without that cap (our own Docker server) raises it at build time with
+ * NEXT_PUBLIC_BODY_LIMIT_MB; the per-format limits above still apply.
  */
-export const HOSTED_BODY_LIMIT_BYTES = 4 * 1024 * 1024
+export const HOSTED_BODY_LIMIT_BYTES =
+  (Number(process.env.NEXT_PUBLIC_BODY_LIMIT_MB) || 4) * 1024 * 1024
 
 const isLocalHost = () =>
-  typeof window !== 'undefined' && ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)
+  typeof window !== 'undefined' &&
+  ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)
 
 /** The limit that applies to this file, here: the format's limit, or the host's if lower. */
 export const limitFor = (file: { name: string; type: string }) =>

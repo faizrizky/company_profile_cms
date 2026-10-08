@@ -62,6 +62,8 @@ const mediaHeaders = [
 ]
 
 const nextConfig: NextConfig = {
+  // Self-contained server for the Docker image (see Dockerfile); Vercel ignores it.
+  output: process.env.BUILD_STANDALONE === 'true' ? 'standalone' : undefined,
   poweredByHeader: false,
   images: {
     localPatterns: [{ pathname: '/api/media/file/**' }],

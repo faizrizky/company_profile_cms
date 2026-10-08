@@ -1,0 +1,28 @@
+# Keep secrets and local state out of the build context (and so out of the image).
+.env
+.env.*
+ADMIN_INITIAL_CREDENTIALS.txt
+.tmp
+.claude
+AGENTS.md
+CLAUDE.md
+
+# Rebuilt inside the image.
+node_modules
+.next
+*.tsbuildinfo
+coverage
+
+# Local uploads (production uses S3-compatible storage).
+media
+
+.git
+.github
+.gitignore
+.prettierignore
+.DS_Store
+npm-debug.log*
+
+# The Docker files themselves.
+Dockerfile
+.dockerignore

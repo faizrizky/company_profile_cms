@@ -24,6 +24,12 @@ const schema = z
     PAYLOAD_SECRET: z.string().min(32, 'PAYLOAD_SECRET must be at least 32 characters'),
     SERVER_URL: z.string().url('SERVER_URL must be a full URL, e.g. https://cms.example.com'),
     FRONTEND_URL: z.string().url('FRONTEND_URL must be a full URL, e.g. https://example.com'),
+    /**
+     * How this server reaches the website to refresh its cache, when that
+     * differs from the public FRONTEND_URL (Docker: http://web:3000, so the
+     * call stays on the private network). Defaults to FRONTEND_URL.
+     */
+    FRONTEND_INTERNAL_URL: optional(z.string().url()),
     REVALIDATE_SECRET: z.string().min(32, 'REVALIDATE_SECRET must be at least 32 characters'),
     CONTACT_API_KEY: z.string().min(32, 'CONTACT_API_KEY must be at least 32 characters'),
     /**
