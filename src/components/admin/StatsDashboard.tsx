@@ -80,6 +80,8 @@ const TEXT = {
     note: 'Clarity allows 10 requests a day: the overview refreshes every 4 hours, browsers, OS and acquisition every 12 hours — on the first visit after that. Live users, recordings, heatmaps and funnels are in Clarity.',
     updated: (at: string) => `Updated ${at}`,
     next: (at: string) => `next from ${at}`,
+    staleLimit: 'Clarity’s daily limit is reached — showing the last saved data',
+    staleError: 'Could not refresh from Clarity — showing the last saved data',
     details: (at: string) => `Browsers, OS & acquisition updated ${at}.`,
     empty: 'No visits recorded yet.',
     emptyHelp:
@@ -159,6 +161,8 @@ const TEXT = {
     note: 'Clarity membatasi 10 permintaan per hari: ringkasan diperbarui tiap 4 jam, browser, OS, dan sumber kunjungan tiap 12 jam — saat halaman ini dibuka setelahnya. Live users, rekaman, heatmap, dan funnel ada di Clarity.',
     updated: (at: string) => `Diperbarui ${at}`,
     next: (at: string) => `berikutnya mulai ${at}`,
+    staleLimit: 'Batas harian Clarity tercapai — menampilkan data terakhir yang tersimpan',
+    staleError: 'Gagal memperbarui dari Clarity — menampilkan data terakhir yang tersimpan',
     details: (at: string) => `Browser, OS & sumber kunjungan diperbarui ${at}.`,
     empty: 'Belum ada kunjungan tercatat.',
     emptyHelp:
@@ -490,11 +494,16 @@ export async function StatsDashboard({ i18n }: AdminViewServerProps) {
           </h1>
           <p>{t.lead}</p>
           {result.status === 'ok' && result.fetchedAt ? (
-            <p className="falah-stats__updated">
+            <p className={`falah-stats__updated${result.stale ? ' is-stale' : ''}`}>
               <span className="falah-stats__updated-dot" />
               {t.updated(clock(result.fetchedAt, locale))}
               <span className="falah-stats__updated-next">
-                · {t.next(clock(result.fetchedAt + OVERVIEW_EVERY_MS, locale))}
+                ·{' '}
+                {result.stale
+                  ? result.stale.code === 429
+                    ? t.staleLimit
+                    : t.staleError
+                  : t.next(clock(result.fetchedAt + OVERVIEW_EVERY_MS, locale))}
               </span>
             </p>
           ) : null}

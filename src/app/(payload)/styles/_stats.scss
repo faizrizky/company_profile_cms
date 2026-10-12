@@ -177,6 +177,21 @@
   font-weight: 500;
 }
 
+// Clarity refused a refresh: the numbers are the last saved ones.
+.falah-stats__head p.falah-stats__updated.is-stale {
+  border-color: rgb(217 119 6 / 0.3);
+  background: rgb(255 251 235 / 0.85);
+
+  .falah-stats__updated-dot {
+    background: #f59e0b;
+    box-shadow: 0 0 0 3px rgb(245 158 11 / 0.2);
+  }
+
+  .falah-stats__updated-next {
+    color: #92400e;
+  }
+}
+
 .falah-stats__recheck-row {
   display: flex;
   flex-wrap: wrap;

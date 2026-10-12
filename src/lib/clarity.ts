@@ -1,6 +1,8 @@
 import 'server-only'
 
+import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
+import { getPayload } from 'payload'
 
 /**
  * Microsoft Clarity Data Export API (project-live-insights).
@@ -64,6 +66,8 @@ export type ClarityResult =
       /** When the overview / the details were fetched from Clarity. */
       fetchedAt?: number
       detailsAt?: number
+      /** Clarity refused a refresh (e.g. the daily limit): these are the last saved numbers. */
+      stale?: { code: number | 'network'; message: string }
     }
   | { status: 'empty'; fetchedAt?: number }
   | { status: 'unconfigured' }
@@ -282,32 +286,63 @@ class ClarityError extends Error {
   }
 }
 
+type Overview = { main: MetricBlock[]; fetchedAt: number }
+type Details = { tech?: MetricBlock[]; acq?: MetricBlock[]; fetchedAt: number }
+
+// The last successful answers are also kept in the database (Payload's
+// key-value store): Next's cache lives in the container and is gone after a
+// restart or deploy, and once the daily limit is hit there would be nothing
+// left to show.
+const LAST_OVERVIEW = 'clarity:last-overview'
+const LAST_DETAILS = 'clarity:last-details'
+
+async function saveLast(key: string, value: Overview | Details) {
+  try {
+    await (await getPayload({ config })).kv.set(key, value)
+  } catch {
+    // Not saved: only the fallback is lost, the fresh numbers still show.
+  }
+}
+
+async function readLast<T extends Overview | Details>(key: string): Promise<T | null> {
+  try {
+    return await (await getPayload({ config })).kv.get<T>(key)
+  } catch {
+    return null
+  }
+}
+
 // Cached by Next (shared across requests / instances) so the daily limit
 // isn't burned. A failure throws, so it is never cached. The token is read
 // inside, not passed in: arguments become part of the cache key.
 const loadOverview = unstable_cache(
-  async () => {
+  async (): Promise<Overview> => {
     const main = await request(process.env.CLARITY_API_TOKEN!, ['URL', 'Country', 'Device'])
     if ('error' in main) throw new ClarityError(main.error)
-    return { main, fetchedAt: Date.now() }
+    const overview = { main, fetchedAt: Date.now() }
+    await saveLast(LAST_OVERVIEW, overview)
+    return overview
   },
   ['clarity-overview-v1'],
   { revalidate: OVERVIEW_EVERY_MS / 1000, tags: [CLARITY_TAG] },
 )
 
 const loadDetails = unstable_cache(
-  async () => {
+  async (): Promise<Details> => {
     const token = process.env.CLARITY_API_TOKEN!
     const [tech, acq] = await Promise.all([
       request(token, ['Browser', 'OS', 'Channel']),
       request(token, ['Source', 'Medium', 'Campaign']),
     ])
     if ('error' in tech && 'error' in acq) throw new ClarityError(tech.error)
-    return {
+    const details = {
       tech: 'error' in tech ? undefined : tech,
       acq: 'error' in acq ? undefined : acq,
       fetchedAt: Date.now(),
     }
+    // A half answer doesn't replace a complete one saved earlier.
+    if (details.tech && details.acq) await saveLast(LAST_DETAILS, details)
+    return details
   },
   ['clarity-details-v1'],
   { revalidate: DETAILS_EVERY_MS / 1000, tags: [CLARITY_TAG] },
@@ -324,16 +359,32 @@ export async function getClarityStats(): Promise<ClarityResult> {
       : result
   }
   if (!process.env.CLARITY_API_TOKEN) return { status: 'unconfigured' }
+
+  let overview: Overview
+  let stale: { code: number | 'network'; message: string } | undefined
   try {
-    const { main, fetchedAt } = await loadOverview()
-    // No visits yet: the details would be empty as well.
-    if (!parse(main).sessions) return { status: 'empty', fetchedAt }
-    // Without the details the overview still shows (browsers etc. stay empty).
-    const details = await loadDetails().catch(() => undefined)
-    const result = buildStats(main, details?.tech, details?.acq)
-    return result.status === 'ok' ? { ...result, fetchedAt, detailsAt: details?.fetchedAt } : result
+    overview = await loadOverview()
   } catch (error) {
-    if (error instanceof ClarityError) return { status: 'error', code: error.code, message: error.message }
-    return { status: 'error', code: 'network', message: (error as Error).message }
+    const failure =
+      error instanceof ClarityError
+        ? { code: error.code, message: error.message }
+        : { code: 'network' as const, message: (error as Error).message }
+    // Refused (daily limit, Clarity down…): show the last saved numbers instead.
+    const last = await readLast<Overview>(LAST_OVERVIEW)
+    if (!last) return { status: 'error', ...failure }
+    overview = last
+    stale = failure
   }
+
+  const { main, fetchedAt } = overview
+  // No visits yet: the details would be empty as well.
+  if (!parse(main).sessions) return { status: 'empty', fetchedAt }
+  // Without the details the overview still shows (browsers etc. stay empty).
+  const fresh = await loadDetails().catch(() => undefined)
+  const saved = fresh?.tech && fresh.acq ? null : await readLast<Details>(LAST_DETAILS)
+  const tech = fresh?.tech ?? saved?.tech
+  const acq = fresh?.acq ?? saved?.acq
+  const detailsAt = fresh?.tech && fresh.acq ? fresh.fetchedAt : (saved?.fetchedAt ?? fresh?.fetchedAt)
+  const result = buildStats(main, tech, acq)
+  return result.status === 'ok' ? { ...result, fetchedAt, detailsAt, stale } : result
 }
