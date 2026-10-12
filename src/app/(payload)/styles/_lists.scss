@@ -239,3 +239,12 @@
 .falah-selection #select-all-across-pages {
   color: var(--falah-accent);
 }
+
+/* Audit Logs can't be edited or deleted, so there is nothing to do with a
+   selection: Payload always adds the checkbox column, hide it here. */
+.collection-list--audit-logs {
+  #heading-_select,
+  .cell-_select {
+    display: none;
+  }
+}
