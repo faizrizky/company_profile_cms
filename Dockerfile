@@ -18,7 +18,9 @@ WORKDIR /app
 
 # ── dependencies ─────────────────────────────────────────────────────
 FROM base AS deps
+# `npm ci` runs the postinstall script, which needs to be there.
 COPY package.json package-lock.json .npmrc ./
+COPY scripts/patch-payload-upload.mjs ./scripts/patch-payload-upload.mjs
 RUN --mount=type=cache,target=/root/.npm npm ci
 
 # ── build ────────────────────────────────────────────────────────────
