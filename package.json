@@ -20,7 +20,8 @@
     "test": "vitest run",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "push:media": "bash scripts/push-media.sh"
+    "push:media": "bash scripts/push-media.sh",
+    "postinstall": "node scripts/patch-payload-upload.mjs"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.90.1",

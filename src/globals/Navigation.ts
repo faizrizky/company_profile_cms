@@ -43,7 +43,24 @@ export const Navigation: GlobalConfig = {
     },
     { name: 'featured', type: 'group', admin: { hidden: true }, fields: cardFields },
     { name: 'cards', type: 'array', maxRows: 3, admin: { hidden: true }, fields: cardFields },
-    { name: 'links', type: 'array', label: 'Menu lainnya', maxRows: 6, fields: linkFields() },
+    {
+      name: 'links',
+      type: 'array',
+      label: 'Menu lainnya',
+      maxRows: 6,
+      fields: [
+        ...linkFields(),
+        {
+          name: 'visible',
+          type: 'checkbox',
+          defaultValue: true,
+          label: 'Tampilkan di menu',
+          admin: {
+            description: 'Hilangkan centang untuk menyembunyikan menu ini tanpa menghapusnya.',
+          },
+        },
+      ],
+    },
     {
       name: 'linkLibrary',
       type: 'array',

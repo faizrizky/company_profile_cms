@@ -915,6 +915,10 @@ export interface SolutionCategory {
    * Turn off while the detail content is not ready (the page returns 404).
    */
   hasDetailPage?: boolean | null;
+  /**
+   * Untick to hide this category, with its products, from the "Our Solutions" menu.
+   */
+  showInMegaMenu?: boolean | null;
   hero?: {
     /**
      * Empty = the category title.
@@ -1966,6 +1970,7 @@ export interface SolutionCategoriesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   hasDetailPage?: T;
+  showInMegaMenu?: T;
   hero?:
     | T
     | {
@@ -2292,6 +2297,10 @@ export interface Navigation {
          * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
          */
         href: string;
+        /**
+         * Untick to hide this menu item without deleting it.
+         */
+        visible?: boolean | null;
         id?: string | null;
       }[]
     | null;
@@ -2425,6 +2434,7 @@ export interface NavigationSelect<T extends boolean = true> {
     | {
         label?: T;
         href?: T;
+        visible?: T;
         id?: T;
       };
   linkLibrary?:
