@@ -182,8 +182,17 @@ deploy:
   script:
     - |
       sshpass -e ssh -o StrictHostKeyChecking=no "$SSHUSER@$SSHSERVER" -p 22345 "
-        cd $BASE_DIR && $DOCKER_COMMAND &&
-        echo 'Deployment of $CI_PROJECT_NAME Service staging completed.'
+      set -e
+        cd $BASE_DIR
+        if grep -q '^CMS_TAG=' .env; then
+          sed -i 's/^CMS_TAG=.*/CMS_TAG=$CI_COMMIT_SHORT_SHA/' .env
+        else
+          echo 'CMS_TAG=$CI_COMMIT_SHORT_SHA' >> .env
+        fi
+        docker compose pull cms
+        docker compose up -d cms
+        # docker image prune -f
+        echo 'Deployment of CMS staging completed.'
       "
   rules:
     - if: '$CI_COMMIT_BRANCH == "feat/deployment"'
