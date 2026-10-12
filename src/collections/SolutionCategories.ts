@@ -38,6 +38,17 @@ export const SolutionCategories: CollectionConfig = {
       },
     },
     {
+      name: 'showInMegaMenu',
+      type: 'checkbox',
+      defaultValue: true,
+      label: 'Tampilkan di mega menu',
+      admin: {
+        position: 'sidebar',
+        description:
+          'Hilangkan centang untuk menyembunyikan kategori ini, beserta produknya, dari menu "Our Solutions".',
+      },
+    },
+    {
       type: 'tabs',
       tabs: [
         {

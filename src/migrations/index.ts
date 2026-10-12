@@ -9,6 +9,7 @@ import * as migration_20260928_100915_product_tags from './20260928_100915_produ
 import * as migration_20260929_041421_partner_hover_tooltip from './20260929_041421_partner_hover_tooltip';
 import * as migration_20260929_042847_partner_description_localized from './20260929_042847_partner_description_localized';
 import * as migration_20261002_111145_media_display_name from './20261002_111145_media_display_name';
+import * as migration_20261012_044724_show_in_mega_menu from './20261012_044724_show_in_mega_menu';
 
 export const migrations = [
   {
@@ -64,6 +65,11 @@ export const migrations = [
   {
     up: migration_20261002_111145_media_display_name.up,
     down: migration_20261002_111145_media_display_name.down,
-    name: '20261002_111145_media_display_name'
+    name: '20261002_111145_media_display_name',
+  },
+  {
+    up: migration_20261012_044724_show_in_mega_menu.up,
+    down: migration_20261012_044724_show_in_mega_menu.down,
+    name: '20261012_044724_show_in_mega_menu'
   },
 ];

@@ -915,6 +915,10 @@ export interface SolutionCategory {
    * Turn off while the detail content is not ready (the page returns 404).
    */
   hasDetailPage?: boolean | null;
+  /**
+   * Untick to hide this category, with its products, from the "Our Solutions" menu.
+   */
+  showInMegaMenu?: boolean | null;
   hero?: {
     /**
      * Empty = the category title.
@@ -1966,6 +1970,7 @@ export interface SolutionCategoriesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   hasDetailPage?: T;
+  showInMegaMenu?: T;
   hero?:
     | T
     | {
