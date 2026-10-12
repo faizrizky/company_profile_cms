@@ -2297,6 +2297,10 @@ export interface Navigation {
          * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
          */
         href: string;
+        /**
+         * Untick to hide this menu item without deleting it.
+         */
+        visible?: boolean | null;
         id?: string | null;
       }[]
     | null;
@@ -2430,6 +2434,7 @@ export interface NavigationSelect<T extends boolean = true> {
     | {
         label?: T;
         href?: T;
+        visible?: T;
         id?: T;
       };
   linkLibrary?:

@@ -158,6 +158,7 @@ export const LABELS_EN: Record<string, string> = {
   'Tampilkan di marquee Hero halaman utama': 'Show in the home page Hero marquee',
   'Aktifkan halaman detail': 'Enable detail page',
   'Tampilkan di mega menu': 'Show in the mega menu',
+  'Tampilkan di menu': 'Show in the menu',
   'Lebar 2 kolom (desktop)': '2 columns wide (desktop)',
   'Judul besar': 'Large title',
   'Menu lainnya': 'Other menu items',
@@ -253,6 +254,8 @@ export const DESCRIPTIONS_EN: Record<string, string> = {
     'Each category has a detail page at /solution/<slug>. Drag to reorder the tabs.',
   'Nonaktifkan bila konten detail belum siap (halaman akan 404).':
     'Turn off while the detail content is not ready (the page returns 404).',
+  'Hilangkan centang untuk menyembunyikan menu ini tanpa menghapusnya.':
+    'Untick to hide this menu item without deleting it.',
   'Hilangkan centang untuk menyembunyikan kategori ini, beserta produknya, dari menu "Our Solutions".':
     'Untick to hide this category, with its products, from the "Our Solutions" menu.',
   'Kosongkan = judul kategori.': 'Empty = the category title.',
