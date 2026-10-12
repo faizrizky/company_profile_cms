@@ -236,7 +236,8 @@ function TwoFactorDialog({
   }
 
   const copy = async (value: string) => {
-    await navigator.clipboard.writeText(value).catch(() => {})
+    // navigator.clipboard only exists over HTTPS (or localhost).
+    await navigator.clipboard?.writeText(value).catch(() => {})
     setCopied(value)
     window.setTimeout(() => setCopied(null), 1500)
   }
