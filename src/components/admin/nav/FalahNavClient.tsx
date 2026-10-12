@@ -1,6 +1,7 @@
 'use client'
 
-import { Hamburger, Link, NavGroup, useNav } from '@payloadcms/ui'
+import { Hamburger, NavGroup, useNav, useRouteTransition } from '@payloadcms/ui'
+import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 
@@ -36,7 +37,13 @@ export function FalahNavClient({ groups }: { groups: NavGroupData[] }) {
   const { hydrated, navOpen, navRef, setNavOpen, shouldAnimate } = useNav()
   const pathname = usePathname()
   const router = useRouter()
+  const { startRouteTransition } = useRouteTransition()
   const isMobile = useIsMobile()
+  // The nav does its own navigation (plain next/link, default prevented):
+  // Payload's Link always pushes after onClick, which raced the push made
+  // when the sliding tab lands — a quick second click could end up on the
+  // first page with the tab in the wrong place.
+  const go = (href: string) => startRouteTransition(() => router.push(href))
   const rail = !navOpen && !isMobile
 
   // Clicking another item slides a copy of the active tab over to it (the page
@@ -49,7 +56,7 @@ export function FalahNavClient({ groups }: { groups: NavGroupData[] }) {
     null,
   )
   const sliding = slide && slide.path === pathname ? slide : null
-  const tabRef = useSlidingTab(sliding, (href) => router.push(href))
+  const tabRef = useSlidingTab(sliding, go)
 
   const className = [
     'nav',
@@ -95,14 +102,26 @@ export function FalahNavClient({ groups }: { groups: NavGroupData[] }) {
                     aria-current={isActive ? 'page' : undefined}
                     data-slide-target={sliding?.toId === item.id ? '' : undefined}
                     onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                      if (isActive || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
-                      if (sliding) {
-                        e.preventDefault()
+                      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return
+                      e.preventDefault()
+                      if (sliding?.toId === item.id) return
+                      if (isActive) {
+                        // Back to the page we're on while another one loads: stay here.
+                        if (sliding) {
+                          setSlide(null)
+                          go(item.href)
+                        }
                         return
                       }
-                      const from = document.querySelector<HTMLElement>('.nav__link[aria-current="page"]')
-                      if (!from) return
-                      e.preventDefault()
+                      // Changed course mid-way: the tab glides on from where it was headed,
+                      // and only the last choice is opened.
+                      const from = sliding
+                        ? document.getElementById(sliding.toId)
+                        : document.querySelector<HTMLElement>('.nav__link[aria-current="page"]')
+                      if (!from) {
+                        go(item.href)
+                        return
+                      }
                       setSlide({ fromId: from.id, toId: item.id, href: item.href, path: pathname })
                     }}
                   >
