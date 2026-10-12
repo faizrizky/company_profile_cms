@@ -181,7 +181,7 @@ deploy:
     - echo "Starting Deployments"
   script:
     - |
-      sshpass -e ssh -o StrictHostKeyChecking=no "$SSHUSER@$SSHSERVER" "
+      sshpass -e ssh -o StrictHostKeyChecking=no "$SSHUSER@$SSHSERVER" -p 22345 "
         cd $BASE_DIR && $DOCKER_COMMAND &&
         echo 'Deployment of $CI_PROJECT_NAME Service staging completed.'
       "
