@@ -15,6 +15,9 @@ export const Media: CollectionConfig = {
   slug: 'media',
   admin: {
     group: 'Content',
+    // The readable name, not the random stored file name: breadcrumb, page title
+    // and the labels of relationship pickers.
+    useAsTitle: 'displayName',
     defaultColumns: ['filename', 'fileSizeMb', 'mimeType', 'updatedAt'],
     listSearchableFields: ['displayName', 'filename', 'alt'],
   },
