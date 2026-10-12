@@ -115,6 +115,14 @@ build:
         --local context=. \
         --local dockerfile=. \
         --opt filename=Dockerfile \
+        --opt build-arg:NODE_ENV="${NODE_ENV}" \
+        --opt build-arg:NODE_VERSION="${NODE_VERSION:-24}" \
+        --opt build-arg:FRONTEND_URL="${FRONTEND_URL:-http://localhost:3000}" \
+        --opt build-arg:S3_PUBLIC_URL="${S3_PUBLIC_URL:-}" \
+        --opt build-arg:S3_ENDPOINT="${S3_ENDPOINT:-}" \
+        --opt build-arg:S3_BUCKET="${S3_BUCKET:-}" \
+        --opt build-arg:NEXT_PUBLIC_BODY_LIMIT_MB="${NEXT_PUBLIC_BODY_LIMIT_MB:-50}" \
+        --opt build-arg:BUILD_MEMORY_MB="${BUILD_MEMORY_MB:-4096}" \
         --output type=image,name=${TAG_COMMIT},push=true,compression=zstd,compression-level=5,force-compression=true,registry.insecure=true \
         --output type=image,name=${TAG_LATEST},push=true,compression=zstd,compression-level=5,force-compression=true,registry.insecure=true
   artifacts:
@@ -174,8 +182,7 @@ deploy:
   script:
     - |
       sshpass -e ssh -o StrictHostKeyChecking=no "$SSHUSER@$SSHSERVER" "
-        cd $BASE_DIR && cd $API_DIR &&
-        $DOCKER_COMMAND &&
+        cd $BASE_DIR && $DOCKER_COMMAND &&
         echo 'Deployment of $CI_PROJECT_NAME Service staging completed.'
       "
   rules:
