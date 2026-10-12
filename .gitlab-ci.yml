@@ -64,7 +64,7 @@ stages:
   script:
     - notify
   rules:
-    - if: '$CI_COMMIT_BRANCH == "feat/deployment"'
+    - if: '$CI_COMMIT_BRANCH == "staging"'
   retry: 1
 
 # ==========================================
@@ -132,7 +132,7 @@ build:
   environment:
     name: staging
   rules:
-    - if: '$CI_COMMIT_BRANCH == "feat/deployment"'
+    - if: '$CI_COMMIT_BRANCH == "staging"'
   retry: 1
 
 notify_build_success:
@@ -195,7 +195,7 @@ deploy:
         echo 'Deployment of CMS staging completed.'
       "
   rules:
-    - if: '$CI_COMMIT_BRANCH == "feat/deployment"'
+    - if: '$CI_COMMIT_BRANCH == "staging"'
 
 notify_staging_deploy_success:
   stage: deploy
