@@ -1,6 +1,13 @@
 'use client'
 
-import { ConfirmationModal, toast, useConfig, useField, useModal } from '@payloadcms/ui'
+import {
+  ConfirmationModal,
+  toast,
+  useConfig,
+  useDocumentInfo,
+  useField,
+  useModal,
+} from '@payloadcms/ui'
 import { useRouter } from 'next/navigation'
 
 import { DEFAULT_TUTORIAL_STEPS } from '@/tutorial/steps'
@@ -12,14 +19,33 @@ import { useTutorial } from './TutorialProvider'
 const SHOW_AGAIN_MODAL = 'tutorial-show-again'
 const RESET_MODAL = 'tutorial-reset'
 
-/** Sidebar of Settings → Tutorial, under the version: run it, show it again to everyone, restore the defaults. */
+/**
+ * Sidebar of Settings → Tutorial, under the version: run it, and for admins,
+ * show it again to everyone or restore the defaults.
+ */
 export function TutorialSettingsActions() {
   const { config } = useConfig()
   const router = useRouter()
   const t = useAdminText(TUTORIAL_TEXT)
-  const { start, running } = useTutorial()
+  const { choose, running } = useTutorial()
   const { openModal } = useModal()
   const { value: version } = useField<number>({ path: 'version' })
+  const { hasSavePermission } = useDocumentInfo()
+  if (hasSavePermission === false) {
+    return (
+      <div className="falah-tutorial-actions">
+        <span className="falah-tutorial-actions__label">{t.actions}</span>
+        <button
+          type="button"
+          className="falah-tutorial-actions__primary"
+          onClick={choose}
+          disabled={running}
+        >
+          {t.run}
+        </button>
+      </div>
+    )
+  }
 
   const save = async (data: Record<string, unknown>, doneText: string) => {
     const res = await fetch(`${config.serverURL}${config.routes.api}/globals/tutorial`, {
@@ -39,7 +65,12 @@ export function TutorialSettingsActions() {
   return (
     <div className="falah-tutorial-actions">
       <span className="falah-tutorial-actions__label">{t.actions}</span>
-      <button type="button" className="falah-tutorial-actions__primary" onClick={start} disabled={running}>
+      <button
+        type="button"
+        className="falah-tutorial-actions__primary"
+        onClick={choose}
+        disabled={running}
+      >
         {t.run}
       </button>
       <button type="button" onClick={() => openModal(SHOW_AGAIN_MODAL)}>

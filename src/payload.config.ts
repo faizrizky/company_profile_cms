@@ -2,6 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { en } from '@payloadcms/translations/languages/en'
 import { id } from '@payloadcms/translations/languages/id'
@@ -25,7 +26,8 @@ import { withListEnhancements } from './fields/listEnhancements'
 import { localizeTextFields } from './fields/localize'
 import { translateCollection, translateGlobal } from './i18n/translateAdmin'
 import { MAX_UPLOAD_BYTES } from './hooks/secureUpload'
-import { env, s3Enabled } from './lib/env'
+import { env, s3Enabled, smtpEnabled } from './lib/env'
+import { DEFAULT_FROM_ADDRESS, DEFAULT_FROM_NAME } from './lib/mail'
 import { SUPABASE_ROOT_CA } from './lib/supabaseCa'
 import { saveWithProgress } from './endpoints/saveWithProgress'
 import { withGlobalProgressHooks, withProgressHooks } from './lib/saveProgress'
@@ -176,6 +178,27 @@ export default buildConfig({
     .map(withGlobalProgressHooks),
 
   endpoints: [saveWithProgress],
+
+  // The mail server for the email about each contact message (see lib/mail);
+  // without SMTP_HOST there is no adapter and nothing is sent.
+  email: smtpEnabled
+    ? nodemailerAdapter({
+        defaultFromAddress: DEFAULT_FROM_ADDRESS,
+        defaultFromName: DEFAULT_FROM_NAME,
+        transportOptions: {
+          host: env.SMTP_HOST,
+          port: env.SMTP_PORT,
+          secure: env.SMTP_SECURE ? env.SMTP_SECURE === 'true' : env.SMTP_PORT === 465,
+          ...(env.SMTP_USER ? { auth: { user: env.SMTP_USER, pass: env.SMTP_PASS } } : {}),
+          // Generous: the office mail server takes ~6 s to log in and can take
+          // half a minute or more to accept a message (it scans it first).
+          // Visitors never wait for this (see lib/mail).
+          connectionTimeout: 20_000,
+          greetingTimeout: 30_000,
+          socketTimeout: 120_000,
+        },
+      })
+    : undefined,
 
   i18n: {
     supportedLanguages: { en, id },

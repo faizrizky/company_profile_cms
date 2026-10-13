@@ -11,6 +11,8 @@ import { PasswordChecklist as PasswordChecklist_04392dd84d621fdceface601f994cac6
 import { TwoFactorStatus as TwoFactorStatus_380291c26ced0491ded072106ac7f617 } from '../../../components/admin/TwoFactorStatus'
 import { TutorialReplay as TutorialReplay_cd73f14902413f3d00ba2e5a93a2d11c } from '../../../components/admin/tutorial/TutorialReplay'
 import { MapPicker as MapPicker_d50713359d9f0b3960c18e52c90ab2a7 } from '../../../components/admin/MapPicker'
+import { EmailRecipientNote as EmailRecipientNote_5ce63293dec6ad14c604a6584153d96b } from '../../../components/admin/EmailRecipientNote'
+import { EmailTestButton as EmailTestButton_9e3ef73f70bbec08ef1e1b167a3f12fb } from '../../../components/admin/EmailTestButton'
 import { TutorialSettingsActions as TutorialSettingsActions_8ec3a9807104f7d80a5a6785b5bf0b39 } from '../../../components/admin/tutorial/TutorialSettingsActions'
 import { TutorialStepsEditor as TutorialStepsEditor_740e7e67761f84d3850a5ea1da1298d7 } from '../../../components/admin/tutorial/TutorialStepsEditor'
 import { FalahNav as FalahNav_eb31d88043f9ccfcb1413c23d153637e } from '../../../components/admin/nav/FalahNav'
@@ -48,6 +50,8 @@ export const importMap = {
   "/components/admin/TwoFactorStatus#TwoFactorStatus": TwoFactorStatus_380291c26ced0491ded072106ac7f617,
   "/components/admin/tutorial/TutorialReplay#TutorialReplay": TutorialReplay_cd73f14902413f3d00ba2e5a93a2d11c,
   "/components/admin/MapPicker#MapPicker": MapPicker_d50713359d9f0b3960c18e52c90ab2a7,
+  "/components/admin/EmailRecipientNote#EmailRecipientNote": EmailRecipientNote_5ce63293dec6ad14c604a6584153d96b,
+  "/components/admin/EmailTestButton#EmailTestButton": EmailTestButton_9e3ef73f70bbec08ef1e1b167a3f12fb,
   "/components/admin/tutorial/TutorialSettingsActions#TutorialSettingsActions": TutorialSettingsActions_8ec3a9807104f7d80a5a6785b5bf0b39,
   "/components/admin/tutorial/TutorialStepsEditor#TutorialStepsEditor": TutorialStepsEditor_740e7e67761f84d3850a5ea1da1298d7,
   "/components/admin/nav/FalahNav#FalahNav": FalahNav_eb31d88043f9ccfcb1413c23d153637e,

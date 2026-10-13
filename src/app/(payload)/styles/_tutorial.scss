@@ -197,6 +197,177 @@
   }
 }
 
+/* ── "Which tutorial?" ─────────────────────────────────────────────────── */
+
+.falah-tour-chooser {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+.falah-tour-chooser__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(8 22 44 / 0.58);
+  animation: falah-tour-chooser-fade 0.2s ease-out;
+}
+
+.falah-tour-chooser__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(420px, 100%);
+  max-height: min(640px, calc(100vh - 32px));
+  padding: 18px 20px 20px;
+  border: 1px solid rgb(255 255 255 / 0.9);
+  border-radius: 18px;
+  background: rgb(255 255 255 / 0.97);
+  box-shadow: 0 24px 60px -18px rgb(8 30 70 / 0.55);
+  color: var(--falah-ink);
+  animation: falah-tour-chooser-rise 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.falah-tour-chooser__close {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--falah-muted);
+  cursor: pointer;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  &:hover {
+    background: #eef5fd;
+    color: var(--falah-ink);
+  }
+}
+
+.falah-tour-chooser__help {
+  margin: 0 0 14px;
+  color: #36506d;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.falah-tour-chooser__all,
+.falah-tour-chooser__part {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  border-radius: 12px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.falah-tour-chooser__all {
+  justify-content: space-between;
+  height: 44px;
+  margin-bottom: 10px;
+  padding: 0 16px;
+  border: 0;
+  background: var(--falah-accent-gradient);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 8px 18px -10px rgb(31 122 224 / 0.9);
+
+  .falah-tour-chooser__count {
+    color: rgb(255 255 255 / 0.85);
+  }
+
+  &:hover {
+    filter: brightness(1.05);
+  }
+}
+
+.falah-tour-chooser__list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.falah-tour-chooser__part {
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  background: none;
+  color: var(--falah-ink);
+  font-size: 14px;
+
+  &:hover,
+  &:focus-visible {
+    border-color: #d3e2f3;
+    background: #f3f8fe;
+  }
+
+  &.is-here {
+    border-color: #bfe0fb;
+    background: #eaf5fe;
+  }
+}
+
+.falah-tour-chooser__label {
+  flex: 1;
+  font-weight: 600;
+}
+
+.falah-tour-chooser__here {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--falah-accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.falah-tour-chooser__count {
+  color: var(--falah-muted);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@keyframes falah-tour-chooser-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes falah-tour-chooser-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .falah-tour-chooser__backdrop,
+  .falah-tour-chooser__card {
+    animation: none;
+  }
+}
+
 /* ── Element picker window ─────────────────────────────────────────────── */
 
 .falah-tour-pick {
@@ -661,6 +832,17 @@ button.falah-account__item {
   &:hover {
     color: #d93036;
   }
+}
+
+// Editors: the steps can be read, not changed.
+.falah-steps__note {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border: 1px solid #d3e2f3;
+  border-radius: 12px;
+  background: #f3f8fe;
+  color: #36506d;
+  font-size: 13px;
 }
 
 .falah-steps__warn {

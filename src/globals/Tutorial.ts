@@ -1,20 +1,20 @@
 import type { GlobalConfig } from 'payload'
 
-import { hasRole, isAdmin, isAuthenticated } from '@/access'
+import { isAdmin, isAuthenticated } from '@/access'
 import { fieldCard } from '@/fields/card'
 import { auditGlobal } from '@/hooks/auditLog'
 import { normalizeSteps, stepsProblem } from '@/tutorial/normalize'
 
 /**
  * The guided tour (see src/tutorial). Every signed-in user reads it — that's
- * how the tour knows its steps — but only admins see and change it.
+ * how the tour knows its steps — and can open this page to look through them
+ * and run the tour; only admins change, add or remove steps.
  */
 export const Tutorial: GlobalConfig = {
   slug: 'tutorial',
   label: { en: 'Tutorial', id: 'Tutorial' },
   admin: {
     group: 'Settings',
-    hidden: ({ user }) => !hasRole(user, 'admin'),
     description: {
       en: 'The guided tour shown to new users, and replayed from the Account page.',
       id: 'Tutorial yang tampil untuk pengguna baru, dan bisa diulang dari halaman Akun.',
