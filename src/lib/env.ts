@@ -41,9 +41,9 @@ const schema = z
     /**
      * The admin is served over plain http (e.g. by LAN IP, no TLS yet). Browsers
      * then send no Sec-Fetch-Site header, and a same-origin GET carries no
-     * Origin, so Payload's CSRF allowlist would ignore the session cookie on
-     * every read: login succeeds, then the admin acts signed out. `true` drops
-     * the allowlist; the SameSite=Strict cookie still never leaves the site.
+     * Origin, so Payload would ignore the session cookie on every read: login
+     * succeeds, then the admin acts signed out. `true` makes the proxy mark
+     * such requests same-origin (see src/proxy.ts). Leave unset with https.
      */
     ALLOW_PLAIN_HTTP: optional(z.enum(['true', 'false'])).transform((v) => v === 'true'),
     /**
