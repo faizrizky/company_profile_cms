@@ -143,8 +143,10 @@ export default buildConfig({
 
   // Only the frontend origin may call the API from a browser, and cookie-
   // authenticated requests are only honoured from these origins (CSRF).
+  // Over plain http browsers don't send the headers that check relies on
+  // (see ALLOW_PLAIN_HTTP in lib/env); the SameSite=Strict cookie covers it.
   cors: [env.FRONTEND_URL, env.SERVER_URL],
-  csrf: [env.FRONTEND_URL, env.SERVER_URL],
+  csrf: env.ALLOW_PLAIN_HTTP ? [] : [env.FRONTEND_URL, env.SERVER_URL],
 
   // The frontend uses REST only; GraphQL would just be extra attack surface.
   graphQL: { disable: true },
