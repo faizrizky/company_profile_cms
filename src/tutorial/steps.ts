@@ -1625,6 +1625,33 @@ export const DEFAULT_TUTORIAL_STEPS: TutorialStep[] = [
       '- Label dan link akunnya',
     ),
   }),
+  step({
+    id: 'site-email',
+    roles: ADMIN,
+    route: '/globals/site-settings',
+    clickFirst: tab(4),
+    target: '#field-emailNotifications',
+    titleEn: 'Email about new messages',
+    titleId: 'Email pesan baru',
+    bodyEn: lines(
+      'Messages from the contact form also reach the team by email:',
+      '- Send an email for every new message: off = only in the Inbox',
+      '- Sent to the email of the Contact tab',
+      '- Sender: who the email comes from',
+      '- Subject: {name}, {organization}… put in what the visitor wrote',
+      '- Send a test email: checks it all (save first)',
+      'Replying answers the visitor directly.',
+    ),
+    bodyId: lines(
+      'Pesan dari form kontak juga sampai ke tim lewat email:',
+      '- Kirim email untuk setiap pesan baru: mati = hanya di Inbox',
+      '- Dikirim ke email di tab Contact',
+      '- Pengirim: email terlihat berasal dari siapa',
+      '- Subjek: {name}, {organization}… diisi dengan yang ditulis pengunjung',
+      '- Kirim email uji: memeriksa semuanya (simpan dulu)',
+      'Membalas email itu langsung menjawab pengunjung.',
+    ),
+  }),
 
   // ── System (admins) ───────────────────────────────────────────────────
   step({

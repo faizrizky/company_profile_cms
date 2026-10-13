@@ -2255,6 +2255,21 @@ export interface SiteSetting {
         id?: string | null;
       }[]
     | null;
+  emailNotifications: {
+    /**
+     * Off: messages still arrive in the Inbox, just without an email.
+     */
+    enabled?: boolean | null;
+    fromName?: string | null;
+    /**
+     * Must be an address the mail server lets the sending account use.
+     */
+    fromEmail: string;
+    /**
+     * Placeholders: {name}, {organization}, {email}, {phone}, {interest} — replaced by what the visitor wrote.
+     */
+    subject: string;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2428,6 +2443,14 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         url?: T;
         icon?: T;
         id?: T;
+      };
+  emailNotifications?:
+    | T
+    | {
+        enabled?: T;
+        fromName?: T;
+        fromEmail?: T;
+        subject?: T;
       };
   updatedAt?: T;
   createdAt?: T;

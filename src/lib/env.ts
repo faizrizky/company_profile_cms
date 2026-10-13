@@ -62,6 +62,24 @@ const schema = z
     ),
     /** Path-style URLs (host/bucket/key) — required by MinIO, harmless elsewhere. */
     S3_FORCE_PATH_STYLE: optional(z.enum(['true', 'false'])).transform((v) => v === 'true'),
+
+    /**
+     * Mail server (SMTP) for the email about each new contact message. Unset:
+     * no email is sent (messages still land in the Inbox). The sender address,
+     * subject and on/off live in Settings → Email notifications.
+     */
+    SMTP_HOST: optional(z.string()),
+    SMTP_PORT: optional(z.coerce.number().int().min(1).max(65535)).transform((v) => v ?? 465),
+    /** TLS from the first byte (port 465); false = STARTTLS (587). Default: true on 465. */
+    SMTP_SECURE: optional(z.enum(['true', 'false'])),
+    SMTP_USER: optional(z.string()),
+    SMTP_PASS: optional(z.string()),
+    /**
+     * Ask the visitor's mail server whether the mailbox exists before accepting
+     * a contact message (see lib/mailboxCheck; needs outbound port 25). On by
+     * default; `false` to turn it off.
+     */
+    EMAIL_MAILBOX_CHECK: optional(z.enum(['true', 'false'])).transform((v) => v !== 'false'),
   })
   .superRefine((env, ctx) => {
     const s3 = [env.S3_BUCKET, env.S3_ACCESS_KEY_ID, env.S3_SECRET_ACCESS_KEY]
@@ -69,6 +87,18 @@ const schema = z
       ctx.addIssue({
         code: 'custom',
         message: 'S3_BUCKET, S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY must be set together',
+      })
+    }
+    if (
+      env.SMTP_HOST
+        ? Boolean(env.SMTP_USER) !== Boolean(env.SMTP_PASS)
+        : env.SMTP_USER || env.SMTP_PASS
+    ) {
+      ctx.addIssue({
+        code: 'custom',
+        message: env.SMTP_HOST
+          ? 'SMTP_USER and SMTP_PASS must be set together'
+          : 'SMTP_USER / SMTP_PASS need SMTP_HOST',
       })
     }
     if (env.NODE_ENV === 'production') {
@@ -98,3 +128,4 @@ if (!parsed.success) {
 export const env = parsed.data
 export const isProduction = env.NODE_ENV === 'production'
 export const s3Enabled = Boolean(env.S3_BUCKET)
+export const smtpEnabled = Boolean(env.SMTP_HOST)

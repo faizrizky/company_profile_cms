@@ -1,10 +1,13 @@
 import type { GlobalConfig } from 'payload'
 
-import { anyone, isAdmin } from '@/access'
+import { anyone, hasRole, isAdmin, isAdminField } from '@/access'
+import { testEmailEndpoint } from '@/endpoints/testEmail'
+import { fieldCard } from '@/fields/card'
 import { hrefField } from '@/fields/link'
 import { imageField } from '@/fields/section'
 import { withTextValidation } from '@/fields/validate'
 import { auditGlobal } from '@/hooks/auditLog'
+import { DEFAULT_FROM_ADDRESS, DEFAULT_FROM_NAME, DEFAULT_SUBJECT } from '@/lib/mail'
 import { revalidateGlobal } from '@/hooks/revalidateFrontend'
 
 /** Digits only, Indonesian local numbers (0…) converted to the 62 country code. */
@@ -18,6 +21,7 @@ export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   admin: { group: 'Settings' },
   access: { read: anyone, update: isAdmin },
+  endpoints: [testEmailEndpoint],
   hooks: { afterChange: [auditGlobal('site-settings'), revalidateGlobal('site-settings')] },
   fields: [
     {
@@ -198,6 +202,101 @@ export const SiteSettings: GlobalConfig = {
                 imageField('icon', {
                   admin: { condition: (_, row) => row?.platform === 'other' },
                 }),
+              ],
+            },
+          ],
+        },
+        {
+          // The email the team gets about each new contact message (see lib/mail).
+          // The site settings are public (the website reads them), so these
+          // fields are readable by admins only — and the tab shows only to them.
+          label: { en: 'Email notifications', id: 'Notifikasi email' },
+          admin: { condition: (_data, _siblings, { user }) => hasRole(user, 'admin') },
+          fields: [
+            {
+              name: 'emailNotifications',
+              type: 'group',
+              label: false,
+              access: { read: isAdminField, update: isAdminField },
+              fields: [
+                fieldCard({ en: 'Sending', id: 'Pengiriman' }, [
+                  {
+                    name: 'enabled',
+                    type: 'checkbox',
+                    defaultValue: true,
+                    label: {
+                      en: 'Send an email for every new message',
+                      id: 'Kirim email untuk setiap pesan baru',
+                    },
+                    admin: {
+                      description: {
+                        en: 'Off: messages still arrive in the Inbox, just without an email.',
+                        id: 'Mati: pesan tetap masuk Inbox, hanya tanpa email.',
+                      },
+                    },
+                  },
+                  {
+                    name: 'recipient',
+                    type: 'ui',
+                    admin: {
+                      components: {
+                        Field: '/components/admin/EmailRecipientNote#EmailRecipientNote',
+                      },
+                    },
+                  },
+                ]),
+                fieldCard({ en: 'Sender and subject', id: 'Pengirim dan subjek' }, [
+                  {
+                    type: 'row',
+                    fields: [
+                      {
+                        name: 'fromName',
+                        type: 'text',
+                        localized: false,
+                        defaultValue: DEFAULT_FROM_NAME,
+                        maxLength: 60,
+                        label: { en: 'Sender name', id: 'Nama pengirim' },
+                        admin: { width: '40%' },
+                      },
+                      {
+                        name: 'fromEmail',
+                        type: 'email',
+                        required: true,
+                        defaultValue: DEFAULT_FROM_ADDRESS,
+                        label: { en: 'Sender address', id: 'Alamat pengirim' },
+                        admin: {
+                          width: '60%',
+                          description: {
+                            en: 'Must be an address the mail server lets the sending account use.',
+                            id: 'Harus alamat yang boleh dipakai akun pengirim di server email.',
+                          },
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    name: 'subject',
+                    type: 'text',
+                    localized: false,
+                    required: true,
+                    defaultValue: DEFAULT_SUBJECT,
+                    maxLength: 150,
+                    label: { en: 'Subject', id: 'Subjek' },
+                    admin: {
+                      description: {
+                        en: 'Placeholders: {name}, {organization}, {email}, {phone}, {interest} — replaced by what the visitor wrote.',
+                        id: 'Isian: {name}, {organization}, {email}, {phone}, {interest} — diganti dengan yang ditulis pengunjung.',
+                      },
+                    },
+                  },
+                ]),
+                {
+                  name: 'testEmail',
+                  type: 'ui',
+                  admin: {
+                    components: { Field: '/components/admin/EmailTestButton#EmailTestButton' },
+                  },
+                },
               ],
             },
           ],
