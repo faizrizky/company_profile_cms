@@ -250,7 +250,7 @@ export function NavAccount({ compact }: { compact: boolean }) {
                 className="falah-account__item"
                 onClick={() => {
                   close()
-                  tutorial.start()
+                  tutorial.choose()
                 }}
               >
                 <svg viewBox="0 0 24 24" aria-hidden>

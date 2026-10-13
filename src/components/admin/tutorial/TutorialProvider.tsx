@@ -26,11 +26,13 @@ import {
   TUTORIAL_PICKED,
   type Rect,
 } from '@/tutorial/messages'
+import { stepSection } from '@/tutorial/sections'
 import { uniqueSelector } from '@/tutorial/selector'
 import { DEFAULT_TUTORIAL_STEPS, type TutorialStep } from '@/tutorial/steps'
 
 import { useAdminLang, useAdminText } from '../useAdminText'
 import { TUTORIAL_TEXT, type TutorialText } from './text'
+import { TutorialChooser } from './TutorialChooser'
 
 /**
  * The guided tour: a spotlight that glides from element to element, across
@@ -39,23 +41,35 @@ import { TUTORIAL_TEXT, type TutorialText } from './text'
  * - Opens by itself for everyone who hasn't finished or skipped the current
  *   version (Settings → Tutorial → version), once the admin is ready (not on
  *   the login or two-step screens).
- * - Replayed from the Account page or the account menu (`useTutorial().start`).
+ * - Replayed from the Account page or the account menu (`useTutorial().choose`):
+ *   all of it, or the part about one page of the sidebar (see tutorial/sections).
  * - Survives a reload mid-way (sessionStorage).
  * - A window opened with ?falahTutorialPick=… is the element picker of the
  *   settings page instead (see TutorialTargetPicker).
  */
 
 type Tour = { steps: TutorialStep[]; version: number; enabled: boolean }
-type Run = Tour & { index: number; dir: 1 | -1 }
+/** `section`: only that part of the tour is played (null: all of it). */
+type Run = Tour & { index: number; dir: 1 | -1; section?: string | null }
 
 const SESSION_KEY = 'falah-tutorial'
 const DISMISSED_KEY = 'falah-tutorial-dismissed'
 export const MISSING_KEY = 'falah-tutorial-missing'
 
-const TutorialContext = createContext<{ start: () => void; running: boolean }>({
+const TutorialContext = createContext<{
+  /** Plays the whole tour, or one part of it (a section id, see tutorial/sections). */
+  start: (section?: string | null) => void
+  /** Asks which part to play first. */
+  choose: () => void
+  running: boolean
+}>({
   start: () => {},
+  choose: () => {},
   running: false,
 })
+
+const inSection = (steps: TutorialStep[], section?: string | null) =>
+  section ? steps.filter((s) => stepSection(s) === section) : steps
 
 export const useTutorial = () => useContext(TutorialContext)
 
@@ -190,6 +204,8 @@ export function TutorialProvider({ children }: { children: ReactNode }) {
   const adminRoute = config.routes.admin
 
   const [run, setRun] = useState<Run | null>(null)
+  // The tour being chosen from (the chooser is open).
+  const [choosing, setChoosing] = useState<Tour | null>(null)
 
   const loadTour = useCallback(async (): Promise<Tour | null> => {
     if (!user) return null
@@ -207,9 +223,19 @@ export function TutorialProvider({ children }: { children: ReactNode }) {
     }
   }, [api, user])
 
-  const start = useCallback(() => {
+  const start = useCallback(
+    (section?: string | null) => {
+      void loadTour().then((tour) => {
+        const steps = tour ? inSection(tour.steps, section) : []
+        if (tour && steps.length) setRun({ ...tour, steps, index: 0, dir: 1, section: section ?? null })
+      })
+    },
+    [loadTour],
+  )
+
+  const choose = useCallback(() => {
     void loadTour().then((tour) => {
-      if (tour?.steps.length) setRun({ ...tour, index: 0, dir: 1 })
+      if (tour?.steps.length) setChoosing(tour)
     })
   }, [loadTour])
 
@@ -221,16 +247,20 @@ export function TutorialProvider({ children }: { children: ReactNode }) {
     let timer: number | undefined
     void loadTour().then((tour) => {
       if (cancelled || !tour?.steps.length) return
-      const resume = read<{ version: number; index: number }>(session, SESSION_KEY)
+      const resume = read<{ version: number; index: number; section?: string | null }>(session, SESSION_KEY)
       const seen = (user as { tutorialSeen?: number | null } | null)?.tutorialSeen ?? 0
       const dismissed = read<number>(session, DISMISSED_KEY) ?? 0
-      const index = resume?.version === tour.version ? Math.min(resume.index, tour.steps.length - 1) : 0
+      const same = resume?.version === tour.version
+      const section = same ? (resume?.section ?? null) : null
+      const steps = inSection(tour.steps, section)
+      if (!steps.length) return
+      const index = same ? Math.min(resume!.index, steps.length - 1) : 0
       if (!resume && (!tour.enabled || seen >= tour.version || dismissed >= tour.version)) return
       // Signed in for real: the menu is there and the two-step screen is gone.
       const ready = () => document.querySelector('.nav') && !document.querySelector('.falah-2fa')
       const wait = () => {
         if (cancelled) return
-        if (ready()) setRun((current) => current ?? { ...tour, index, dir: 1 })
+        if (ready()) setRun((current) => current ?? { ...tour, steps, index, dir: 1, section })
         else timer = window.setTimeout(wait, 500)
       }
       timer = window.setTimeout(wait, 800)
@@ -244,14 +274,16 @@ export function TutorialProvider({ children }: { children: ReactNode }) {
   }, [userId, pickToken, loadTour])
 
   useEffect(() => {
-    if (run) write(session, SESSION_KEY, { version: run.version, index: run.index })
+    if (run) write(session, SESSION_KEY, { version: run.version, index: run.index, section: run.section ?? null })
   }, [run])
 
   const finish = useCallback(() => {
     if (!run) return
     write(session, SESSION_KEY, null)
-    write(session, DISMISSED_KEY, run.version)
     setRun(null)
+    // One part, played on request: the whole tour still counts as unseen.
+    if (run.section) return
+    write(session, DISMISSED_KEY, run.version)
     if (user) {
       // Finished or skipped: this version won't open by itself again.
       void fetch(`${api}/users/${user.id}`, {
@@ -264,8 +296,19 @@ export function TutorialProvider({ children }: { children: ReactNode }) {
   }, [api, run, user])
 
   return (
-    <TutorialContext.Provider value={{ start, running: Boolean(run) }}>
+    <TutorialContext.Provider value={{ start, choose, running: Boolean(run) }}>
       {children}
+      {choosing && !run ? (
+        <TutorialChooser
+          steps={choosing.steps}
+          onClose={() => setChoosing(null)}
+          onPick={(section) => {
+            const steps = inSection(choosing.steps, section)
+            setChoosing(null)
+            if (steps.length) setRun({ ...choosing, steps, index: 0, dir: 1, section })
+          }}
+        />
+      ) : null}
       {pickToken ? <PickMode token={pickToken} adminRoute={adminRoute} /> : null}
       {run && !pickToken ? <Tour run={run} setRun={setRun} finish={finish} adminRoute={adminRoute} api={api} /> : null}
     </TutorialContext.Provider>

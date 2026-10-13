@@ -17,7 +17,7 @@ export function TutorialSettingsActions() {
   const { config } = useConfig()
   const router = useRouter()
   const t = useAdminText(TUTORIAL_TEXT)
-  const { start, running } = useTutorial()
+  const { choose, running } = useTutorial()
   const { openModal } = useModal()
   const { value: version } = useField<number>({ path: 'version' })
 
@@ -39,7 +39,7 @@ export function TutorialSettingsActions() {
   return (
     <div className="falah-tutorial-actions">
       <span className="falah-tutorial-actions__label">{t.actions}</span>
-      <button type="button" className="falah-tutorial-actions__primary" onClick={start} disabled={running}>
+      <button type="button" className="falah-tutorial-actions__primary" onClick={choose} disabled={running}>
         {t.run}
       </button>
       <button type="button" onClick={() => openModal(SHOW_AGAIN_MODAL)}>
