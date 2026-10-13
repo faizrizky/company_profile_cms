@@ -834,6 +834,17 @@ button.falah-account__item {
   }
 }
 
+// Editors: the steps can be read, not changed.
+.falah-steps__note {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border: 1px solid #d3e2f3;
+  border-radius: 12px;
+  background: #f3f8fe;
+  color: #36506d;
+  font-size: 13px;
+}
+
 .falah-steps__warn {
   margin: 0;
   padding: 8px 12px;

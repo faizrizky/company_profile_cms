@@ -25,15 +25,18 @@ export const TUTORIAL_TEXT = {
       'Every user sees it again the next time they open the admin. Save your changes to the steps first.',
     showAgainDone: 'Everyone will see the tutorial again.',
     reset: 'Restore the default steps',
-    resetConfirm: 'All steps are replaced by the defaults. Unsaved changes and added steps are lost.',
+    resetConfirm:
+      'All steps are replaced by the defaults. Unsaved changes and added steps are lost.',
     resetDone: 'Default steps restored.',
     failed: 'Could not save.',
     pick: 'Pick element',
     pickHelp: 'Opens the step’s page in a new window: click the element to highlight.',
-    pickBlocked: 'The window was blocked by the browser. Allow pop-ups for this site and try again.',
+    pickBlocked:
+      'The window was blocked by the browser. Allow pop-ups for this site and try again.',
     picked: 'Element picked — save to keep it.',
     missing: 'Not found the last time the tutorial ran on this browser: pick the element again.',
     // Steps editor
+    readOnlyNote: 'Only administrators can change the tutorial. Run it from “Run the tutorial”.',
     count: (n: number) => (n === 1 ? '1 step' : `${n} steps`),
     addStep: 'Add step',
     deleteStep: 'Delete step',
@@ -104,15 +107,19 @@ export const TUTORIAL_TEXT = {
       'Semua pengguna akan melihatnya lagi saat membuka admin berikutnya. Simpan dulu perubahan langkah.',
     showAgainDone: 'Semua pengguna akan melihat tutorial lagi.',
     reset: 'Kembalikan langkah default',
-    resetConfirm: 'Semua langkah diganti dengan langkah default. Perubahan yang belum disimpan dan langkah tambahan akan hilang.',
+    resetConfirm:
+      'Semua langkah diganti dengan langkah default. Perubahan yang belum disimpan dan langkah tambahan akan hilang.',
     resetDone: 'Langkah default dikembalikan.',
     failed: 'Gagal menyimpan.',
     pick: 'Pilih elemen',
     pickHelp: 'Membuka halaman langkah ini di jendela baru: klik elemen yang ingin disorot.',
     pickBlocked: 'Jendela diblokir browser. Izinkan pop-up untuk situs ini lalu coba lagi.',
     picked: 'Elemen dipilih — simpan untuk menyimpannya.',
-    missing: 'Tidak ditemukan saat tutorial terakhir dijalankan di browser ini: pilih ulang elemennya.',
+    missing:
+      'Tidak ditemukan saat tutorial terakhir dijalankan di browser ini: pilih ulang elemennya.',
     count: (n: number) => `${n} langkah`,
+    readOnlyNote:
+      'Hanya administrator yang bisa mengubah tutorial. Jalankan lewat “Jalankan tutorial”.',
     addStep: 'Tambah langkah',
     deleteStep: 'Hapus langkah',
     deleteHeading: 'Hapus langkah ini?',

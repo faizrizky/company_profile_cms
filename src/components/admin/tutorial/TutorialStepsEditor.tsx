@@ -5,6 +5,7 @@ import {
   ConfirmationModal,
   TextareaInput,
   TextInput,
+  useDocumentInfo,
   useField,
   useModal,
 } from '@payloadcms/ui'
@@ -52,9 +53,15 @@ const titleOf = (step: TutorialStep, lang: 'en' | 'id', t: TutorialText) =>
  * steps where only the open one shows its inputs (title and text in both
  * languages, who sees it). What gets highlighted is chosen by clicking it in
  * "Pick element" and only shown here. Edits the `steps` JSON value; saved with
- * the page.
+ * the page. Editors (no update access) only read the steps.
  */
-export function TutorialStepsEditor({ path }: { path: string }) {
+export function TutorialStepsEditor({
+  path,
+  readOnly: fieldReadOnly,
+}: {
+  path: string
+  readOnly?: boolean
+}) {
   const t = useAdminText(TUTORIAL_TEXT)
   const lang = useAdminLang()
   // Same rule as the server (Tutorial.ts), checked on save.
@@ -65,6 +72,8 @@ export function TutorialStepsEditor({ path }: { path: string }) {
   const [openId, setOpenId] = useState<string | null>(null)
   const [deleting, setDeleting] = useState<TutorialStep | null>(null)
   const { openModal } = useModal()
+  const { hasSavePermission } = useDocumentInfo()
+  const readOnly = Boolean(fieldReadOnly) || hasSavePermission === false
   const missing = useMissing()
   // Once a save was refused (Payload sets errorMessage but not showError for a
   // custom field), the current problem — gone as soon as it's fixed.
@@ -101,10 +110,13 @@ export function TutorialStepsEditor({ path }: { path: string }) {
     <div className="falah-steps">
       <div className="falah-steps__head">
         <span className="falah-steps__count">{t.count(steps.length)}</span>
-        <button type="button" className="falah-steps__add" onClick={add}>
-          <span aria-hidden>+</span> {t.addStep}
-        </button>
+        {readOnly ? null : (
+          <button type="button" className="falah-steps__add" onClick={add}>
+            <span aria-hidden>+</span> {t.addStep}
+          </button>
+        )}
       </div>
+      {readOnly ? <p className="falah-steps__note">{t.readOnlyNote}</p> : null}
       {problem ? (
         <p className="falah-steps__error" role="alert">
           {problem}
@@ -130,11 +142,17 @@ export function TutorialStepsEditor({ path }: { path: string }) {
                   <span className="falah-steps__title">{titleOf(step, lang, t)}</span>
                   <span className="falah-steps__tags">
                     {roles.length < 2 ? (
-                      <span className="falah-steps__tag">{roles[0] === 'admin' ? 'Admin' : 'Editor'}</span>
+                      <span className="falah-steps__tag">
+                        {roles[0] === 'admin' ? 'Admin' : 'Editor'}
+                      </span>
                     ) : null}
-                    {step.frame === 'editor' ? <span className="falah-steps__tag">{t.inEditor}</span> : null}
-                    {step.enabled === false ? <span className="falah-steps__tag">{t.inactive}</span> : null}
-                    {missing[step.id] ? (
+                    {step.frame === 'editor' ? (
+                      <span className="falah-steps__tag">{t.inEditor}</span>
+                    ) : null}
+                    {step.enabled === false ? (
+                      <span className="falah-steps__tag">{t.inactive}</span>
+                    ) : null}
+                    {missing[step.id] && !readOnly ? (
                       <span className="falah-steps__tag is-warn" title={t.missing}>
                         !
                       </span>
@@ -144,30 +162,38 @@ export function TutorialStepsEditor({ path }: { path: string }) {
                     <path d="m6 9 6 6 6-6" />
                   </svg>
                 </button>
-                <span className="falah-steps__moves">
-                  <button type="button" aria-label={t.moveUp} disabled={index === 0} onClick={() => move(index, -1)}>
-                    <svg viewBox="0 0 24 24" aria-hidden>
-                      <path d="M12 19V5" />
-                      <path d="m6 11 6-6 6 6" />
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    aria-label={t.moveDown}
-                    disabled={index === steps.length - 1}
-                    onClick={() => move(index, 1)}
-                  >
-                    <svg viewBox="0 0 24 24" aria-hidden>
-                      <path d="M12 5v14" />
-                      <path d="m18 13-6 6-6-6" />
-                    </svg>
-                  </button>
-                </span>
+                {readOnly ? null : (
+                  <span className="falah-steps__moves">
+                    <button
+                      type="button"
+                      aria-label={t.moveUp}
+                      disabled={index === 0}
+                      onClick={() => move(index, -1)}
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden>
+                        <path d="M12 19V5" />
+                        <path d="m6 11 6-6 6 6" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      aria-label={t.moveDown}
+                      disabled={index === steps.length - 1}
+                      onClick={() => move(index, 1)}
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden>
+                        <path d="M12 5v14" />
+                        <path d="m18 13-6 6-6-6" />
+                      </svg>
+                    </button>
+                  </span>
+                )}
               </div>
               {open ? (
                 <StepForm
                   step={step}
                   t={t}
+                  readOnly={readOnly}
                   missing={Boolean(missing[step.id])}
                   onChange={(patch) => change(step.id, patch)}
                   onDelete={() => {
@@ -201,12 +227,14 @@ export function TutorialStepsEditor({ path }: { path: string }) {
 function StepForm({
   step,
   t,
+  readOnly,
   missing,
   onChange,
   onDelete,
 }: {
   step: TutorialStep
   t: TutorialText
+  readOnly: boolean
   missing: boolean
   onChange: (patch: Partial<TutorialStep>) => void
   onDelete: () => void
@@ -231,6 +259,7 @@ function StepForm({
           <CheckboxInput
             id={field('enabled')}
             label={t.active}
+            readOnly={readOnly}
             checked={step.enabled !== false}
             onToggle={(e) => onChange({ enabled: e.target.checked })}
           />
@@ -241,12 +270,13 @@ function StepForm({
               key={role}
               id={field(`role-${role}`)}
               label={role === 'admin' ? 'Admin' : 'Editor'}
+              readOnly={readOnly}
               checked={roles.includes(role)}
               onToggle={() => toggleRole(role)}
             />
           ))}
         </div>
-        <p className="falah-steps__help">{t.activeHelp}</p>
+        {readOnly ? null : <p className="falah-steps__help">{t.activeHelp}</p>}
       </section>
 
       <section className="falah-steps__section">
@@ -279,28 +309,35 @@ function StepForm({
           <TextInput
             path={field('target')}
             label={t.target}
-            description={t.targetHelp}
+            description={readOnly ? undefined : t.targetHelp}
             value={target}
             readOnly
             onChange={() => {}}
           />
         ) : null}
-        {missing ? <p className="falah-steps__warn">{t.missing}</p> : null}
-        <div className="falah-steps__spot-actions">
-          <button type="button" className="falah-steps__pick" onClick={pickElement} aria-busy={waiting}>
-            {target ? t.pickAgain : t.pick}
-          </button>
-          {target ? (
+        {missing && !readOnly ? <p className="falah-steps__warn">{t.missing}</p> : null}
+        {readOnly ? null : (
+          <div className="falah-steps__spot-actions">
             <button
               type="button"
-              className="falah-steps__link"
-              onClick={() => onChange({ target: '', clickFirst: '', frame: 'admin' })}
+              className="falah-steps__pick"
+              onClick={pickElement}
+              aria-busy={waiting}
             >
-              {t.clearSpot}
+              {target ? t.pickAgain : t.pick}
             </button>
-          ) : null}
-        </div>
-        <p className="falah-steps__help">{t.pickHelp}</p>
+            {target ? (
+              <button
+                type="button"
+                className="falah-steps__link"
+                onClick={() => onChange({ target: '', clickFirst: '', frame: 'admin' })}
+              >
+                {t.clearSpot}
+              </button>
+            ) : null}
+          </div>
+        )}
+        {readOnly ? null : <p className="falah-steps__help">{t.pickHelp}</p>}
       </section>
 
       <section className="falah-steps__section">
@@ -310,15 +347,21 @@ function StepForm({
             path={field('titleId')}
             label={t.titleId}
             required
+            readOnly={readOnly}
             value={step.titleId ?? ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange({ titleId: e.target.value.slice(0, 80) })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onChange({ titleId: e.target.value.slice(0, 80) })
+            }
           />
           <TextInput
             path={field('titleEn')}
             label={t.titleEn}
             required
+            readOnly={readOnly}
             value={step.titleEn ?? ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange({ titleEn: e.target.value.slice(0, 80) })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onChange({ titleEn: e.target.value.slice(0, 80) })
+            }
           />
         </div>
         <div className="falah-steps__pair">
@@ -326,6 +369,7 @@ function StepForm({
             path={field('bodyId')}
             label={t.bodyId}
             required
+            readOnly={readOnly}
             rows={5}
             value={step.bodyId ?? ''}
             onChange={(e) => onChange({ bodyId: e.target.value.slice(0, 600) })}
@@ -334,19 +378,22 @@ function StepForm({
             path={field('bodyEn')}
             label={t.bodyEn}
             required
+            readOnly={readOnly}
             rows={5}
             value={step.bodyEn ?? ''}
             onChange={(e) => onChange({ bodyEn: e.target.value.slice(0, 600) })}
           />
         </div>
-        <p className="falah-steps__help">{t.bodyHelp}</p>
+        {readOnly ? null : <p className="falah-steps__help">{t.bodyHelp}</p>}
       </section>
 
-      <div className="falah-steps__footer">
-        <button type="button" className="falah-steps__delete" onClick={onDelete}>
-          {t.deleteStep}
-        </button>
-      </div>
+      {readOnly ? null : (
+        <div className="falah-steps__footer">
+          <button type="button" className="falah-steps__delete" onClick={onDelete}>
+            {t.deleteStep}
+          </button>
+        </div>
+      )}
     </div>
   )
 }
