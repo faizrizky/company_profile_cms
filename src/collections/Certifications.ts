@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { publishedOrAuthenticated } from '@/access'
 import { contentAccess, contentHooks } from '@/collections/content'
 import { fieldCard } from '@/fields/card'
 import { imageField } from '@/fields/section'
@@ -9,10 +10,14 @@ export const Certifications: CollectionConfig = {
   orderable: true,
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'subtitle', 'updatedAt'],
+    defaultColumns: ['title', 'subtitle', '_status', 'updatedAt'],
     group: 'Content',
   },
-  access: contentAccess(),
+  access: contentAccess(publishedOrAuthenticated),
+  versions: {
+    drafts: { autosave: { interval: 2000, showSaveDraftButton: true }, schedulePublish: true },
+    maxPerDoc: 50,
+  },
   hooks: contentHooks('certifications'),
   fields: [
     fieldCard({ en: 'Content', id: 'Konten' }, [

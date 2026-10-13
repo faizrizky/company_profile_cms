@@ -107,11 +107,13 @@ export interface Config {
     'site-settings': SiteSetting;
     navigation: Navigation;
     footer: Footer;
+    tutorial: Tutorial;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     navigation: NavigationSelect<false> | NavigationSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    tutorial: TutorialSelect<false> | TutorialSelect<true>;
   };
   locale: 'en' | 'id';
   widgets: {
@@ -311,6 +313,7 @@ export interface Partner {
   logoHover?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -621,6 +624,7 @@ export interface Certification {
   certificateFocus?: ('center' | 'top') | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1029,6 +1033,7 @@ export interface Product {
   };
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1058,6 +1063,7 @@ export interface ContactSubmission {
 export interface User {
   id: number;
   totpEnabled?: boolean | null;
+  tutorialSeen?: number | null;
   twoFactor?:
     | {
         [k: string]: unknown;
@@ -1943,6 +1949,7 @@ export interface PartnersSelect<T extends boolean = true> {
   logoHover?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1960,6 +1967,7 @@ export interface CertificationsSelect<T extends boolean = true> {
   certificateFocus?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2054,6 +2062,7 @@ export interface ProductsSelect<T extends boolean = true> {
       };
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2083,6 +2092,7 @@ export interface ContactSubmissionsSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   totpEnabled?: T;
+  tutorialSeen?: T;
   twoFactor?: T;
   name?: T;
   roles?: T;
@@ -2366,6 +2376,31 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
+ * The guided tour shown to new users, and replayed from the Account page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tutorial".
+ */
+export interface Tutorial {
+  id: number;
+  version?: number | null;
+  /**
+   * Opens on its own for everyone who hasn’t seen this version of the tour yet.
+   */
+  enabled?: boolean | null;
+  steps?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
@@ -2486,6 +2521,18 @@ export interface FooterSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tutorial_select".
+ */
+export interface TutorialSelect<T extends boolean = true> {
+  version?: T;
+  enabled?: T;
+  steps?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "collections_widget".
  */
 export interface CollectionsWidget {
@@ -2502,10 +2549,27 @@ export interface TaskSchedulePublish {
   input: {
     type?: ('publish' | 'unpublish') | null;
     locale?: string | null;
-    doc?: {
-      relationTo: 'pages';
-      value: number | Page;
-    } | null;
+    doc?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'partners';
+          value: number | Partner;
+        } | null)
+      | ({
+          relationTo: 'certifications';
+          value: number | Certification;
+        } | null)
+      | ({
+          relationTo: 'solution-categories';
+          value: number | SolutionCategory;
+        } | null)
+      | ({
+          relationTo: 'products';
+          value: number | Product;
+        } | null);
     global?: string | null;
     user?: {
       relationTo: 'users';

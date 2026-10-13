@@ -20,7 +20,10 @@ export const SolutionCategories: CollectionConfig = {
       'Setiap kategori punya halaman detail di /solution/<slug>. Geser untuk mengatur urutan tab.',
   },
   access: contentAccess(publishedOrAuthenticated),
-  versions: { drafts: { autosave: { interval: 2000 } }, maxPerDoc: 30 },
+  versions: {
+    drafts: { autosave: { interval: 2000, showSaveDraftButton: true }, schedulePublish: true },
+    maxPerDoc: 50,
+  },
   hooks: contentHooks('solution-categories'),
   fields: [
     fieldCard({ en: 'General', id: 'Umum' }, [

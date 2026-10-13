@@ -39,7 +39,7 @@ export const Pages: CollectionConfig = {
   },
   access: contentAccess(publishedOrAuthenticated),
   versions: {
-    drafts: { autosave: { interval: 2000 }, schedulePublish: true },
+    drafts: { autosave: { interval: 2000, showSaveDraftButton: true }, schedulePublish: true },
     maxPerDoc: 50,
   },
   hooks: contentHooks('pages'),

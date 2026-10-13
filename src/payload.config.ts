@@ -20,6 +20,7 @@ import { Users } from './collections/Users'
 import { Footer } from './globals/Footer'
 import { Navigation } from './globals/Navigation'
 import { SiteSettings } from './globals/SiteSettings'
+import { Tutorial } from './globals/Tutorial'
 import { withListEnhancements } from './fields/listEnhancements'
 import { localizeTextFields } from './fields/localize'
 import { translateCollection, translateGlobal } from './i18n/translateAdmin'
@@ -121,6 +122,8 @@ export default buildConfig({
         '/components/admin/MediaNames#MediaNamesProvider',
         // Progress toast (with a percentage) while a form saves or publishes.
         '/components/admin/SaveProgress#SaveProgressProvider',
+        // The guided tour: opens for new users, replayed from the Account page (see src/tutorial).
+        '/components/admin/tutorial/TutorialProvider#TutorialProvider',
       ],
     },
   },
@@ -164,8 +167,11 @@ export default buildConfig({
     .map(translateCollection)
     // Real save progress for the editors (see endpoints/saveWithProgress.ts).
     .map(withProgressHooks),
-  globals: [SiteSettings, Navigation, Footer]
-    .map(withLocalizedText)
+  globals: [
+    ...[SiteSettings, Navigation, Footer].map(withLocalizedText),
+    // Not localized: each step carries its Indonesian and English text side by side.
+    Tutorial,
+  ]
     .map(translateGlobal)
     .map(withGlobalProgressHooks),
 

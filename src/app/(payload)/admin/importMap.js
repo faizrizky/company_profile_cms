@@ -9,7 +9,10 @@ import { MediaFileCell as MediaFileCell_43b49a85fdeabccf4cc8d1c9210a9a19 } from 
 import { ShowcaseTabField as ShowcaseTabField_8c6529d0630530b36da464d8eade7335 } from '../../../components/admin/ShowcaseTabField'
 import { PasswordChecklist as PasswordChecklist_04392dd84d621fdceface601f994cac6 } from '../../../components/admin/PasswordChecklist'
 import { TwoFactorStatus as TwoFactorStatus_380291c26ced0491ded072106ac7f617 } from '../../../components/admin/TwoFactorStatus'
+import { TutorialReplay as TutorialReplay_cd73f14902413f3d00ba2e5a93a2d11c } from '../../../components/admin/tutorial/TutorialReplay'
 import { MapPicker as MapPicker_d50713359d9f0b3960c18e52c90ab2a7 } from '../../../components/admin/MapPicker'
+import { TutorialSettingsActions as TutorialSettingsActions_8ec3a9807104f7d80a5a6785b5bf0b39 } from '../../../components/admin/tutorial/TutorialSettingsActions'
+import { TutorialStepsEditor as TutorialStepsEditor_740e7e67761f84d3850a5ea1da1298d7 } from '../../../components/admin/tutorial/TutorialStepsEditor'
 import { FalahNav as FalahNav_eb31d88043f9ccfcb1413c23d153637e } from '../../../components/admin/nav/FalahNav'
 import { Icon as Icon_dfe4008080d895d460898c3a6155e9ba } from '../../../components/admin/Icon'
 import { Logo as Logo_91a09b539d3c86b0aebf520e7564ce08 } from '../../../components/admin/Logo'
@@ -25,6 +28,7 @@ import { FileSizeMbProvider as FileSizeMbProvider_7e7f97f4afdb28a48d5c8a0ccfc7b6
 import { UploadLimitsProvider as UploadLimitsProvider_318864aac0e4a9b8ec7a5896f86e4277 } from '../../../components/admin/UploadLimits'
 import { MediaNamesProvider as MediaNamesProvider_7334bec1d083369e67567d95aef9b8f1 } from '../../../components/admin/MediaNames'
 import { SaveProgressProvider as SaveProgressProvider_7afde912eebf3da11b20fbdc876d592c } from '../../../components/admin/SaveProgress'
+import { TutorialProvider as TutorialProvider_9c55c7c07c91684ff639c1b430adf718 } from '../../../components/admin/tutorial/TutorialProvider'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 import { StatsDashboard as StatsDashboard_02957e108870d4d62b84242af16991cf } from '../../../components/admin/StatsDashboard'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -42,7 +46,10 @@ export const importMap = {
   "/components/admin/ShowcaseTabField#ShowcaseTabField": ShowcaseTabField_8c6529d0630530b36da464d8eade7335,
   "/components/admin/PasswordChecklist#PasswordChecklist": PasswordChecklist_04392dd84d621fdceface601f994cac6,
   "/components/admin/TwoFactorStatus#TwoFactorStatus": TwoFactorStatus_380291c26ced0491ded072106ac7f617,
+  "/components/admin/tutorial/TutorialReplay#TutorialReplay": TutorialReplay_cd73f14902413f3d00ba2e5a93a2d11c,
   "/components/admin/MapPicker#MapPicker": MapPicker_d50713359d9f0b3960c18e52c90ab2a7,
+  "/components/admin/tutorial/TutorialSettingsActions#TutorialSettingsActions": TutorialSettingsActions_8ec3a9807104f7d80a5a6785b5bf0b39,
+  "/components/admin/tutorial/TutorialStepsEditor#TutorialStepsEditor": TutorialStepsEditor_740e7e67761f84d3850a5ea1da1298d7,
   "/components/admin/nav/FalahNav#FalahNav": FalahNav_eb31d88043f9ccfcb1413c23d153637e,
   "/components/admin/Icon#Icon": Icon_dfe4008080d895d460898c3a6155e9ba,
   "/components/admin/Logo#Logo": Logo_91a09b539d3c86b0aebf520e7564ce08,
@@ -58,6 +65,7 @@ export const importMap = {
   "/components/admin/UploadLimits#UploadLimitsProvider": UploadLimitsProvider_318864aac0e4a9b8ec7a5896f86e4277,
   "/components/admin/MediaNames#MediaNamesProvider": MediaNamesProvider_7334bec1d083369e67567d95aef9b8f1,
   "/components/admin/SaveProgress#SaveProgressProvider": SaveProgressProvider_7afde912eebf3da11b20fbdc876d592c,
+  "/components/admin/tutorial/TutorialProvider#TutorialProvider": TutorialProvider_9c55c7c07c91684ff639c1b430adf718,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
   "/components/admin/StatsDashboard#StatsDashboard": StatsDashboard_02957e108870d4d62b84242af16991cf,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1

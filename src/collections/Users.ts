@@ -107,6 +107,23 @@ export const Users: CollectionConfig = {
       },
     },
     {
+      // "Replay the tutorial" on your own account page (see src/tutorial).
+      name: 'tutorialReplay',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        disableListColumn: true,
+        components: { Field: '/components/admin/tutorial/TutorialReplay#TutorialReplay' },
+      },
+    },
+    {
+      // The tutorial version this user has finished or skipped; a newer one opens by itself.
+      name: 'tutorialSeen',
+      type: 'number',
+      min: 0,
+      admin: { hidden: true, disableListColumn: true },
+    },
+    {
       // Encrypted secret, recovery code hashes, verified sessions. Never sent
       // over the API (read access false); the auth strategy still loads it.
       name: 'twoFactor',

@@ -1,0 +1,691 @@
+/* ── Guided tour (components/admin/tutorial) ───────────────────────────── */
+
+// Above Payload's drawers and modals; the page underneath can't be clicked.
+.falah-tour {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  cursor: default;
+}
+
+// The highlight: a hole in the dimmed page, gliding from element to element.
+.falah-tour__spot {
+  position: fixed;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 3px rgb(56 189 248 / 0.9),
+    0 0 0 9px rgb(56 189 248 / 0.22),
+    0 0 0 200vmax rgb(8 22 44 / 0.58);
+  pointer-events: none;
+  will-change: top, left, width, height;
+
+  // No element: the whole page is dimmed (the hole shrinks to nothing).
+  &.is-centered {
+    border-radius: 50%;
+    box-shadow: 0 0 0 200vmax rgb(8 22 44 / 0.58);
+  }
+}
+
+.falah-tour__card {
+  position: fixed;
+  width: min(360px, calc(100vw - 32px));
+  padding: 18px 20px 16px;
+  border: 1px solid rgb(255 255 255 / 0.9);
+  border-radius: 18px;
+  background: rgb(255 255 255 / 0.96);
+  box-shadow: 0 24px 60px -18px rgb(8 30 70 / 0.55);
+  color: var(--falah-ink);
+  transition: opacity 0.25s;
+
+  &.is-loading {
+    opacity: 0.85;
+  }
+}
+
+.falah-tour__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.falah-tour__badge {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #e7f5fe;
+  color: var(--falah-accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.falah-tour__count {
+  color: var(--falah-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.falah-tour__title {
+  margin: 0 0 6px;
+  color: var(--falah-ink);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.falah-tour__body {
+  max-height: min(42vh, 320px);
+  overflow-y: auto;
+  color: #36506d;
+  font-size: 14px;
+  line-height: 1.55;
+
+  p {
+    margin: 0;
+  }
+
+  p + p,
+  p + ul,
+  ul + p {
+    margin-top: 6px;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  li::marker {
+    color: var(--falah-accent);
+  }
+}
+
+// Gliding to the next step (only then: small later moves apply at once).
+.falah-tour.is-gliding:not([data-following]) {
+  .falah-tour__spot {
+    transition:
+      top 0.55s cubic-bezier(0.5, 0, 0.2, 1),
+      left 0.55s cubic-bezier(0.5, 0, 0.2, 1),
+      width 0.55s cubic-bezier(0.5, 0, 0.2, 1),
+      height 0.55s cubic-bezier(0.5, 0, 0.2, 1),
+      border-radius 0.55s;
+  }
+
+  .falah-tour__card {
+    transition:
+      top 0.55s cubic-bezier(0.5, 0, 0.2, 1),
+      left 0.55s cubic-bezier(0.5, 0, 0.2, 1),
+      opacity 0.25s;
+  }
+}
+
+.falah-tour__progress {
+  height: 4px;
+  margin: 14px 0 12px;
+  border-radius: 999px;
+  background: #e3eef9;
+  overflow: hidden;
+
+  span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--falah-accent-gradient);
+    transition: width 0.4s;
+  }
+}
+
+.falah-tour__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.falah-tour__nav {
+  display: flex;
+  gap: 8px;
+}
+
+.falah-tour__actions button {
+  height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.falah-tour__skip {
+  padding: 0 4px !important;
+  background: none;
+  color: var(--falah-muted);
+
+  &:hover {
+    color: var(--falah-ink);
+  }
+}
+
+.falah-tour__back {
+  border: 1px solid #d3e2f3 !important;
+  background: #fff;
+  color: var(--falah-accent);
+}
+
+.falah-tour__next {
+  min-width: 92px;
+  background: var(--falah-accent-gradient);
+  color: #fff;
+  box-shadow: 0 8px 18px -10px rgb(31 122 224 / 0.9);
+
+  &:disabled {
+    cursor: progress;
+    filter: saturate(0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .falah-tour__spot,
+  .falah-tour__card {
+    transition: none;
+  }
+}
+
+/* ── Element picker window ─────────────────────────────────────────────── */
+
+.falah-tour-pick {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 8px 8px 18px;
+  border-radius: 999px;
+  background: #0f2742;
+  color: #fff;
+  box-shadow: 0 16px 40px -12px rgb(8 22 44 / 0.6);
+  transform: translateX(-50%);
+
+  button {
+    height: 32px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.14);
+    color: #fff;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+
+.falah-tour-pick__text {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  font-weight: 600;
+
+  small {
+    color: #9fc3ec;
+    font-size: 11px;
+    font-weight: 500;
+  }
+}
+
+.falah-tour-pick__hover {
+  position: fixed;
+  z-index: 10000;
+  border: 2px solid #38bdf8;
+  border-radius: 8px;
+  background: rgb(56 189 248 / 0.12);
+  pointer-events: none;
+  transition: all 0.08s;
+}
+
+/* ── Account page, account menu and settings ───────────────────────────── */
+
+.falah-tutorial-replay {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.falah-tutorial-replay__label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.falah-tutorial-replay__help {
+  margin: 0;
+  color: var(--falah-muted);
+  font-size: 12px;
+}
+
+// Pill buttons: the theme's secondary look (white, blue text, soft border).
+@mixin falah-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid #d3e2f3;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--falah-accent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s;
+
+  &:hover:not(:disabled) {
+    border-color: #a9cdf2;
+    background: #f3f9ff;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.55;
+  }
+}
+
+.falah-tutorial-replay__button {
+  @include falah-pill;
+}
+
+button.falah-account__item {
+  width: 100%;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Sidebar of Settings → Tutorial, under the version. */
+.falah-tutorial-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+
+  button {
+    @include falah-pill;
+    width: 100%;
+  }
+
+  .falah-tutorial-actions__primary {
+    border: 0;
+    background: var(--falah-accent-gradient);
+    color: #fff;
+    box-shadow: 0 8px 18px -12px rgb(31 122 224 / 0.9);
+
+    &:hover:not(:disabled) {
+      background: var(--falah-accent-gradient);
+      filter: brightness(1.05);
+    }
+  }
+}
+
+.falah-tutorial-actions__label {
+  margin-bottom: 2px;
+  color: var(--falah-ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ── Steps editor: a list, only the open step shows its inputs ─────────── */
+
+.falah-steps__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.falah-steps__count {
+  color: var(--falah-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.falah-steps__add,
+.falah-steps__pick {
+  @include falah-pill;
+}
+
+.falah-steps__error {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border: 1px solid #f5c2c0;
+  border-radius: 12px;
+  background: #fdecec;
+  color: #b42318;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.falah-steps__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.falah-steps__item {
+  border: 1px solid #e3edf8;
+  border-radius: var(--style-radius-m, 14px);
+  background: rgb(255 255 255 / 0.75);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+
+  &:hover {
+    border-color: #cfe2f6;
+  }
+
+  &.is-open {
+    border-color: #bcd9f6;
+    background: #fff;
+    box-shadow: 0 14px 34px -24px rgb(30 90 160 / 0.6);
+  }
+
+  &.is-off .falah-steps__title,
+  &.is-off .falah-steps__num {
+    opacity: 0.5;
+  }
+}
+
+.falah-steps__row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-right: 10px;
+}
+
+.falah-steps__toggle {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 12px 8px 12px 14px;
+  border: 0;
+  background: none;
+  color: var(--falah-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.falah-steps__num {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e7f5fe;
+  color: var(--falah-accent);
+  font-size: 12px;
+  font-weight: 700;
+
+  .is-open & {
+    background: var(--falah-accent-gradient);
+    color: #fff;
+  }
+}
+
+.falah-steps__title {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.falah-steps__tags {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.falah-steps__tag {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #eef4fb;
+  color: var(--falah-muted);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &.is-warn {
+    background: #fff4e5;
+    color: #b45309;
+  }
+}
+
+.falah-steps__chevron,
+.falah-steps__moves svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.falah-steps__chevron {
+  flex: none;
+  color: var(--falah-muted);
+  transition: transform 0.2s;
+
+  .is-open & {
+    transform: rotate(180deg);
+  }
+}
+
+.falah-steps__moves {
+  display: flex;
+  gap: 2px;
+  padding-left: 6px;
+  border-left: 1px solid #eef3f9;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 8px;
+    background: none;
+    color: var(--falah-muted);
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background: #e7f5fe;
+      color: var(--falah-accent);
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+  }
+}
+
+.falah-steps__form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px 18px 18px;
+  border-top: 1px solid #eef3f9;
+}
+
+.falah-steps__section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 0;
+
+  & + & {
+    border-top: 1px dashed #e3edf8;
+  }
+
+  h4 {
+    margin: 0;
+    color: var(--falah-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  // Payload's inputs, inside the step: no extra field spacing.
+  .field-type {
+    margin: 0;
+  }
+}
+
+.falah-steps__checks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+}
+
+.falah-steps__divider {
+  width: 1px;
+  height: 20px;
+  background: #e3edf8;
+}
+
+.falah-steps__checks-label {
+  color: var(--falah-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.falah-steps__pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.falah-steps__help {
+  margin: 0;
+  color: var(--falah-muted);
+  font-size: 12px;
+}
+
+.falah-steps__spot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid #e3edf8;
+  border-radius: 12px;
+  background: #f7fbff;
+  color: var(--falah-ink);
+  font-size: 13px;
+  font-weight: 500;
+
+  &.is-set {
+    border-color: #bfe6cf;
+    background: #f0faf4;
+  }
+}
+
+.falah-steps__spot-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e3edf8;
+  color: var(--falah-muted);
+  font-size: 12px;
+  font-weight: 700;
+
+  .is-set & {
+    background: #22c55e;
+    color: #fff;
+  }
+}
+
+.falah-steps__spot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.falah-steps__link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--falah-muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+
+  &:hover {
+    color: #d93036;
+  }
+}
+
+.falah-steps__warn {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #fff4e5;
+  color: #92400e;
+  font-size: 12px;
+}
+
+.falah-steps__footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 12px;
+  border-top: 1px dashed #e3edf8;
+}
+
+.falah-steps__delete {
+  @include falah-pill;
+  border-color: #f5c2c0;
+  color: #d93036;
+
+  &:hover:not(:disabled) {
+    border-color: #ef9a9a;
+    background: #fff5f5;
+  }
+}

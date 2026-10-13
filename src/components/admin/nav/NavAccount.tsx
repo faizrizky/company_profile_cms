@@ -17,6 +17,7 @@ import { createPortal } from 'react-dom'
 import type { User } from '@/payload-types'
 
 import { flags } from '../flags'
+import { useTutorial } from '../tutorial/TutorialProvider'
 
 const greeting: Record<string, string> = { en: 'Hello', id: 'Halo' }
 // Admin UI languages — keep in sync with `i18n.supportedLanguages` in payload.config.ts.
@@ -24,6 +25,7 @@ const languages = ['en', 'id'] as const
 const languageTitle: Record<string, string> = { en: 'Interface language', id: 'Bahasa tampilan' }
 const contentTitle: Record<string, string> = { en: 'Content language', id: 'Bahasa konten' }
 const languageNames: Record<string, string> = { en: 'English', id: 'Indonesia' }
+const tutorialLabel: Record<string, string> = { en: 'Tutorial', id: 'Tutorial' }
 const roleLabel: Record<string, Record<string, string>> = {
   en: { admin: 'Administrator', editor: 'Editor' },
   id: { admin: 'Administrator', editor: 'Editor' },
@@ -87,6 +89,7 @@ export function NavAccount({ compact }: { compact: boolean }) {
   const contentLocale = useLocale()
   const router = useRouter()
   const { startRouteTransition } = useRouteTransition()
+  const tutorial = useTutorial()
   const pathname = usePathname()
   const menuId = useId()
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -241,6 +244,22 @@ export function NavAccount({ compact }: { compact: boolean }) {
                 </svg>
                 {t('authentication:account')}
               </Link>
+              <button
+                type="button"
+                role="menuitem"
+                className="falah-account__item"
+                onClick={() => {
+                  close()
+                  tutorial.start()
+                }}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden>
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6" />
+                  <path d="M12 17h.01" />
+                </svg>
+                {tutorialLabel[lang]}
+              </button>
               <a
                 role="menuitem"
                 href={logoutHref}

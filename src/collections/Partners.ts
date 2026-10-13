@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { publishedOrAuthenticated } from '@/access'
 import { contentAccess, contentHooks } from '@/collections/content'
 import { fieldCard } from '@/fields/card'
 import { hrefField } from '@/fields/link'
@@ -8,8 +9,12 @@ import { imageField } from '@/fields/section'
 export const Partners: CollectionConfig = {
   slug: 'partners',
   orderable: true,
-  admin: { useAsTitle: 'name', defaultColumns: ['name', 'logo', 'updatedAt'], group: 'Content' },
-  access: contentAccess(),
+  admin: { useAsTitle: 'name', defaultColumns: ['name', 'logo', '_status', 'updatedAt'], group: 'Content' },
+  access: contentAccess(publishedOrAuthenticated),
+  versions: {
+    drafts: { autosave: { interval: 2000, showSaveDraftButton: true }, schedulePublish: true },
+    maxPerDoc: 50,
+  },
   hooks: contentHooks('partners'),
   fields: [
     fieldCard({ en: 'Partner', id: 'Partner' }, [
