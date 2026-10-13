@@ -437,8 +437,9 @@ function Tour({
   )
 
   // Skipped quietly when its element isn't found, in the direction of travel.
-  const skip = useCallback(() => {
-    noteMissing(step.id, true)
+  const skip = useCallback((quiet?: boolean) => {
+    // Not "missing" when the page itself has nothing to show (see below).
+    if (!quiet) noteMissing(step.id, true)
     const index = run.index + run.dir
     if (index < 0) setRun({ ...run, index: 0, dir: 1 })
     else if (index >= total) finish()
@@ -486,6 +487,7 @@ function Tour({
     let nextClick = 0
     let clicked = clicks.length === 0
     let found = false
+    let skipNow = false
     let cancelled = false
     let timer: number | undefined
     const deadline = Date.now() + (inEditor ? 25_000 : 8_000)
@@ -503,6 +505,12 @@ function Tour({
         nextClick += 1
         clicked = nextClick >= clicks.length
         if (!isActive(button)) button.click()
+        return null
+      }
+      // Statistics that couldn't be loaded (Clarity's daily limit, no data yet)
+      // show a message instead of the cards: don't wait for cards that won't come.
+      if (!found && !query(target).length && query('.falah-stats__message').length && /falah-stat/.test(target)) {
+        skipNow = true
         return null
       }
       const els = query(target)
@@ -523,6 +531,10 @@ function Tour({
     const tick = async () => {
       const rect = await measure()
       if (cancelled) return
+      if (skipNow) {
+        skip(true)
+        return
+      }
       if (rect && clicked) {
         if (!found) noteMissing(step.id, false)
         found = true
