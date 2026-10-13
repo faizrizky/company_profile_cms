@@ -1,0 +1,285 @@
+variables:
+  REPOSITORY: "registry.falahtech.com/2026/company-profile"
+  TAG_COMMIT: "$REPOSITORY/cms:$CI_COMMIT_SHORT_SHA"
+  TAG_LATEST: "$REPOSITORY/cms:latest"
+  TAG_CACHE: "$REPOSITORY/cms:buildcache"
+  BRANCH: "$CI_COMMIT_REF_NAME"
+  BUILDKIT_NO_CLIENT_TOKEN: "1"
+
+stages:
+  - build
+  - migrate
+  - deploy
+
+# ==========================================
+# SHARED NOTIFY FUNCTION
+# ==========================================
+.notify_functions:
+  script:
+    - |
+      format_duration() {
+        total_seconds="${1:-0}"
+        hours=$((total_seconds / 3600))
+        minutes=$(((total_seconds % 3600) / 60))
+        seconds=$((total_seconds % 60))
+        if [ "$hours" -gt 0 ]; then
+          printf "%dh %dm %ds" "$hours" "$minutes" "$seconds"
+        elif [ "$minutes" -gt 0 ]; then
+          printf "%dm %ds" "$minutes" "$seconds"
+        else
+          printf "%ds" "$seconds"
+        fi
+      }
+
+      notify() {
+        MSG="$(printf "%b" "$NOTIFY_MESSAGE")"
+
+        if [ "$INCLUDE_LATEST_COMMITS" = "true" ]; then
+          COMMITS="$(git log -3 --pretty=format:'• %h - %an: %s')"
+          MSG="$(printf "%s\n\n*Latest 3 Commits:*\n%s" "$MSG" "$COMMITS")"
+        fi
+
+        if [ "$INCLUDE_BUILD_DURATION" = "true" ] && [ -n "$BUILD_DURATION_SECONDS" ]; then
+          MSG="$(printf "%s\n*Build Duration:* %s" "$MSG" "$(format_duration "$BUILD_DURATION_SECONDS")")"
+        fi
+
+        if [ "$INCLUDE_PIPELINE_DURATION" = "true" ] && [ -n "$CI_PIPELINE_CREATED_AT" ]; then
+          START="$(date -d "$CI_PIPELINE_CREATED_AT" +%s)"
+          MSG="$(printf "%s\n*Pipeline Duration:* %s" "$MSG" "$(format_duration $(($(date +%s) - START)))")"
+        fi
+
+        PAYLOAD="$(jq -n --arg gn "$NOTIFICATION_GROUP" --arg msg "$MSG" \
+          '{groupName: $gn, message: $msg, mentionsUsers: []}')"
+
+        curl --fail --silent --show-error \
+          -X POST "$NOTIFICATION_API/send" \
+          -H "Content-Type: application/json" \
+          -d "$PAYLOAD"
+      }
+
+.notify_base:
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl jq git coreutils
+    - !reference [.notify_functions, script]
+  script:
+    - notify
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "staging"'
+  retry: 1
+
+# ==========================================
+# BUILD STAGING (includes "pipeline started" notification)
+# ==========================================
+build:
+  stage: build
+  image:
+    name: moby/buildkit:latest
+    entrypoint: [""]
+  before_script:
+    - apk add --no-cache curl jq git coreutils
+    - !reference [.notify_functions, script]
+    - mkdir -p ~/.docker
+    - |
+      cat > ~/.docker/config.json <<EOF
+      {
+        "auths": {
+          "registry.falahtech.com": {
+            "username": "${DOCKER_USER}",
+            "password": "${DOCKER_PASSWORD}"
+          }
+        }
+      }
+      EOF
+  script:
+    - |
+      set -e
+
+      # --- Pipeline started notification (never blocks the build) ---
+      INCLUDE_LATEST_COMMITS=true \
+      NOTIFY_MESSAGE="🚀 *PIPELINE STARTED* 🚀\n\n*Project:* ${CI_PROJECT_NAME}\n*Environment:* Staging\n*Branch:* ${CI_COMMIT_REF_NAME}\n*Triggered by:* ${GITLAB_USER_NAME}" \
+        notify || echo "Start notification failed, continuing..."
+
+      # --- Build ---
+      BUILD_STARTED_AT="$(date +%s)"
+      write_build_duration() {
+        status=$?
+        echo "BUILD_DURATION_SECONDS=$(( $(date +%s) - BUILD_STARTED_AT ))" > build.env
+        exit "$status"
+      }
+      trap write_build_duration EXIT
+
+      echo "Using BuildKit service: $BUILDKIT_SERVICE"
+      buildctl --addr "$BUILDKIT_SERVICE" debug workers
+      buildctl --addr "$BUILDKIT_SERVICE" build \
+        --frontend dockerfile.v0 \
+        --local context=. \
+        --local dockerfile=. \
+        --opt filename=Dockerfile.cms \
+        --opt build-arg:NODE_ENV="${NODE_ENV}" \
+        --opt build-arg:NODE_VERSION="${NODE_VERSION:-24}" \
+        --opt build-arg:FRONTEND_URL="${FRONTEND_URL:-http://localhost:3000}" \
+        --opt build-arg:S3_PUBLIC_URL="${S3_PUBLIC_URL:-}" \
+        --opt build-arg:S3_ENDPOINT="${S3_ENDPOINT:-}" \
+        --opt build-arg:S3_BUCKET="${S3_BUCKET:-}" \
+        --opt build-arg:NEXT_PUBLIC_BODY_LIMIT_MB="${NEXT_PUBLIC_BODY_LIMIT_MB:-50}" \
+        --opt build-arg:BUILD_MEMORY_MB="${BUILD_MEMORY_MB:-4096}" \
+        --output type=image,name=${TAG_COMMIT},push=true,compression=zstd,compression-level=5,force-compression=true,registry.insecure=true \
+        --output type=image,name=${TAG_LATEST},push=true,compression=zstd,compression-level=5,force-compression=true,registry.insecure=true
+  artifacts:
+    when: always
+    reports:
+      dotenv: build.env
+  environment:
+    name: staging
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "staging"'
+  retry: 1
+
+notify_build_success:
+  stage: build
+  extends: .notify_base
+  needs:
+    - job: build
+      artifacts: true
+  when: on_success
+  variables:
+    INCLUDE_BUILD_DURATION: "true"
+    NOTIFY_MESSAGE: |-
+      📦 *BUILD & PUSH SUCCESS* 📦
+
+      *Project:* ${CI_PROJECT_NAME}
+      *Commit Hash:* ${CI_COMMIT_SHORT_SHA}
+      *Image:* ${TAG_COMMIT}
+
+notify_build_failure:
+  stage: build
+  extends: .notify_base
+  needs:
+    - job: build
+      artifacts: true
+  when: on_failure
+  variables:
+    INCLUDE_BUILD_DURATION: "true"
+    NOTIFY_MESSAGE: |-
+      ❌ *BUILD & PUSH FAILED* ❌
+
+      *Project:* ${CI_PROJECT_NAME}
+      *Commit Hash:* ${CI_COMMIT_SHORT_SHA}
+      *Triggered by:* ${GITLAB_USER_NAME}
+
+      *Pipeline URL:* ${CI_PIPELINE_URL}
+
+# ==========================================
+# MIGRATION
+# ==========================================
+migrate:
+  stage: migrate
+  tags:
+    - "45"
+  image: node:24-alpine
+  needs:
+    - job: build
+  variables:
+    NODE_ENV: "production"
+    NPM_CONFIG_CACHE: "$CI_PROJECT_DIR/.npm"
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+  before_script:
+    - apk add --no-cache libc6-compat
+  script:
+    - printf "%s" "$ENV_STAGING" > .env
+    - chmod 600 .env
+    - export DATABASE_URL="$MIGRATE_DATABASE_URL"
+    - npm ci
+    - npm run migrate
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "staging"'
+      allow_failure: true
+      # when: manual
+
+notify_migrate_failure:
+  stage: migrate
+  extends: .notify_base
+  needs:
+    - job: migrate
+  when: on_failure
+  variables:
+    NOTIFY_MESSAGE: |-
+      ❌ *MIGRATION FAILED* ❌
+
+      *Project:* ${CI_PROJECT_NAME}
+      *Commit Hash:* ${CI_COMMIT_SHORT_SHA}
+      *Triggered by:* ${GITLAB_USER_NAME}
+
+      *Pipeline URL:* ${CI_PIPELINE_URL}
+
+# ==========================================
+# DEPLOY STAGING
+# ==========================================
+deploy:
+  stage: deploy
+  image: ringcentral/sshpass:latest
+  dependencies:
+    - build
+  before_script:
+    - echo "Starting Deployments"
+  script:
+    - |
+      sshpass -e ssh -o StrictHostKeyChecking=no "$SSHUSER@$SSHSERVER" -p 22345 "
+      set -e
+        cd $BASE_DIR
+        if grep -q '^CMS_TAG=' .env; then
+          sed -i 's/^CMS_TAG=.*/CMS_TAG=$CI_COMMIT_SHORT_SHA/' .env
+        else
+          echo 'CMS_TAG=$CI_COMMIT_SHORT_SHA' >> .env
+        fi
+        docker compose pull cms
+        docker compose up -d cms
+        # docker image prune -f
+        echo 'Deployment of CMS staging completed.'
+      "
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "staging"'
+
+notify_staging_deploy_success:
+  stage: deploy
+  extends: .notify_base
+  needs:
+    - job: deploy
+  when: on_success
+  variables:
+    INCLUDE_PIPELINE_DURATION: "true"
+    NOTIFY_MESSAGE: |-
+      ✅ *DEPLOYMENT SUCCESS* ✅
+
+      *Project:* ${CI_PROJECT_NAME}
+      *Environment:* Staging
+      *Branch:* ${CI_COMMIT_REF_NAME}
+      *Triggered by:* ${GITLAB_USER_NAME}
+      *Image:* ${TAG_COMMIT}
+
+      *Pipeline URL:* ${CI_PIPELINE_URL}
+
+notify_staging_deploy_failure:
+  stage: deploy
+  extends: .notify_base
+  needs:
+    - job: deploy
+  when: on_failure
+  variables:
+    INCLUDE_PIPELINE_DURATION: "true"
+    NOTIFY_MESSAGE: |-
+      ❌ *DEPLOYMENT FAILED* ❌
+
+      *Project:* ${CI_PROJECT_NAME}
+      *Environment:* Staging
+      *Branch:* ${CI_COMMIT_REF_NAME}
+      *Triggered by:* ${GITLAB_USER_NAME}
+      *Image:* ${TAG_COMMIT}
+
+      *Pipeline URL:* ${CI_PIPELINE_URL}
