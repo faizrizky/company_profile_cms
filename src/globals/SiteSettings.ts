@@ -1,7 +1,7 @@
 import type { GlobalConfig } from 'payload'
 
 import { anyone, hasRole, isAdmin, isAdminField } from '@/access'
-import { testEmailEndpoint } from '@/endpoints/testEmail'
+import { testEmailEndpoints } from '@/endpoints/testEmail'
 import { fieldCard } from '@/fields/card'
 import { hrefField } from '@/fields/link'
 import { imageField } from '@/fields/section'
@@ -21,7 +21,7 @@ export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   admin: { group: 'Settings' },
   access: { read: anyone, update: isAdmin },
-  endpoints: [testEmailEndpoint],
+  endpoints: testEmailEndpoints,
   hooks: { afterChange: [auditGlobal('site-settings'), revalidateGlobal('site-settings')] },
   fields: [
     {
