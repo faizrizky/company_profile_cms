@@ -190,10 +190,12 @@ export default buildConfig({
           port: env.SMTP_PORT,
           secure: env.SMTP_SECURE ? env.SMTP_SECURE === 'true' : env.SMTP_PORT === 465,
           ...(env.SMTP_USER ? { auth: { user: env.SMTP_USER, pass: env.SMTP_PASS } } : {}),
-          // Generous: the mail server can take several seconds to log in.
-          connectionTimeout: 15_000,
-          greetingTimeout: 15_000,
-          socketTimeout: 30_000,
+          // Generous: the office mail server takes ~6 s to log in and can take
+          // half a minute or more to accept a message (it scans it first).
+          // Visitors never wait for this (see lib/mail).
+          connectionTimeout: 20_000,
+          greetingTimeout: 30_000,
+          socketTimeout: 120_000,
         },
       })
     : undefined,
