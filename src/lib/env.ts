@@ -39,6 +39,14 @@ const schema = z
      */
     COOKIE_DOMAIN: optional(z.string()),
     /**
+     * The admin is served over plain http (e.g. by LAN IP, no TLS yet). Browsers
+     * then send no Sec-Fetch-Site header, and a same-origin GET carries no
+     * Origin, so Payload would ignore the session cookie on every read: login
+     * succeeds, then the admin acts signed out. `true` makes the proxy mark
+     * such requests same-origin (see src/proxy.ts). Leave unset with https.
+     */
+    ALLOW_PLAIN_HTTP: optional(z.enum(['true', 'false'])).transform((v) => v === 'true'),
+    /**
      * Incoming webhook for security alerts (logins, new users, role and 2FA
      * changes): Discord, Slack or Google Chat. Leave unset to only audit-log.
      */

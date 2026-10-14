@@ -11,7 +11,7 @@ import { getClientIp } from '@/lib/request'
  */
 const authLimiter = createRateLimiter({ limit: 10, windowMs: 15 * 60 * 1000 })
 
-const AUTH_PATHS = new Set([
+const AUTH_POSTS = new Set([
   '/api/users/login',
   '/api/users/first-register',
   '/api/users/forgot-password',
@@ -20,15 +20,14 @@ const AUTH_PATHS = new Set([
 ])
 
 /**
- * Payload accepts the session cookie only with an allowed Origin or, when there
- * is none (same-origin GET), with Sec-Fetch-Site. Browsers send Sec-Fetch-Site
- * to secure origins only, so over plain http every page load looks signed out.
- * With ALLOW_PLAIN_HTTP, a request carrying neither header is marked
- * same-origin, as a browser on HTTPS would. Cross-site requests are still
- * refused: browsers always send Origin on POST/PATCH/DELETE, and the
- * SameSite=Strict cookie is not sent from other sites at all.
+ * Plain http only (ALLOW_PLAIN_HTTP): Payload honours the session cookie on a
+ * request without Origin only if Sec-Fetch-Site says same-origin, and browsers
+ * don't send Sec-Fetch-Site to http sites. Without this every read after login
+ * is anonymous and the admin falls back to the login form. Cross-site browser
+ * requests that matter still carry Origin (checked by Payload), and the
+ * SameSite=Strict cookie is never sent cross-site anyway.
  */
-function withPlainHttpFetchSite(request: NextRequest): NextResponse {
+function markSameOrigin(request: NextRequest) {
   const { headers } = request
   if (!env.ALLOW_PLAIN_HTTP || headers.has('origin') || headers.has('sec-fetch-site')) {
     return NextResponse.next()
@@ -39,8 +38,8 @@ function withPlainHttpFetchSite(request: NextRequest): NextResponse {
 }
 
 export function proxy(request: NextRequest) {
-  if (request.method !== 'POST' || !AUTH_PATHS.has(request.nextUrl.pathname)) {
-    return withPlainHttpFetchSite(request)
+  if (request.method !== 'POST' || !AUTH_POSTS.has(request.nextUrl.pathname)) {
+    return markSameOrigin(request)
   }
 
   const { ok, retryAfterSeconds } = authLimiter.check(getClientIp(request.headers))
