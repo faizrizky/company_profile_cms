@@ -75,7 +75,7 @@ const schema = z
      * Sec-Fetch-Site to secure origins, so Payload ignores the session cookie on
      * page loads and login loops back. See `src/proxy.ts`. Leave unset on HTTPS.
      */
-    ALLOW_PLAIN_HTTP: optional(z.enum(['true', 'false'])).transform((v) => v === 'true'),
+
 
     /**
      * Mail server (SMTP) for the email about each new contact message. Unset:
