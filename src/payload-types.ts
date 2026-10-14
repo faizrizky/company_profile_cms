@@ -2270,6 +2270,7 @@ export interface SiteSetting {
      */
     subject: string;
   };
+  _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2355,6 +2356,7 @@ export interface Navigation {
      */
     href: string;
   };
+  _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2387,6 +2389,7 @@ export interface Footer {
    * Use {year} for the current year.
    */
   copyright?: string | null;
+  _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2452,6 +2455,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         fromEmail?: T;
         subject?: T;
       };
+  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -2514,6 +2518,7 @@ export interface NavigationSelect<T extends boolean = true> {
         label?: T;
         href?: T;
       };
+  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -2538,6 +2543,7 @@ export interface FooterSelect<T extends boolean = true> {
         id?: T;
       };
   copyright?: T;
+  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -2593,7 +2599,7 @@ export interface TaskSchedulePublish {
           relationTo: 'products';
           value: number | Product;
         } | null);
-    global?: string | null;
+    global?: ('site-settings' | 'navigation' | 'footer') | null;
     user?: {
       relationTo: 'users';
       value: number | User;

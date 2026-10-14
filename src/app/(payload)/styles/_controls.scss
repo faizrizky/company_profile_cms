@@ -47,9 +47,54 @@
   opacity: 0.6;
 }
 
+/* Secondary buttons (Save draft, Go back, Cancel…): the light sibling of the
+   primary gradient — a white button with a soft blue edge and a soft shadow
+   under it, instead of Payload's dark outline. */
 .btn--style-secondary {
-  --bg-color: rgb(255 255 255 / 0.8);
-  --hover-bg: #fff;
+  --color: var(--falah-accent);
+  --bg-color: #fff;
+  --hover-color: #0b4a9e;
+  --hover-bg: #f5faff;
+  --btn-border: 1px solid #d6e6f7;
+  --hover-btn-border: 1px solid #b4d5f3;
+  font-weight: 500;
+  box-shadow:
+    0 8px 20px -12px rgb(31 122 224 / 0.45),
+    0 1px 2px rgb(15 39 66 / 0.06);
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    color 0.15s,
+    box-shadow 0.15s,
+    transform 0.15s;
+
+  &:not(.btn--disabled):hover {
+    box-shadow:
+      0 10px 24px -12px rgb(31 122 224 / 0.55),
+      0 1px 2px rgb(15 39 66 / 0.06);
+    transform: translateY(-1px);
+  }
+
+  &:not(.btn--disabled):active {
+    box-shadow: 0 4px 12px -8px rgb(31 122 224 / 0.5);
+    transform: translateY(0);
+  }
+}
+
+.btn--style-secondary.btn--disabled {
+  --color: #9db4cc;
+  --bg-color: rgb(255 255 255 / 0.7);
+  --hover-bg: var(--bg-color);
+  --hover-color: var(--color);
+  --btn-border: 1px solid #e3edf8;
+  --hover-btn-border: var(--btn-border);
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn--style-secondary:not(.btn--disabled):hover {
+    transform: none;
+  }
 }
 
 input:focus,

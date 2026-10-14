@@ -1,6 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
-import { anyone, isAuthenticated } from '@/access'
+import { isAuthenticated, publishedOrAuthenticated } from '@/access'
 import { hrefField, linkFields } from '@/fields/link'
 import { imageField } from '@/fields/section'
 import { auditGlobal } from '@/hooks/auditLog'
@@ -16,7 +16,14 @@ const cardFields = [
 export const Navigation: GlobalConfig = {
   slug: 'navigation',
   admin: { group: 'Settings' },
-  access: { read: anyone, update: isAuthenticated },
+  // The website reads the published version; drafts (and `?draft=true`)
+  // stay behind sign-in.
+  access: { read: publishedOrAuthenticated, readVersions: isAuthenticated, update: isAuthenticated },
+  // Like pages: changes are drafts (saved automatically) until published.
+  versions: {
+    drafts: { autosave: { interval: 2000, showSaveDraftButton: true }, schedulePublish: true },
+    max: 50,
+  },
   hooks: { afterChange: [auditGlobal('navigation'), revalidateGlobal('navigation')] },
   fields: [
     {

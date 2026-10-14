@@ -1561,8 +1561,16 @@ export const DEFAULT_TUTORIAL_STEPS: TutorialStep[] = [
     target: '#nav-global-site-settings',
     titleEn: 'Site settings',
     titleId: 'Pengaturan situs',
-    bodyEn: 'Name, logo, contact details and social media of the whole website.',
-    bodyId: 'Nama, logo, kontak, dan media sosial untuk seluruh website.',
+    bodyEn: lines(
+      'Name, logo, contact details, social media and the contact-form email of the whole website.',
+      '- Like pages: changes are saved as a draft and reach the website once you publish',
+      '- Versions: every save is kept and can be restored',
+    ),
+    bodyId: lines(
+      'Nama, logo, kontak, media sosial, dan email form kontak untuk seluruh website.',
+      '- Sama seperti halaman: perubahan tersimpan sebagai draft dan baru tampil di website setelah dipublish',
+      '- Versions: setiap simpanan tercatat dan bisa dipulihkan',
+    ),
   }),
   step({
     id: 'site-general',

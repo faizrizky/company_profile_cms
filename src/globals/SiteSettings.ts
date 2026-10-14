@@ -1,6 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
-import { anyone, hasRole, isAdmin, isAdminField } from '@/access'
+import { hasRole, isAdmin, isAdminField, publishedOrAuthenticated } from '@/access'
 import { testEmailEndpoints } from '@/endpoints/testEmail'
 import { fieldCard } from '@/fields/card'
 import { hrefField } from '@/fields/link'
@@ -20,7 +20,14 @@ const normalizeWhatsapp = (value: unknown) => {
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   admin: { group: 'Settings' },
-  access: { read: anyone, update: isAdmin },
+  // The website reads the published settings; drafts (and `?draft=true`)
+  // stay behind sign-in, the history with the admins who edit it.
+  access: { read: publishedOrAuthenticated, readVersions: isAdmin, update: isAdmin },
+  // Like pages: changes are drafts (saved automatically) until published.
+  versions: {
+    drafts: { autosave: { interval: 2000, showSaveDraftButton: true }, schedulePublish: true },
+    max: 50,
+  },
   endpoints: testEmailEndpoints,
   hooks: { afterChange: [auditGlobal('site-settings'), revalidateGlobal('site-settings')] },
   fields: [
