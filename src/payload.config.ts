@@ -122,6 +122,8 @@ export default buildConfig({
         '/components/admin/UploadLimits#UploadLimitsProvider',
         // Readable file names wherever Payload prints the stored (random) one.
         '/components/admin/MediaNames#MediaNamesProvider',
+        // "Document locked": who is editing, by name instead of "User: 1".
+        '/components/admin/DocumentLockNames#DocumentLockNamesProvider',
         // Progress toast (with a percentage) while a form saves or publishes.
         '/components/admin/SaveProgress#SaveProgressProvider',
         // The guided tour: opens for new users, replayed from the Account page (see src/tutorial).

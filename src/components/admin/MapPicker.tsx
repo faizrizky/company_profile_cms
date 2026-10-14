@@ -148,16 +148,20 @@ export const MapPicker: UIFieldClientComponent = ({ path }) => {
         iconSize: [30, 42],
         iconAnchor: [15, 42],
       })
-      const place = (latlng: { lat: number; lng: number }) => {
-        setters.current.lat(round(latlng.lat))
-        setters.current.lng(round(latlng.lng))
+      // `save: false` only shows the pin: writing back the stored coordinates
+      // would count as a change (and start an autosaved draft).
+      const place = (latlng: { lat: number; lng: number }, save = true) => {
+        if (save) {
+          setters.current.lat(round(latlng.lat))
+          setters.current.lng(round(latlng.lng))
+        }
         if (marker.current) marker.current.setLatLng(latlng)
         else {
           marker.current = L.marker(latlng, { icon, draggable: true }).addTo(m)
           marker.current.on('dragend', () => place(marker.current!.getLatLng()))
         }
       }
-      if (hasPin) place({ lat: lat.value!, lng: lng.value! })
+      if (hasPin) place({ lat: lat.value!, lng: lng.value! }, false)
       m.on('click', (e) => place(e.latlng))
       map.current = m
       ;(m as LeafletMap & { falahPlace?: typeof place }).falahPlace = place

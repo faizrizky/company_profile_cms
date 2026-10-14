@@ -8,19 +8,21 @@ import { useAdminText } from './useAdminText'
 const TEXT = {
   en: {
     label: 'Test',
-    help: 'Sends a sample message to the contact address, with the saved sender and subject.',
+    help: 'Sends a sample message to the contact address, with the published sender and subject.',
     button: 'Send a test email',
     sending: 'Sending… (the mail server can take up to 2 minutes)',
-    saveFirst: 'Save your changes first: the test uses what is saved.',
+    saveFirst:
+      'Publish your changes first: the test (and every email) uses the published settings.',
     sent: (to: string) => `Test email sent to ${to}.`,
     failed: 'The test email could not be sent.',
   },
   id: {
     label: 'Uji coba',
-    help: 'Mengirim pesan contoh ke alamat email kontak, dengan pengirim dan subjek yang tersimpan.',
+    help: 'Mengirim pesan contoh ke alamat email kontak, dengan pengirim dan subjek yang sudah dipublish.',
     button: 'Kirim email uji',
     sending: 'Mengirim… (server email bisa butuh sampai 2 menit)',
-    saveFirst: 'Simpan perubahan dulu: uji coba memakai yang sudah tersimpan.',
+    saveFirst:
+      'Publikasikan perubahan dulu: uji coba (dan setiap email) memakai pengaturan yang sudah dipublish.',
     sent: (to: string) => `Email uji terkirim ke ${to}.`,
     failed: 'Email uji gagal dikirim.',
   },

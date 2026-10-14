@@ -29,6 +29,7 @@ import { TwoFactorGateProvider as TwoFactorGateProvider_bd1354467d11b81d7d9b3ed6
 import { FileSizeMbProvider as FileSizeMbProvider_7e7f97f4afdb28a48d5c8a0ccfc7b619 } from '../../../components/admin/FileSizeMb'
 import { UploadLimitsProvider as UploadLimitsProvider_318864aac0e4a9b8ec7a5896f86e4277 } from '../../../components/admin/UploadLimits'
 import { MediaNamesProvider as MediaNamesProvider_7334bec1d083369e67567d95aef9b8f1 } from '../../../components/admin/MediaNames'
+import { DocumentLockNamesProvider as DocumentLockNamesProvider_d4086420fab5ac17b9999bdfb8ced8b6 } from '../../../components/admin/DocumentLockNames'
 import { SaveProgressProvider as SaveProgressProvider_7afde912eebf3da11b20fbdc876d592c } from '../../../components/admin/SaveProgress'
 import { TutorialProvider as TutorialProvider_9c55c7c07c91684ff639c1b430adf718 } from '../../../components/admin/tutorial/TutorialProvider'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
@@ -68,6 +69,7 @@ export const importMap = {
   "/components/admin/FileSizeMb#FileSizeMbProvider": FileSizeMbProvider_7e7f97f4afdb28a48d5c8a0ccfc7b619,
   "/components/admin/UploadLimits#UploadLimitsProvider": UploadLimitsProvider_318864aac0e4a9b8ec7a5896f86e4277,
   "/components/admin/MediaNames#MediaNamesProvider": MediaNamesProvider_7334bec1d083369e67567d95aef9b8f1,
+  "/components/admin/DocumentLockNames#DocumentLockNamesProvider": DocumentLockNamesProvider_d4086420fab5ac17b9999bdfb8ced8b6,
   "/components/admin/SaveProgress#SaveProgressProvider": SaveProgressProvider_7afde912eebf3da11b20fbdc876d592c,
   "/components/admin/tutorial/TutorialProvider#TutorialProvider": TutorialProvider_9c55c7c07c91684ff639c1b430adf718,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,

@@ -71,8 +71,11 @@ export const revalidateCollection = (tag: CacheTag) => {
 }
 
 export const revalidateGlobal = (tag: CacheTag): GlobalAfterChangeHook => {
-  return async ({ doc, req }) => {
-    await notifyFrontend(req, [tag])
+  return async ({ doc, previousDoc, req }) => {
+    // Globals with drafts: an autosaved draft doesn't change what visitors see.
+    const isPublishedChange =
+      !('_status' in doc) || doc._status === 'published' || previousDoc?._status === 'published'
+    if (isPublishedChange) await notifyFrontend(req, [tag])
     return doc
   }
 }

@@ -1,6 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
-import { anyone, isAuthenticated } from '@/access'
+import { isAuthenticated, publishedOrAuthenticated } from '@/access'
 import { linkFields } from '@/fields/link'
 import { auditGlobal } from '@/hooks/auditLog'
 import { revalidateGlobal } from '@/hooks/revalidateFrontend'
@@ -11,7 +11,14 @@ export const Footer: GlobalConfig = {
     group: 'Settings',
     description: 'Alamat, email, telepon & sosial media diatur di Site Settings.',
   },
-  access: { read: anyone, update: isAuthenticated },
+  // The website reads the published version; drafts (and `?draft=true`)
+  // stay behind sign-in.
+  access: { read: publishedOrAuthenticated, readVersions: isAuthenticated, update: isAuthenticated },
+  // Like pages: changes are drafts (saved automatically) until published.
+  versions: {
+    drafts: { autosave: { interval: 2000, showSaveDraftButton: true }, schedulePublish: true },
+    max: 50,
+  },
   hooks: { afterChange: [auditGlobal('footer'), revalidateGlobal('footer')] },
   fields: [
     { name: 'description', type: 'textarea', maxLength: 300 },
