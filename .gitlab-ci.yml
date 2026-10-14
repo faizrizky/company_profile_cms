@@ -115,7 +115,7 @@ build:
         --frontend dockerfile.v0 \
         --local context=. \
         --local dockerfile=. \
-        --opt filename=Dockerfile.cms \
+        --opt filename=Dockerfile \
         --opt build-arg:NODE_ENV="${NODE_ENV}" \
         --opt build-arg:NODE_VERSION="${NODE_VERSION:-24}" \
         --opt build-arg:FRONTEND_URL="${FRONTEND_URL:-http://localhost:3000}" \
