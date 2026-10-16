@@ -5,6 +5,7 @@ import { contentAccess, contentHooks } from '@/collections/content'
 import { fieldCard } from '@/fields/card'
 import { imageField } from '@/fields/section'
 import { slugField } from '@/fields/slug'
+import { visualEditorViews } from '@/lib/visualViews'
 
 export const Products: CollectionConfig = {
   slug: 'products',
@@ -15,6 +16,8 @@ export const Products: CollectionConfig = {
     group: 'Solutions',
     description:
       'Kartu produk di Solution Overview dan mega menu (produk pertama tiap kategori jadi kartu besar). Geser untuk mengatur urutan.',
+    // Opens on the visual editor (the card among its neighbours); the form is one tab away.
+    components: { views: visualEditorViews() },
   },
   access: contentAccess(publishedOrAuthenticated),
   versions: {

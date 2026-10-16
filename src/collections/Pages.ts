@@ -6,7 +6,7 @@ import { contentAccess, contentHooks } from '@/collections/content'
 import { fieldCard } from '@/fields/card'
 import { seoField } from '@/fields/seo'
 import { slugField } from '@/fields/slug'
-import { env } from '@/lib/env'
+import { visualEditorViews } from '@/lib/visualViews'
 
 /** Routes owned by the frontend that a CMS page must never shadow. */
 const RESERVED_SLUGS = new Set(['api', 'admin', '_next', 'solution-category'])
@@ -18,23 +18,8 @@ export const Pages: CollectionConfig = {
     defaultColumns: ['title', 'slug', '_status', 'updatedAt'],
     group: 'Content',
     components: {
-      views: {
-        edit: {
-          // Opening a page lands in the visual editor; the classic form is one tab away.
-          default: {
-            Component: {
-              path: '/components/admin/VisualEditorView#VisualEditorView',
-              clientProps: { frontendUrl: env.FRONTEND_URL },
-            },
-            tab: { label: 'Visual', order: 0 },
-          },
-          form: {
-            Component: '@payloadcms/ui#DefaultEditView',
-            path: '/form',
-            tab: { label: 'Form', href: '/form', order: 100 },
-          },
-        },
-      },
+      // Opening a page lands in the visual editor; the classic form is one tab away.
+      views: visualEditorViews(),
     },
   },
   access: contentAccess(publishedOrAuthenticated),

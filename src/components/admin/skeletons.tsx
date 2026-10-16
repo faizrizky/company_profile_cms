@@ -1,4 +1,5 @@
 import type { JSX } from 'react'
+import { VISUAL_COLLECTIONS } from '@/lib/visualCollections'
 
 /**
  * Loading placeholders shaped like the admin screens they stand in for.
@@ -143,6 +144,8 @@ export function VisualSkeleton() {
 
 export type SkeletonKind = 'dashboard' | 'list' | 'edit' | 'visual'
 
+const VISUAL = new Set<string>(VISUAL_COLLECTIONS)
+
 /** Which placeholder fits an admin path. */
 export function skeletonFor(pathname: string, adminRoute = '/admin'): SkeletonKind {
   const rest = pathname.startsWith(adminRoute) ? pathname.slice(adminRoute.length) : pathname
@@ -150,9 +153,9 @@ export function skeletonFor(pathname: string, adminRoute = '/admin'): SkeletonKi
   if (parts.length === 0) return 'dashboard'
   if (parts[0] === 'collections') {
     if (parts.length === 2) return 'list'
-    // A page opens on the visual editor; its Form / Versions tabs and the
-    // create screen are regular forms.
-    if (parts[1] === 'pages' && parts.length === 3 && parts[2] !== 'create') return 'visual'
+    // A page, category or product opens on the visual editor; its Form / Versions
+    // tabs and the create screen are regular forms.
+    if (VISUAL.has(parts[1]) && parts.length === 3 && parts[2] !== 'create') return 'visual'
     return 'edit'
   }
   return 'edit'

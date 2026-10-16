@@ -2,9 +2,12 @@
 
 import type { ReactNode } from 'react'
 
+import { VISUAL_COLLECTIONS } from '@/lib/visualCollections'
+
 import { useDomScan } from './useDomScan'
 
 const VIEWS = new Set(['form', 'api', 'preview'])
+const VISUAL = new Set<string>(VISUAL_COLLECTIONS)
 
 /** Which document view a path points at: edit/visual (default), form, versions, api, preview. */
 function tabKey(pathname: string): string {
@@ -12,8 +15,8 @@ function tabKey(pathname: string): string {
   if (parts.includes('versions')) return 'versions'
   const last = parts.at(-1) ?? ''
   if (VIEWS.has(last)) return last
-  // Pages open on the visual editor; every other document on its form.
-  return parts[1] === 'collections' && parts[2] === 'pages' ? 'visual' : 'edit'
+  // Pages, solution categories and products open on the visual editor; every other document on its form.
+  return parts[1] === 'collections' && VISUAL.has(parts[2]) ? 'visual' : 'edit'
 }
 
 function tag(tab: HTMLElement) {
