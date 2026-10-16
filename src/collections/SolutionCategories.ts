@@ -7,6 +7,7 @@ import { hrefField } from '@/fields/link'
 import { imageField, videoField } from '@/fields/section'
 import { seoField } from '@/fields/seo'
 import { slugField } from '@/fields/slug'
+import { visualEditorViews } from '@/lib/visualViews'
 
 export const SolutionCategories: CollectionConfig = {
   slug: 'solution-categories',
@@ -18,6 +19,8 @@ export const SolutionCategories: CollectionConfig = {
     group: 'Solutions',
     description:
       'Setiap kategori punya halaman detail di /solution/<slug>. Geser untuk mengatur urutan tab.',
+    // Opens on the visual editor (the four sections of the page); the form is one tab away.
+    components: { views: visualEditorViews() },
   },
   access: contentAccess(publishedOrAuthenticated),
   versions: {

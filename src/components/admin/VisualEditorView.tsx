@@ -23,9 +23,10 @@ const READY_TIMEOUT_MS = 20_000
 type Props = ComponentProps<typeof DefaultEditView> & { frontendUrl: string }
 
 /**
- * Default view for Pages: the drag & drop visual editor (served by the
- * website at /studio) embedded inside the admin. The classic form stays in
- * the "Form" tab and is used to create new pages.
+ * Default view for Pages, solution categories and products: the drag & drop
+ * visual editor (served by the website at /studio/<collection>/<id>) embedded
+ * inside the admin. The classic form stays in the "Form" tab and is used to
+ * create new documents.
  */
 export function VisualEditorView({ frontendUrl, ...props }: Props) {
   const { collectionSlug, id } = useDocumentInfo()
@@ -63,7 +64,10 @@ export function VisualEditorView({ frontendUrl, ...props }: Props) {
   }, [])
 
   const ui = useAdminLang()
-  const src = id ? `${frontendUrl}/studio/pages/${id}?locale=${locale.code}&ui=${ui}&embed=1` : ''
+  const src =
+    id && collectionSlug
+      ? `${frontendUrl}/studio/${collectionSlug}/${id}?locale=${locale.code}&ui=${ui}&embed=1`
+      : ''
 
   // Show the editor skeleton until the studio says it's ready.
   useEffect(() => {
