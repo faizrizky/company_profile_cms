@@ -133,7 +133,8 @@ export const SolutionCategories: CollectionConfig = {
                   type: 'upload',
                   relationTo: 'media',
                   admin: {
-                    description: 'PDF brosur. Kosongkan = tombol mengarah ke halaman contact.',
+                    description:
+                      'PDF brosur cadangan: dipakai tab yang tidak punya brosur sendiri. Kosongkan = tombol mengarah ke halaman contact.',
                   },
                 },
                 {
@@ -168,6 +169,15 @@ export const SolutionCategories: CollectionConfig = {
                           },
                         }),
                       ],
+                    },
+                    {
+                      name: 'brochure',
+                      type: 'upload',
+                      relationTo: 'media',
+                      admin: {
+                        description:
+                          'PDF brosur produk di tab ini. Kosongkan = pakai brosur kategori (di atas), atau tombol mengarah ke halaman contact.',
+                      },
                     },
                   ],
                 },
