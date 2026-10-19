@@ -65,6 +65,12 @@ const nextConfig: NextConfig = {
   // Self-contained server for the Docker image (see Dockerfile); Vercel ignores it.
   output: process.env.BUILD_STANDALONE === 'true' ? 'standalone' : undefined,
   poweredByHeader: false,
+  experimental: {
+    // proxy.ts runs on every request and Next only buffers the first 10 MB of a
+    // body for it; the rest is cut off, so a larger upload failed with
+    // "Unexpected end of form". Room for the 50 MB limit plus form overhead.
+    proxyClientMaxBodySize: '60mb',
+  },
   images: {
     localPatterns: [{ pathname: '/api/media/file/**' }],
   },
