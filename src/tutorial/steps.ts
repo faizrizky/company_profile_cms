@@ -1325,13 +1325,13 @@ export const DEFAULT_TUTORIAL_STEPS: TutorialStep[] = [
     bodyEn: lines(
       'The problems this solution answers:',
       '- Eyebrow (small label), title and description',
-      '- Items (up to 8): an icon (clock = downtime, coins = cost, person = human error, shuffle = inconsistency), a title and a text',
+      '- Items (up to 8): an icon (upload a square SVG or PNG), a title and a text',
       'Drag the items to change their order on the page.',
     ),
     bodyId: lines(
       'Masalah yang dijawab solusi ini:',
       '- Eyebrow (label kecil), judul, dan deskripsi',
-      '- Item (maks. 8): ikon (jam = downtime, koin = biaya, orang = human error, acak = tidak konsisten), judul, dan teks',
+      '- Item (maks. 8): ikon (unggah SVG atau PNG persegi), judul, dan teks',
       'Seret item untuk mengubah urutannya di halaman.',
     ),
   }),

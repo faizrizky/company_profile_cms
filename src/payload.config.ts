@@ -30,6 +30,7 @@ import { env, s3Enabled, smtpEnabled } from './lib/env'
 import { DEFAULT_FROM_ADDRESS, DEFAULT_FROM_NAME } from './lib/mail'
 import { SUPABASE_ROOT_CA } from './lib/supabaseCa'
 import { saveWithProgress } from './endpoints/saveWithProgress'
+import { migrateChallengeIcons } from './lib/challengeIcons'
 import { withGlobalProgressHooks, withProgressHooks } from './lib/saveProgress'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -235,6 +236,8 @@ export default buildConfig({
   }),
 
   sharp,
+
+  onInit: migrateChallengeIcons,
 
   // Uploads go through this server first, and on Vercel a request is capped at
   // ~4.5 MB (see HOSTED_BODY_LIMIT_BYTES). Larger files need direct-to-storage

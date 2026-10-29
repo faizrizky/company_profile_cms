@@ -18,6 +18,7 @@ import * as migration_20261014_090051_site_settings_drafts from './20261014_0900
 import * as migration_20261014_092153_navigation_footer_drafts from './20261014_092153_navigation_footer_drafts';
 import * as migration_20261019_073205_tab_brochure from './20261019_073205_tab_brochure';
 import * as migration_20261029_090753_challenge_icon_image from './20261029_090753_challenge_icon_image';
+import * as migration_20261029_100047_challenge_icon_choice_removed from './20261029_100047_challenge_icon_choice_removed';
 
 export const migrations = [
   {
@@ -118,6 +119,11 @@ export const migrations = [
   {
     up: migration_20261029_090753_challenge_icon_image.up,
     down: migration_20261029_090753_challenge_icon_image.down,
-    name: '20261029_090753_challenge_icon_image'
+    name: '20261029_090753_challenge_icon_image',
+  },
+  {
+    up: migration_20261029_100047_challenge_icon_choice_removed.up,
+    down: migration_20261029_100047_challenge_icon_choice_removed.down,
+    name: '20261029_100047_challenge_icon_choice_removed'
   },
 ];

@@ -159,22 +159,22 @@ export const virtualTrainingSuiteDetail = (media: MediaRef) => async () => ({
       'Modern operational environment demand more than traditional training methods. These challenges can limit performance, increase cost, & introduce unnecessary risk.',
     items: [
       {
-        icon: 'downtime' as const,
+        iconImage: await media('/solution/challenges/downtime.svg'),
         title: 'High Equipment Downtime',
         description: 'Long maintenance time leads to operational disruptions and productivity loss',
       },
       {
-        icon: 'cost' as const,
+        iconImage: await media('/solution/challenges/cost.svg'),
         title: 'Expensive Practical Training',
         description: 'Using real equipment for training increases cost and resources consumption',
       },
       {
-        icon: 'error' as const,
+        iconImage: await media('/solution/challenges/error.svg'),
         title: 'Human Error & incorrect Procedures',
         description: 'Technicians may skip steps or make mistakes that can cause equipment failure',
       },
       {
-        icon: 'inconsistent' as const,
+        iconImage: await media('/solution/challenges/inconsistent.svg'),
         title: 'Inconsistent Procedures',
         description: 'Different technicians follow different methods and standard',
       },

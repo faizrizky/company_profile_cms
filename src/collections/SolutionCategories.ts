@@ -92,22 +92,13 @@ export const SolutionCategories: CollectionConfig = {
                   type: 'array',
                   maxRows: 8,
                   fields: [
-                    {
-                      name: 'icon',
-                      type: 'select',
-                      required: true,
-                      defaultValue: 'downtime',
-                      options: [
-                        { label: 'Clock (downtime)', value: 'downtime' },
-                        { label: 'Coins (cost)', value: 'cost' },
-                        { label: 'User X (human error)', value: 'error' },
-                        { label: 'Shuffle (inconsistent)', value: 'inconsistent' },
-                      ],
-                    },
                     imageField('iconImage', {
-                      label: 'Ikon sendiri',
+                      label: { en: 'Icon', id: 'Ikon' },
                       admin: {
-                        description: 'Opsional. Gambar persegi (SVG/PNG); menggantikan ikon di atas.',
+                        description: {
+                          en: 'Square image, SVG or transparent PNG. Shown at 50 × 50.',
+                          id: 'Gambar persegi, SVG atau PNG transparan. Tampil 50 × 50.',
+                        },
                       },
                     }),
                     { name: 'title', type: 'text', required: true, maxLength: 120 },
