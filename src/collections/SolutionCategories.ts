@@ -104,6 +104,12 @@ export const SolutionCategories: CollectionConfig = {
                         { label: 'Shuffle (inconsistent)', value: 'inconsistent' },
                       ],
                     },
+                    imageField('iconImage', {
+                      label: 'Ikon sendiri',
+                      admin: {
+                        description: 'Opsional. Gambar persegi (SVG/PNG); menggantikan ikon di atas.',
+                      },
+                    }),
                     { name: 'title', type: 'text', required: true, maxLength: 120 },
                     { name: 'description', type: 'textarea', maxLength: 300 },
                   ],
