@@ -5,7 +5,8 @@ import { contentAccess, contentHooks } from '@/collections/content'
 import { fieldCard } from '@/fields/card'
 import { imageField } from '@/fields/section'
 import { slugField } from '@/fields/slug'
-import { visualEditorViews } from '@/lib/visualViews'
+import { linkProductToTab, oneProductPerTab, syncTabFromProduct } from '@/hooks/showcaseSync'
+import { SOLUTION_PRODUCT_SWITCH, visualEditorViews } from '@/lib/visualViews'
 
 export const Products: CollectionConfig = {
   slug: 'products',
@@ -17,14 +18,27 @@ export const Products: CollectionConfig = {
     description:
       'Kartu produk di Solution Overview dan mega menu (produk pertama tiap kategori jadi kartu besar). Geser untuk mengatur urutan.',
     // Opens on the visual editor (the card among its neighbours); the form is one tab away.
-    components: { views: visualEditorViews() },
+    // Solution | Product: categories and products are edited as one "Solution & Product".
+    components: {
+      views: visualEditorViews(),
+      beforeList: [SOLUTION_PRODUCT_SWITCH],
+      edit: { beforeDocumentControls: [SOLUTION_PRODUCT_SWITCH] },
+    },
   },
   access: contentAccess(publishedOrAuthenticated),
   versions: {
     drafts: { autosave: { interval: 2000, showSaveDraftButton: true }, schedulePublish: true },
     maxPerDoc: 50,
   },
-  hooks: contentHooks('products'),
+  hooks: (() => {
+    const hooks = contentHooks('products')
+    // Each product is one Showcase tab of its category (see hooks/showcaseSync).
+    return {
+      ...hooks,
+      beforeChange: [linkProductToTab],
+      afterChange: [syncTabFromProduct, ...(hooks.afterChange ?? [])],
+    }
+  })(),
   fields: [
     fieldCard({ en: 'Content', id: 'Konten' }, [
       { name: 'title', type: 'text', required: true, maxLength: 120 },
@@ -71,6 +85,7 @@ export const Products: CollectionConfig = {
           },
           components: { Field: '/components/admin/ShowcaseTabField#ShowcaseTabField' },
         },
+        validate: oneProductPerTab as never,
       },
     ]),
     slugField(),

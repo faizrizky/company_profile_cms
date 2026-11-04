@@ -6,6 +6,7 @@ import { SelectionBar as SelectionBar_f7534a8a02a657e5c7e609e9cec59411 } from '.
 import { VisualEditorView as VisualEditorView_61cd617b938842b661c9f6d1678c1c79 } from '../../../components/admin/VisualEditorView'
 import { DefaultEditView as DefaultEditView_3817bf644402e67bfe6577f60ef982de } from '@payloadcms/ui'
 import { MediaFileCell as MediaFileCell_43b49a85fdeabccf4cc8d1c9210a9a19 } from '../../../components/admin/MediaFileCell'
+import { SolutionProductSwitch as SolutionProductSwitch_440621d953e091efe99ce23335bedd52 } from '../../../components/admin/SolutionProductSwitch'
 import { ShowcaseTabField as ShowcaseTabField_8c6529d0630530b36da464d8eade7335 } from '../../../components/admin/ShowcaseTabField'
 import { PasswordChecklist as PasswordChecklist_04392dd84d621fdceface601f994cac6 } from '../../../components/admin/PasswordChecklist'
 import { TwoFactorStatus as TwoFactorStatus_380291c26ced0491ded072106ac7f617 } from '../../../components/admin/TwoFactorStatus'
@@ -46,6 +47,7 @@ export const importMap = {
   "/components/admin/VisualEditorView#VisualEditorView": VisualEditorView_61cd617b938842b661c9f6d1678c1c79,
   "@payloadcms/ui#DefaultEditView": DefaultEditView_3817bf644402e67bfe6577f60ef982de,
   "/components/admin/MediaFileCell#MediaFileCell": MediaFileCell_43b49a85fdeabccf4cc8d1c9210a9a19,
+  "/components/admin/SolutionProductSwitch#SolutionProductSwitch": SolutionProductSwitch_440621d953e091efe99ce23335bedd52,
   "/components/admin/ShowcaseTabField#ShowcaseTabField": ShowcaseTabField_8c6529d0630530b36da464d8eade7335,
   "/components/admin/PasswordChecklist#PasswordChecklist": PasswordChecklist_04392dd84d621fdceface601f994cac6,
   "/components/admin/TwoFactorStatus#TwoFactorStatus": TwoFactorStatus_380291c26ced0491ded072106ac7f617,

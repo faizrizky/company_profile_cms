@@ -54,17 +54,26 @@ export async function FalahNav({ i18n, payload, permissions, req, visibleEntitie
   const groups: NavGroupData[] = grouped.map(({ label, entities }) => ({
     label,
     open: prefs?.groups?.[label]?.open,
-    items: entities.map(({ slug, type, label: entityLabel }) => {
-      const isGlobal = type === EntityType.global
-      return {
-        id: isGlobal ? `nav-global-${slug}` : `nav-${slug}`,
-        href: formatAdminURL({
-          adminRoute: routes.admin,
-          path: `/${isGlobal ? 'globals' : 'collections'}/${slug}`,
-        }),
-        label: getTranslation(entityLabel, i18n),
-      }
-    }),
+    // Products live under "Solution & Product" (the Solution | Product switch), not on their own.
+    items: entities
+      .filter(({ slug, type }) => !(type === EntityType.collection && slug === 'products'))
+      .map(({ slug, type, label: entityLabel }) => {
+        const isGlobal = type === EntityType.global
+        const href = (path: `/${string}`) => formatAdminURL({ adminRoute: routes.admin, path })
+        if (!isGlobal && slug === 'solution-categories') {
+          return {
+            id: `nav-${slug}`,
+            href: href(`/collections/${slug}`),
+            label: 'Solution & Product',
+            also: [href('/collections/products')],
+          }
+        }
+        return {
+          id: isGlobal ? `nav-global-${slug}` : `nav-${slug}`,
+          href: href(`/${isGlobal ? 'globals' : 'collections'}/${slug}`),
+          label: getTranslation(entityLabel, i18n),
+        }
+      }),
   }))
 
   // The home (website statistics) heads the menu.

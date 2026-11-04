@@ -4,6 +4,7 @@ import {
   FieldDescription,
   FieldLabel,
   useConfig,
+  useDocumentInfo,
   useField,
   useFormFields,
   useLocale,
@@ -13,18 +14,20 @@ import { useEffect, useId, useState, type CSSProperties } from 'react'
 
 import { useAdminText } from './useAdminText'
 
-type Tab = { id: string; name: string }
+type Tab = { id: string; name: string; usedBy?: string }
 
 const TEXT = {
   en: {
     auto: '— Automatic (tab named like the product) —',
     none: 'Choose a category first',
     noPage: 'This category has no detail page, so the card is not a link.',
+    usedBy: (title: string) => `used by "${title}"`,
   },
   id: {
     auto: '— Otomatis (tab yang namanya sama dengan produk) —',
     none: 'Pilih kategori terlebih dahulu',
     noPage: 'Kategori ini tidak punya halaman detail, jadi kartu tidak bisa diklik.',
+    usedBy: (title: string) => `dipakai "${title}"`,
   },
 }
 
@@ -40,6 +43,7 @@ export const ShowcaseTabField: TextFieldClientComponent = ({ field, path: pathFr
     number | string | { id: number | string } | null | undefined
   const categoryId = typeof category === 'object' && category ? category.id : category
   const { config } = useConfig()
+  const { id: productId } = useDocumentInfo()
   const locale = useLocale()
   const t = useAdminText(TEXT)
   const id = useId()
@@ -50,14 +54,30 @@ export const ShowcaseTabField: TextFieldClientComponent = ({ field, path: pathFr
   useEffect(() => {
     if (!categoryId) return
     let active = true
-    const url = `${config.serverURL}${config.routes.api}/solution-categories/${categoryId}?depth=0&draft=true&locale=${locale.code}&select[hasDetailPage]=true&select[showcase.tabs]=true`
-    fetch(url, { credentials: 'include' })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((doc) => {
+    const api = `${config.serverURL}${config.routes.api}`
+    const json = (url: string) =>
+      fetch(url, { credentials: 'include' }).then((r) => (r.ok ? r.json() : null))
+    Promise.all([
+      json(
+        `${api}/solution-categories/${categoryId}?depth=0&draft=true&locale=${locale.code}&select[hasDetailPage]=true&select[showcase][tabs]=true`,
+      ),
+      // The category's products, to mark the tabs other products already open (one product per tab).
+      json(
+        `${api}/products?where[category][equals]=${categoryId}&depth=0&draft=true&limit=100&locale=${locale.code}&select[title]=true&select[showcaseTab]=true`,
+      ),
+    ])
+      .then(([doc, products]) => {
         if (!active) return
+        const others = ((products?.docs ?? []) as { id: number; title?: string; showcaseTab?: string }[]).filter(
+          (product) => String(product.id) !== String(productId),
+        )
         setLoaded({
           for: categoryId,
-          tabs: (doc?.showcase?.tabs ?? []).map((tab: Tab) => ({ id: tab.id, name: tab.name })),
+          tabs: (doc?.showcase?.tabs ?? []).map((tab: Tab) => ({
+            id: tab.id,
+            name: tab.name,
+            usedBy: others.find((product) => product.showcaseTab === tab.id)?.title,
+          })),
           hasPage: doc?.hasDetailPage !== false,
         })
       })
@@ -65,7 +85,7 @@ export const ShowcaseTabField: TextFieldClientComponent = ({ field, path: pathFr
     return () => {
       active = false
     }
-  }, [categoryId, config.serverURL, config.routes.api, locale.code])
+  }, [categoryId, config.serverURL, config.routes.api, locale.code, productId])
 
   return (
     <div
@@ -83,8 +103,9 @@ export const ShowcaseTabField: TextFieldClientComponent = ({ field, path: pathFr
         >
           <option value="">{categoryId ? t.auto : t.none}</option>
           {state?.tabs.map((tab) => (
-            <option key={tab.id} value={tab.id}>
-              {tab.name}
+            // A tab another product opens can't be picked (one product per tab).
+            <option key={tab.id} value={tab.id} disabled={Boolean(tab.usedBy) && tab.id !== value}>
+              {tab.usedBy ? `${tab.name} — ${t.usedBy(tab.usedBy)}` : tab.name}
             </option>
           ))}
         </select>

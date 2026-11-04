@@ -140,7 +140,8 @@
   text-transform: uppercase;
 }
 
-.falah-account__lang-options {
+.falah-account__lang-options,
+.falah-switch {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4px;
@@ -149,7 +150,8 @@
   background: #eef6fd;
 }
 
-.falah-account__lang {
+.falah-account__lang,
+.falah-switch__option {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -168,11 +170,13 @@
     box-shadow 0.2s ease;
 }
 
-.falah-account__lang:hover {
+.falah-account__lang:hover,
+.falah-switch__option:hover {
   color: var(--falah-ink);
 }
 
-.falah-account__lang.is-active {
+.falah-account__lang.is-active,
+.falah-switch__option.is-active {
   background: #fff;
   color: var(--falah-ink);
   box-shadow:
@@ -296,4 +300,28 @@
 
 .live-preview-toolbar--static {
   border-bottom: 0;
+}
+
+/* Solution | Product (Solution & Product lists and forms): the language switch's look, sized to its labels. */
+.falah-switch {
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-template-columns: none;
+  grid-auto-columns: 1fr;
+  margin-inline-end: 12px;
+  vertical-align: middle;
+}
+
+.falah-switch__option {
+  min-width: 96px;
+  text-decoration: none;
+}
+
+.falah-switch__option.is-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.falah-switch__option.is-disabled:hover {
+  color: var(--falah-muted);
 }

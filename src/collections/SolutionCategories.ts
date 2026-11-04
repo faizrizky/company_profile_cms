@@ -7,7 +7,8 @@ import { hrefField } from '@/fields/link'
 import { imageField, videoField } from '@/fields/section'
 import { seoField } from '@/fields/seo'
 import { slugField } from '@/fields/slug'
-import { visualEditorViews } from '@/lib/visualViews'
+import { syncProductsFromTabs } from '@/hooks/showcaseSync'
+import { SOLUTION_PRODUCT_SWITCH, visualEditorViews } from '@/lib/visualViews'
 
 export const SolutionCategories: CollectionConfig = {
   slug: 'solution-categories',
@@ -20,14 +21,23 @@ export const SolutionCategories: CollectionConfig = {
     description:
       'Setiap kategori punya halaman detail di /solution/<slug>. Geser untuk mengatur urutan tab.',
     // Opens on the visual editor (the four sections of the page); the form is one tab away.
-    components: { views: visualEditorViews() },
+    // Solution | Product: categories and products are edited as one "Solution & Product".
+    components: {
+      views: visualEditorViews(),
+      beforeList: [SOLUTION_PRODUCT_SWITCH],
+      edit: { beforeDocumentControls: [SOLUTION_PRODUCT_SWITCH] },
+    },
   },
   access: contentAccess(publishedOrAuthenticated),
   versions: {
     drafts: { autosave: { interval: 2000, showSaveDraftButton: true }, schedulePublish: true },
     maxPerDoc: 50,
   },
-  hooks: contentHooks('solution-categories'),
+  hooks: (() => {
+    const hooks = contentHooks('solution-categories')
+    // Showcase tabs and products are kept in step (see hooks/showcaseSync).
+    return { ...hooks, afterChange: [syncProductsFromTabs, ...(hooks.afterChange ?? [])] }
+  })(),
   fields: [
     fieldCard({ en: 'General', id: 'Umum' }, [
       { name: 'title', type: 'text', required: true, maxLength: 80 },

@@ -19,6 +19,8 @@ export function stepSection(step: Pick<TutorialStep, 'route' | 'target'>): strin
     const target = (step.target ?? '').trim()
     return !target || /^\.nav\b/.test(target) ? INTRO_SECTION : 'nav-statistics'
   }
+  // Products are part of "Solution & Product" in the sidebar.
+  if (kind === 'collections' && slug === 'products') return 'nav-solution-categories'
   if (kind === 'collections' && slug) return `nav-${slug}`
   if (kind === 'globals' && slug) return `nav-global-${slug}`
   return kind === 'account' ? ACCOUNT_SECTION : kind

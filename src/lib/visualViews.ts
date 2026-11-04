@@ -26,3 +26,6 @@ export const visualEditorViews = (): Views => ({
     },
   },
 })
+
+/** The Solution | Product switch of the Solution & Product lists and forms. */
+export const SOLUTION_PRODUCT_SWITCH = '/components/admin/SolutionProductSwitch#SolutionProductSwitch'

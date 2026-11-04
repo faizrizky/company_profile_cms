@@ -10,7 +10,8 @@ import { NavAccount } from './NavAccount'
 export type NavGroupData = {
   label: string
   open?: boolean
-  items: { id: string; href: string; label: string }[]
+  /** `also`: other paths that light this item up (e.g. products under Solution & Product). */
+  items: { id: string; href: string; label: string; also?: string[] }[]
 }
 
 const MOBILE_QUERY = '(max-width: 768px)'
@@ -90,7 +91,9 @@ export function FalahNavClient({ groups }: { groups: NavGroupData[] }) {
                 const isActive =
                   item.id === 'nav-statistics'
                     ? pathname === item.href || pathname === `${item.href}/`
-                    : pathname.startsWith(item.href) && ['/', undefined].includes(pathname[item.href.length])
+                    : [item.href, ...(item.also ?? [])].some(
+                        (href) => pathname.startsWith(href) && ['/', undefined].includes(pathname[href.length]),
+                      )
                 return (
                   <Link
                     key={item.id}

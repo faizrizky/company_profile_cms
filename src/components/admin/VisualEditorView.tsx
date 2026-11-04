@@ -7,6 +7,7 @@ import {
   useDocumentInfo,
   useLocale,
 } from '@payloadcms/ui'
+import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState, type ComponentProps } from 'react'
 
 import { EditorSkeleton } from './skeletons'
@@ -17,6 +18,8 @@ const READY_MESSAGE = 'falah-studio:ready'
 /** The studio asks for the admin's session token (see the website's lib/studio/token.ts). */
 const TOKEN_REQUEST = 'falah-studio:token-request'
 const TOKEN_RESPONSE = 'falah-studio:token'
+/** The studio opens another document (Solution | Product): { path } under the admin route. */
+const OPEN_MESSAGE = 'falah-studio:open'
 /** Never keep the placeholder up longer than this, even without the message. */
 const READY_TIMEOUT_MS = 20_000
 
@@ -32,7 +35,7 @@ export function VisualEditorView({ frontendUrl, ...props }: Props) {
   const { collectionSlug, id } = useDocumentInfo()
   const {
     config: {
-      routes: { api },
+      routes: { admin, api },
       serverURL,
     },
     getEntityConfig,
@@ -107,6 +110,20 @@ export function VisualEditorView({ frontendUrl, ...props }: Props) {
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
   }, [frontendUrl, serverURL, api])
+
+  // Solution | Product in the studio: open the other document here, in the admin.
+  // Only collection documents, so a message can't send the admin anywhere else.
+  const router = useRouter()
+  useEffect(() => {
+    const origin = new URL(frontendUrl).origin
+    const onMessage = (event: MessageEvent) => {
+      if (event.origin !== origin || event.data?.type !== OPEN_MESSAGE) return
+      const path = String(event.data.path ?? '')
+      if (/^\/collections\/[a-z-]+\/\d+$/.test(path)) router.push(`${admin}${path}`)
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [frontendUrl, admin, router])
 
   if (!id) return <DefaultEditView {...props} />
 
