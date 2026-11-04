@@ -103,7 +103,21 @@ export const syncProductsFromTabs: CollectionAfterChangeHook<SolutionCategory> =
 }) => {
   const locale = localeOf(req)
   if (context[SYNCING] || !locale) return doc
+  await syncCategoryProducts(req, locale, doc)
+  return doc
+}
 
+/**
+ * Brings a category's products in line with its tabs, in one language: a
+ * product per named tab (linked by name, else created as a draft), renamed
+ * like its tab; products of removed tabs unlinked. Also run once for every
+ * category by migration 20261104_034017_showcase_tab_products.
+ */
+export async function syncCategoryProducts(
+  req: PayloadRequest,
+  locale: 'en' | 'id',
+  doc: SolutionCategory,
+): Promise<void> {
   const tabs = doc.showcase?.tabs ?? []
   const tabIds = new Set(tabs.map((tab) => tab.id).filter(Boolean))
   const products = await productsOf(req, locale, doc.id)
@@ -147,7 +161,6 @@ export const syncProductsFromTabs: CollectionAfterChangeHook<SolutionCategory> =
     )
     products.push(created)
   }
-  return doc
 }
 
 /**

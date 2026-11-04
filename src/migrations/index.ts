@@ -19,6 +19,7 @@ import * as migration_20261014_092153_navigation_footer_drafts from './20261014_
 import * as migration_20261019_073205_tab_brochure from './20261019_073205_tab_brochure';
 import * as migration_20261029_090753_challenge_icon_image from './20261029_090753_challenge_icon_image';
 import * as migration_20261029_100047_challenge_icon_choice_removed from './20261029_100047_challenge_icon_choice_removed';
+import * as migration_20261104_034017_showcase_tab_products from './20261104_034017_showcase_tab_products';
 
 export const migrations = [
   {
@@ -124,6 +125,11 @@ export const migrations = [
   {
     up: migration_20261029_100047_challenge_icon_choice_removed.up,
     down: migration_20261029_100047_challenge_icon_choice_removed.down,
-    name: '20261029_100047_challenge_icon_choice_removed'
+    name: '20261029_100047_challenge_icon_choice_removed',
+  },
+  {
+    up: migration_20261104_034017_showcase_tab_products.up,
+    down: migration_20261104_034017_showcase_tab_products.down,
+    name: '20261104_034017_showcase_tab_products'
   },
 ];
