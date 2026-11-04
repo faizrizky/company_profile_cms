@@ -10,6 +10,8 @@ import { SOLUTION_PRODUCT_SWITCH, visualEditorViews } from '@/lib/visualViews'
 
 export const Products: CollectionConfig = {
   slug: 'products',
+  // Plural = breadcrumb and list title (see SolutionCategories).
+  labels: { singular: 'Product', plural: 'Solution & Product' },
   orderable: true,
   admin: {
     useAsTitle: 'title',
