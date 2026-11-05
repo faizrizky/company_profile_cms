@@ -4,6 +4,7 @@ import { useConfig, useFormFields } from '@payloadcms/ui'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 import { useAdminText } from './useAdminText'
 
@@ -87,7 +88,25 @@ export function SolutionProductSwitch() {
         product: { href: to('/collections/solution-categories') },
       }
 
-  return (
+  // In a list, Payload renders this above its page gutter (flush against the
+  // sidebar); it goes in the title row instead, on the right.
+  const [slot, setSlot] = useState<HTMLElement | null>(null)
+  useEffect(() => {
+    if (id) return
+    const el = document.createElement('div')
+    el.className = 'falah-switch-slot'
+    // Next frame: the list header is on the page by then.
+    const frame = requestAnimationFrame(() => {
+      document.querySelector('.list-header__title-and-actions')?.append(el)
+      setSlot(el.isConnected ? el : null)
+    })
+    return () => {
+      cancelAnimationFrame(frame)
+      el.remove()
+    }
+  }, [id, pathname])
+
+  const control = (
     <div className="falah-switch" role="group" aria-label={t.label}>
       {(['solution', 'product'] as const).map((side) => {
         const label = side === 'solution' ? 'Solution' : 'Product'
@@ -111,4 +130,6 @@ export function SolutionProductSwitch() {
       })}
     </div>
   )
+  if (!id) return slot ? createPortal(control, slot) : null
+  return control
 }

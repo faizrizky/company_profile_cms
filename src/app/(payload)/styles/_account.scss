@@ -325,3 +325,19 @@
 .falah-switch__option.is-disabled:hover {
   color: var(--falah-muted);
 }
+
+/* In a list: the title row's right end. */
+.falah-switch-slot {
+  margin-inline-start: auto;
+}
+
+.falah-switch-slot .falah-switch {
+  margin-inline-end: 0;
+}
+
+/* The chosen side: the primary button's blue (Create New, Publish). */
+.falah-switch__option.is-active {
+  background: var(--falah-accent-gradient);
+  color: #fff;
+  box-shadow: 0 10px 22px -12px rgb(31 122 224 / 0.8);
+}
