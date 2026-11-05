@@ -106,7 +106,15 @@ export const Products: CollectionConfig = {
         {
           type: 'row',
           fields: [
-            { name: 'wide', type: 'checkbox', label: 'Lebar 2 kolom (desktop)' },
+            {
+              name: 'wide',
+              type: 'checkbox',
+              label: 'Lebar 2 kolom (desktop)',
+              admin: {
+                description:
+                  'Produk pertama di tiap kategori selalu tampil lebar dengan judul besar, apa pun pilihan ini.',
+              },
+            },
             { name: 'largeTitle', type: 'checkbox', label: 'Judul besar' },
           ],
         },

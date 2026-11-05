@@ -1475,8 +1475,16 @@ export const DEFAULT_TUTORIAL_STEPS: TutorialStep[] = [
     target: '#field-layout',
     titleEn: 'Card layout',
     titleId: 'Tata letak kartu',
-    bodyEn: lines('- 2 columns wide: the card spans two columns on desktop', '- Large title: enlarges its title'),
-    bodyId: lines('- Lebar 2 kolom: kartu selebar dua kolom di desktop', '- Judul besar: memperbesar judulnya'),
+    bodyEn: lines(
+      '- 2 columns wide: the card spans two columns on desktop',
+      '- Large title: enlarges its title',
+      'The first product of each category is always the big card (wide, large title), whatever is chosen here.',
+    ),
+    bodyId: lines(
+      '- Lebar 2 kolom: kartu selebar dua kolom di desktop',
+      '- Judul besar: memperbesar judulnya',
+      'Produk pertama tiap kategori selalu menjadi kartu besar (lebar, judul besar), apa pun pilihan di sini.',
+    ),
   }),
 
   // ── Inbox ─────────────────────────────────────────────────────────────
