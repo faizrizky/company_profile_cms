@@ -1,27 +1,47 @@
 'use client'
 
 import {
+  ConfirmationModal,
   DefaultEditView,
   SetDocumentStepNav,
   useConfig,
   useDocumentInfo,
   useLocale,
+  useModal,
 } from '@payloadcms/ui'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState, type ComponentProps } from 'react'
 
 import { EditorSkeleton } from './skeletons'
-import { useAdminLang } from './useAdminText'
+import { useAdminLang, useAdminText } from './useAdminText'
 
 /** Sent by the studio (frontend) once the editor has mounted. */
 const READY_MESSAGE = 'falah-studio:ready'
 /** The studio asks for the admin's session token (see the website's lib/studio/token.ts). */
 const TOKEN_REQUEST = 'falah-studio:token-request'
 const TOKEN_RESPONSE = 'falah-studio:token'
-/** The studio opens another document (Solution | Product): { path } under the admin route. */
+/** The studio opens another document (Solution | Product): { path } under the admin route; { confirm: true } = it has unsaved changes, ask first. */
 const OPEN_MESSAGE = 'falah-studio:open'
 /** Never keep the placeholder up longer than this, even without the message. */
 const READY_TIMEOUT_MS = 20_000
+const LEAVE_MODAL = 'visual-leave-unsaved'
+
+const LEAVE_TEXT = {
+  en: {
+    heading: 'Leave without saving?',
+    body: 'You have unsaved changes in the visual editor. If you leave now, they are lost.',
+    leave: 'Leave',
+    stay: 'Stay',
+    working: 'Opening…',
+  },
+  id: {
+    heading: 'Pindah tanpa menyimpan?',
+    body: 'Ada perubahan di editor visual yang belum disimpan. Kalau pindah sekarang, perubahannya hilang.',
+    leave: 'Pindah',
+    stay: 'Tetap di sini',
+    working: 'Membuka…',
+  },
+}
 
 type Props = ComponentProps<typeof DefaultEditView> & { frontendUrl: string }
 
@@ -114,16 +134,26 @@ export function VisualEditorView({ frontendUrl, ...props }: Props) {
   // Solution | Product in the studio: open the other document here, in the admin.
   // Only collection documents, so a message can't send the admin anywhere else.
   const router = useRouter()
+  const { openModal, closeModal } = useModal()
+  const leaveText = useAdminText(LEAVE_TEXT)
+  const [leaveTo, setLeaveTo] = useState<string>()
   useEffect(() => {
     const origin = new URL(frontendUrl).origin
     const onMessage = (event: MessageEvent) => {
       if (event.origin !== origin || event.data?.type !== OPEN_MESSAGE) return
       const path = String(event.data.path ?? '')
-      if (/^\/collections\/[a-z-]+\/\d+$/.test(path)) router.push(`${admin}${path}`)
+      if (!/^\/collections\/[a-z-]+\/\d+$/.test(path)) return
+      if (event.data.confirm) {
+        // Unsaved changes in the editor: the admin's own confirmation first.
+        setLeaveTo(`${admin}${path}`)
+        openModal(LEAVE_MODAL)
+      } else {
+        router.push(`${admin}${path}`)
+      }
     }
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
-  }, [frontendUrl, admin, router])
+  }, [frontendUrl, admin, router, openModal])
 
   if (!id) return <DefaultEditView {...props} />
 
@@ -158,6 +188,19 @@ export function VisualEditorView({ frontendUrl, ...props }: Props) {
           allow="clipboard-read; clipboard-write"
         />
       ) : null}
+      <ConfirmationModal
+        className="falah-confirm--danger"
+        modalSlug={LEAVE_MODAL}
+        heading={leaveText.heading}
+        body={leaveText.body}
+        confirmLabel={leaveText.leave}
+        confirmingLabel={leaveText.working}
+        cancelLabel={leaveText.stay}
+        onConfirm={() => {
+          closeModal(LEAVE_MODAL)
+          if (leaveTo) router.push(leaveTo)
+        }}
+      />
     </div>
   )
 }
