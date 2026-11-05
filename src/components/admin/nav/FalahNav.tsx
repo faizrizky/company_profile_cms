@@ -60,14 +60,13 @@ export async function FalahNav({ i18n, payload, permissions, req, visibleEntitie
       .map(({ slug, type, label: entityLabel }) => {
         const isGlobal = type === EntityType.global
         const href = (path: `/${string}`) => formatAdminURL({ adminRoute: routes.admin, path })
-        // "Solution & Product" opens on the Solution side (the products); the
-        // category list is reached from a category's breadcrumb.
-        const solution = !isGlobal && slug === 'solution-categories'
+        // "Solution & Product" lists the categories (the heads); each one holds
+        // its products. The product list stays lit too, as part of this item.
         return {
           id: isGlobal ? `nav-global-${slug}` : `nav-${slug}`,
-          href: href(solution ? '/collections/products' : `/${isGlobal ? 'globals' : 'collections'}/${slug}`),
+          href: href(`/${isGlobal ? 'globals' : 'collections'}/${slug}`),
           label: getTranslation(entityLabel, i18n),
-          ...(solution && { also: [href('/collections/solution-categories')] }),
+          ...(slug === 'solution-categories' && { also: [href('/collections/products')] }),
         }
       }),
   }))

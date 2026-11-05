@@ -1212,7 +1212,7 @@ export const DEFAULT_TUTORIAL_STEPS: TutorialStep[] = [
   // ── Solutions ─────────────────────────────────────────────────────────
   step({
     id: 'solutions',
-    route: '/collections/products',
+    route: '/collections/solution-categories',
     target: '#nav-solution-categories',
     titleEn: 'Solution & Product',
     titleId: 'Solution & Product',
@@ -1229,13 +1229,13 @@ export const DEFAULT_TUTORIAL_STEPS: TutorialStep[] = [
       'Two sides of the same category:',
       '- Solution: the product cards of the solutions overview',
       '- Product: the category page, with its Showcase tabs',
-      'The switch is in the form and in the visual editor, and it stays on the category you have open. The menu opens the Solution list; a category’s list is one click away from its breadcrumb.',
+      'The switch is in the form and in the visual editor, and it stays on the category you have open. The menu lists the categories; each one holds its products.',
     ),
     bodyId: lines(
       'Dua sisi dari kategori yang sama:',
       '- Solution: kartu produk di ringkasan solusi',
       '- Product: halaman kategori, dengan tab Showcase-nya',
-      'Tombol ini ada di form dan editor visual, dan tetap di kategori yang sedang dibuka. Menu membuka daftar Solution; daftar kategori ada satu klik dari breadcrumb-nya.',
+      'Tombol ini ada di form dan editor visual, dan tetap di kategori yang sedang dibuka. Menu menampilkan daftar kategori; produknya ada di dalam tiap kategori.',
     ),
   }),
   step({
