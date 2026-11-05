@@ -326,15 +326,6 @@
   color: var(--falah-muted);
 }
 
-/* In a list: the title row's right end. */
-.falah-switch-slot {
-  margin-inline-start: auto;
-}
-
-.falah-switch-slot .falah-switch {
-  margin-inline-end: 0;
-}
-
 /* The chosen side: the primary button's blue (Create New, Publish). */
 .falah-switch__option.is-active {
   background: var(--falah-accent-gradient);

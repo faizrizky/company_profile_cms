@@ -23,7 +23,6 @@ export const Products: CollectionConfig = {
     // Solution | Product: categories and products are edited as one "Solution & Product".
     components: {
       views: visualEditorViews(),
-      beforeList: [SOLUTION_PRODUCT_SWITCH],
       edit: { beforeDocumentControls: [SOLUTION_PRODUCT_SWITCH] },
     },
   },
