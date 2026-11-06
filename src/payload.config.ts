@@ -193,6 +193,8 @@ export default buildConfig({
           port: env.SMTP_PORT,
           secure: env.SMTP_SECURE ? env.SMTP_SECURE === 'true' : env.SMTP_PORT === 465,
           ...(env.SMTP_USER ? { auth: { user: env.SMTP_USER, pass: env.SMTP_PASS } } : {}),
+          // Connecting by address: check the certificate against its own name.
+          ...(env.SMTP_TLS_SERVERNAME ? { tls: { servername: env.SMTP_TLS_SERVERNAME } } : {}),
           // Generous: the office mail server takes ~6 s to log in and can take
           // half a minute or more to accept a message (it scans it first).
           // Visitors never wait for this (see lib/mail).

@@ -86,6 +86,12 @@ const schema = z
     SMTP_PORT: optional(z.coerce.number().int().min(1).max(65535)).transform((v) => v ?? 465),
     /** TLS from the first byte (port 465); false = STARTTLS (587). Default: true on 465. */
     SMTP_SECURE: optional(z.enum(['true', 'false'])),
+    /**
+     * The name the mail server's certificate is issued for, when SMTP_HOST is
+     * an address (e.g. the internal IP): the certificate is still checked, against
+     * this name. A host name in SMTP_HOST needs none.
+     */
+    SMTP_TLS_SERVERNAME: optional(z.string()),
     SMTP_USER: optional(z.string()),
     SMTP_PASS: optional(z.string()),
     /**

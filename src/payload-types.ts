@@ -1035,6 +1035,9 @@ export interface Product {
   image: number | Media;
   imageMobile?: (number | null) | Media;
   layout?: {
+    /**
+     * Produk pertama di tiap kategori selalu tampil lebar dengan judul besar, apa pun pilihan ini.
+     */
     wide?: boolean | null;
     largeTitle?: boolean | null;
   };
